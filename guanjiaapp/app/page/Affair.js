@@ -39,12 +39,12 @@ export default class Affair extends Component{
         const liftButtonConfig = {
             title:'返回',
             handler:() => this.buttonGoBack(),
-        }
+        };
         const titleConfig = {
             title:this.state.title,
-        }
+        };
         return(
-            <View style={{flex:1}}>
+            <View style={{flex:1,flexDirection:'column'}}>
                 <View>
                     <NavigationBar
                     title={titleConfig}
@@ -52,7 +52,7 @@ export default class Affair extends Component{
                     tintColor={'rgb(61,171,236)'}
                     />
                 </View>
-
+                <View style={{flex:1}}>
                     <ScrollableTabView
                         tabBarPosition='top'
                         renderTabBar={() => <DefaultTabBar/>}
@@ -66,6 +66,7 @@ export default class Affair extends Component{
                         <POEvolution tabLabel='专报' {...this.props}/>
                         <POSpecial tabLabel='导控' {...this.props}/>
                     </ScrollableTabView>
+                </View>
             </View>
         )
     }

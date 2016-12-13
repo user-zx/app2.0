@@ -16,6 +16,8 @@ import {
     SwRefreshListView, //支持下拉刷新和上拉加载的ListView
 } from 'react-native-swRefresh'
 const {width,height}=Dimensions.get('window');
+import ModalDropdown from 'react-native-modal-dropdown';
+import {toastShort} from '../component/Toast'
 import {NavGoBack} from '../component/NavGoBack';
 import NavigationBar from 'react-native-navbar';
 import ArticleDetails from './ArticleDetails';
@@ -34,7 +36,13 @@ export default class PublicOpinionArticles extends Component{
             title:'',
         };
     }
+    _dropdown_6_onSelect(idx, value) {
+        toastShort(idx,value);
 
+        this.setState({
+            dropdown_6_icon_heart: !this.state.dropdown_6_icon_heart,
+        })
+    }
     buttonGoBack(){
         const {navigator} = this.props;
         return NavGoBack(navigator);
@@ -97,8 +105,35 @@ export default class PublicOpinionArticles extends Component{
 
         return (
             <View style={{flex:1,flexDirection:'column'}}>
-                <View>
-
+                <View style={{width:width,height:40,flexDirection:'row'}}>
+                    <ModalDropdown options={['全部', '综合','新闻','博客','论坛','微博','微信','QQ群','电子报','视频','手机WEB','其他']}
+                                   defaultValue='载体'
+                                   textStyle={{fontSize:px2dp(15),padding:px2dp(10),textAlign:'center'}}
+                                   style={styles.dropdown_1}
+                                   dropdownStyle={styles.dropdown_9}
+                                   onSelect={(idx, value) => this._dropdown_6_onSelect(idx, value)}
+                    />
+                    <ModalDropdown options={['全部', '大眼睛','小眼睛','高鼻梁','没鼻子','大嘴唇','三角眼','大屁股','小短腿','肤色黑']}
+                                   defaultValue='特征'
+                                   textStyle={{fontSize:px2dp(15),padding:px2dp(10),textAlign:'center'}}
+                                   style={styles.dropdown_1}
+                                   dropdownStyle={styles.dropdown_9}
+                                   onSelect={(idx, value) => this._dropdown_6_onSelect(idx, value)}
+                    />
+                    <ModalDropdown options={['全部', '一天内','一周内','一个月内','三个月','六个月','一年']}
+                                   defaultValue='时间'
+                                   textStyle={{fontSize:px2dp(15),padding:px2dp(10),textAlign:'center'}}
+                                   style={styles.dropdown_1}
+                                   dropdownStyle={styles.dropdown_9}
+                                   onSelect={(idx, value) => this._dropdown_6_onSelect(idx, value)}
+                    />
+                    <ModalDropdown options={['全部', '热度降序','热度升序','阅读量降序','转发量降序','评论量降序']}
+                                   defaultValue='排序'
+                                   textStyle={{fontSize:px2dp(15),padding:px2dp(10),textAlign:'center'}}
+                                   style={styles.dropdown_1}
+                                   dropdownStyle={styles.dropdown_9}
+                                   onSelect={(idx, value) => this._dropdown_6_onSelect(idx, value)}
+                    />
                 </View>
                 <View style={{flex:1}}>{this._renderListView()}</View>
             </View>
@@ -140,9 +175,7 @@ export default class PublicOpinionArticles extends Component{
                 </View>
             </TouchableOpacity>
         )
-
     }
-
     /**
      * 模拟刷新
      * @param end
@@ -236,7 +269,7 @@ const styles=StyleSheet.create({
         alignItems:'center'
     },
     cell:{
-        height:100,
+        height:px2dp(100),
         backgroundColor:'#FFF',
         alignItems:'center',
         justifyContent:'center',
@@ -249,5 +282,21 @@ const styles=StyleSheet.create({
     cellText:{
 
     },
+    dropdown_1: {
+        top: 0,
+        width:width/4,
+        height:px2dp(40),
+        backgroundColor:'#F2F2F2',
+        borderColor:'black',
+        alignItems:'center',
+    },
+    dropdown_9: {
+        flex: 1,
+        //left: px2dp(10),
+        height:px2dp(160),
+        width:px2dp(80),
+        backgroundColor:'#666666'
+    },
+
 
 });
