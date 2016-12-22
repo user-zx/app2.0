@@ -60,7 +60,7 @@ export default class TabBarView extends React.Component{
                     renderIcon={() => <Image source={require("../image/one.png")} style={styles.iconStyle}/>}
                     renderSelectedIcon={() => <Image source={require("../image/one_click.png")} style={styles.iconStyle}/>}
                     onPress={() => this.setState({ selectedTab: 'StewardView' })}>
-                    <StewardView {...this.props}/>
+                    <StewardView {...this.props} />
                 </TabNavigator.Item>
                 <TabNavigator.Item
                     title="全景监测"
@@ -70,7 +70,7 @@ export default class TabBarView extends React.Component{
                     renderIcon={() => <Image source={require("../image/three.png")} style={styles.iconStyle}/>}
                     renderSelectedIcon={() => <Image source={require("../image/three_click.png")} style={styles.iconStyle}/>}
                     onPress={() => this.setState({ selectedTab: 'MonitorView' })}>
-                    <MonitorView {...this.props}/>
+                    <MonitorView {...this.props} />
                 </TabNavigator.Item>
                 <TabNavigator.Item
                     title="事件分析"
@@ -80,7 +80,7 @@ export default class TabBarView extends React.Component{
                     renderIcon={() => <Image source={require("../image/two.png")} style={styles.iconStyle}/>}
                     renderSelectedIcon={() => <Image source={require("../image/two_click.png")} style={styles.iconStyle}/>}
                     onPress={() => this.setState({ selectedTab: 'SpecialView' })}>
-                    <SpecialView {...this.props}/>
+                    <SpecialView {...this.props} />
                 </TabNavigator.Item>
                 <TabNavigator.Item
                     title="我"
@@ -90,7 +90,7 @@ export default class TabBarView extends React.Component{
                     renderIcon={() => <Image source={require("../image/four.png")} style={styles.iconStyle}/>}
                     renderSelectedIcon={() => <Image source={require("../image/four_click.png")} style={styles.iconStyle}/>}
                     onPress={() => this.setState({ selectedTab: 'MeView' })}>
-                    <MeView {...this.props}/>
+                    <MeView {...this.props} />
                 </TabNavigator.Item>
             </TabNavigator>
         );

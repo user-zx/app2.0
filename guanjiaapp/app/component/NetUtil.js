@@ -15,9 +15,9 @@ let NetUtil = {
 
         fetch(url, fetchOptions)
             .then((response) => response.json())
-    .then((responseJson) => {
-            callback(responseJson);
-    }).done();
+            .then((responseJson) => {
+                    callback(responseJson);
+            }).done();
     },
 }
 export default NetUtil;

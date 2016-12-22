@@ -8,6 +8,14 @@
  */
 
 #import <UIKit/UIKit.h>
+#import <RCTJPushModule.h>
+#ifdef NSFoundationVersionNumber_iOS_9_x_Max
+#import <UserNotifications/UserNotifications.h>
+#endif
+//----------------极光推送-----------//
+static NSString *appKey = @"cb77d5faf3e9b5a061371ffd";
+static NSString *channel = @"nil";    //填写channel  一般为nil
+static BOOL isProduction = false;  //填写isProdurion  平时测试时为false ，生产时填写true
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 

@@ -8,17 +8,49 @@ import {
     Alert,
     ScrollView,
     Dimensions,
+    ListView,
+    AsyncStorage,
 } from 'react-native';
 import NavigationBar from 'react-native-navbar';
 import px2dp from '../util/px2db';
 import NewsClass from './NewsClass'
+const {width,height}=Dimensions.get('window');
+
 export default class StewardView extends React.Component {
+    _ds = new ListView.DataSource({rowHasChanged:(r1,r2)=>r1 !== r2});
     constructor (props) {
         super(props);
         this.state = {
+            dataSource:this._ds.cloneWithRows(this.getDataArr()),
             text : '全部监测数据 45733621',
             resultMessage:'热点',
         };
+    }
+
+    getDataArr(){
+        const dataArr = [];
+        for(let i = 0 ; i< 10 ; i ++ ){
+            dataArr.push(
+                {
+                    title:'相关站点信息' + i,
+                    text:'Lorem ipsum dolor sit amet, ius ad pertinax oportereaccommodare,' +
+                    ' an vix civibus corrumpit referrentur. Te nam case ludusinciderint, te mea' +
+                    ' facilisi adipiscing. Sea id integre luptatum. In tota saleconsequuntur nec.' +
+                    ' Erat ocurreret mei ei. Eu paulo sapientem vulputateest, vel an accusam intellegam interesset.' +
+                    ' Nam eu stet periculareprimique, ea vim illud modus, putant invidunt reprehendunt ne qui' + i
+                }
+            );
+        }
+        return dataArr;
+    }
+    renderRow(rowData,sectionID,rowID,heightlightRow){
+        return(
+            <View style={{flex:1,flexDirection:'row',borderBottomWidth:1,borderBottomColor:'#F2F2F2',borderLeftWidth:1,borderLeftColor:'#F2F2F2'}}>
+                <Text style={{width:width/4,textAlign:'center',fontSize:16,padding:px2dp(10)}}>{rowData.title}</Text>
+                <View style={{width:1,height:70,backgroundColor:'#F2F2F2'}} />
+                <Text style={{width:(width/4*3)-1 ,textAlign:'center',fontSize:16,padding:px2dp(20)}}>{rowData.text}</Text>
+            </View>
+        )
     }
     pressAction(title){
         var  _this = this;
@@ -109,6 +141,14 @@ export default class StewardView extends React.Component {
                         <Text onPress={this.pressAction.bind(this,'关注站点信息')} style={{color:'rgb(80,164,237)',fontSize:16,padding:px2dp(20)}}>关注站点信息</Text>
                         <Text onPress={this.pressAction.bind(this,'关注站点信息')} style={{color:'rgb(80,164,237)',fontSize:16,padding:px2dp(20)}}>关注站点信息</Text>
                     </View>
+                    <View style={{flexDirection:'row',backgroundColor:'#FFF',marginTop:px2dp(10)}}>
+                        <ListView
+                            dataSource={this.state.dataSource}
+                            renderRow={this.renderRow.bind(this)}
+                            contentContainerStyle={{flexWrap:'wrap' }}
+                        />
+                    </View>
+
                 </ScrollView>
             </View>
         );

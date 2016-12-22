@@ -22,6 +22,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		7A81536A3E04425EBABDDB79 /* libRCTJPushModule.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D903B9E35E1E4E66AFDB46DC /* libRCTJPushModule.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		A022B2481DED23F000F5F721 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A022B2451DED239000F5F721 /* libRCTAnimation.a */; };
 		A06706971DFF9DC80097CE61 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A06706961DFF9DC80097CE61 /* libz.tbd */; };
@@ -30,6 +31,13 @@
 		A06706B01DFF9E150097CE61 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A06706AF1DFF9E150097CE61 /* CoreTelephony.framework */; };
 		A06706B21DFF9E230097CE61 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A06706B11DFF9E230097CE61 /* SystemConfiguration.framework */; };
 		A06706D71DFFC0A00097CE61 /* libRCTWeChat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A06706D41DFFC0100097CE61 /* libRCTWeChat.a */; };
+		A07A9F521E013E4E00D476DA /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A07A9F511E013E4E00D476DA /* Security.framework */; };
+		A07A9F541E013E6100D476DA /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A07A9F531E013E6100D476DA /* CFNetwork.framework */; };
+		A07A9F561E013E7000D476DA /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A07A9F551E013E7000D476DA /* CoreFoundation.framework */; };
+		A07A9F581E013E8900D476DA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A07A9F571E013E8900D476DA /* Foundation.framework */; };
+		A07A9F5A1E013EA400D476DA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A07A9F591E013EA400D476DA /* UIKit.framework */; };
+		A07A9F5C1E013EBF00D476DA /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A07A9F5B1E013EBF00D476DA /* UserNotifications.framework */; };
+		A07A9F5E1E013ECF00D476DA /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A07A9F5D1E013ECF00D476DA /* libresolv.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -180,6 +188,13 @@
 			remoteGlobalIDString = 86D238421BD0BB9E00C75D01;
 			remoteInfo = RCTWeChat;
 		};
+		A07A9F411E013CD400D476DA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0CEB9CD368BB46319C035153 /* RCTJPushModule.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6280980A1CEDC407000D3A81;
+			remoteInfo = RCTJPushModule;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -192,6 +207,7 @@
 		00E356EE1AD99517003FC87E /* guanjiaappTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = guanjiaappTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* guanjiaappTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = guanjiaappTests.m; sourceTree = "<group>"; };
+		0CEB9CD368BB46319C035153 /* RCTJPushModule.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTJPushModule.xcodeproj; path = "../node_modules/jpush-react-native/ios/RCTJPushModule/RCTJPushModule.xcodeproj"; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* guanjiaapp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = guanjiaapp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -211,6 +227,15 @@
 		A06706AF1DFF9E150097CE61 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		A06706B11DFF9E230097CE61 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		A06706BE1DFFC0100097CE61 /* RCTWeChat.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWeChat.xcodeproj; path = "../node_modules/react-native-wechat/ios/RCTWeChat.xcodeproj"; sourceTree = "<group>"; };
+		A07A9F2B1E0134BE00D476DA /* guanjiaapp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = guanjiaapp.entitlements; path = guanjiaapp/guanjiaapp.entitlements; sourceTree = "<group>"; };
+		A07A9F511E013E4E00D476DA /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		A07A9F531E013E6100D476DA /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		A07A9F551E013E7000D476DA /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		A07A9F571E013E8900D476DA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		A07A9F591E013EA400D476DA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		A07A9F5B1E013EBF00D476DA /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
+		A07A9F5D1E013ECF00D476DA /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
+		D903B9E35E1E4E66AFDB46DC /* libRCTJPushModule.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTJPushModule.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -226,6 +251,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A07A9F5E1E013ECF00D476DA /* libresolv.tbd in Frameworks */,
+				A07A9F5C1E013EBF00D476DA /* UserNotifications.framework in Frameworks */,
+				A07A9F5A1E013EA400D476DA /* UIKit.framework in Frameworks */,
+				A07A9F581E013E8900D476DA /* Foundation.framework in Frameworks */,
+				A07A9F561E013E7000D476DA /* CoreFoundation.framework in Frameworks */,
+				A07A9F541E013E6100D476DA /* CFNetwork.framework in Frameworks */,
+				A07A9F521E013E4E00D476DA /* Security.framework in Frameworks */,
 				A06706D71DFFC0A00097CE61 /* libRCTWeChat.a in Frameworks */,
 				A06706B21DFF9E230097CE61 /* SystemConfiguration.framework in Frameworks */,
 				A06706B01DFF9E150097CE61 /* CoreTelephony.framework in Frameworks */,
@@ -243,6 +275,7 @@
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
+				7A81536A3E04425EBABDDB79 /* libRCTJPushModule.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -329,6 +362,7 @@
 		13B07FAE1A68108700A75B9A /* guanjiaapp */ = {
 			isa = PBXGroup;
 			children = (
+				A07A9F2B1E0134BE00D476DA /* guanjiaapp.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -373,6 +407,7 @@
 				832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */,
 				00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */,
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
+				0CEB9CD368BB46319C035153 /* RCTJPushModule.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -420,6 +455,13 @@
 		A06706951DFF9DC80097CE61 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A07A9F5D1E013ECF00D476DA /* libresolv.tbd */,
+				A07A9F5B1E013EBF00D476DA /* UserNotifications.framework */,
+				A07A9F591E013EA400D476DA /* UIKit.framework */,
+				A07A9F571E013E8900D476DA /* Foundation.framework */,
+				A07A9F551E013E7000D476DA /* CoreFoundation.framework */,
+				A07A9F531E013E6100D476DA /* CFNetwork.framework */,
+				A07A9F511E013E4E00D476DA /* Security.framework */,
 				A06706B11DFF9E230097CE61 /* SystemConfiguration.framework */,
 				A06706AF1DFF9E150097CE61 /* CoreTelephony.framework */,
 				A06706AD1DFF9DEB0097CE61 /* libsqlite3.0.tbd */,
@@ -433,6 +475,14 @@
 			isa = PBXGroup;
 			children = (
 				A06706D41DFFC0100097CE61 /* libRCTWeChat.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A07A9F381E013CD400D476DA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A07A9F421E013CD400D476DA /* libRCTJPushModule.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -482,7 +532,7 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 610;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
@@ -492,6 +542,14 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = TEJ24QS8CL;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -522,6 +580,10 @@
 				{
 					ProductGroup = 00C302BC1ABCB91800DB3ED1 /* Products */;
 					ProjectRef = 00C302BB1ABCB91800DB3ED1 /* RCTImage.xcodeproj */;
+				},
+				{
+					ProductGroup = A07A9F381E013CD400D476DA /* Products */;
+					ProjectRef = 0CEB9CD368BB46319C035153 /* RCTJPushModule.xcodeproj */;
 				},
 				{
 					ProductGroup = 78C398B11ACF4ADC00677621 /* Products */;
@@ -705,6 +767,13 @@
 			remoteRef = A06706D31DFFC0100097CE61 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		A07A9F421E013CD400D476DA /* libRCTJPushModule.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTJPushModule.a;
+			remoteRef = A07A9F411E013CD400D476DA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -796,6 +865,10 @@
 				INFOPLIST_FILE = guanjiaappTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/guanjiaapp.app/guanjiaapp";
 			};
@@ -810,6 +883,10 @@
 				INFOPLIST_FILE = guanjiaappTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/guanjiaapp.app/guanjiaapp";
 			};
@@ -819,6 +896,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = guanjiaapp/guanjiaapp.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = TEJ24QS8CL;
@@ -827,6 +905,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/Libraries",
 					"$(SRCROOT)/../node_modules/react-native/React/**",
+					"$(SRCROOT)/../node_modules/jpush-react-native/ios/RCTJPushModule/RCTJPushModule",
 				);
 				INFOPLIST_FILE = guanjiaapp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -844,6 +923,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = guanjiaapp/guanjiaapp.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = TEJ24QS8CL;
 				HEADER_SEARCH_PATHS = (
@@ -851,6 +931,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/Libraries",
 					"$(SRCROOT)/../node_modules/react-native/React/**",
+					"$(SRCROOT)/../node_modules/jpush-react-native/ios/RCTJPushModule/RCTJPushModule",
 				);
 				INFOPLIST_FILE = guanjiaapp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -902,6 +983,7 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
+					"$(SRCROOT)/../node_modules/jpush-react-native/ios/RCTJPushModule/RCTJPushModule",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -942,6 +1024,7 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
+					"$(SRCROOT)/../node_modules/jpush-react-native/ios/RCTJPushModule/RCTJPushModule",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;

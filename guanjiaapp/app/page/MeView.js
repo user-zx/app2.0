@@ -12,7 +12,11 @@ import {
     Dimensions,
 } from 'react-native';
 import NavigationBar from 'react-native-navbar';
-import Selfinfo from './Selfinfo'
+import Selfinfo from './Selfinfo';
+import StartView from './StartView';
+import Announcement from './Announcement';
+import PublicOpinionReports from './PublicOpinionReport';
+import FeedBack from './Feedback';
 import px2dp from '../util/px2db';
 var {width,height} = Dimensions.get('window');
 export default class MeView extends React.Component {
@@ -25,8 +29,8 @@ export default class MeView extends React.Component {
         const {navigator} = this.props;
         if (navigator) {
             navigator.push({
-                name:Selfinfo,
-                component:Selfinfo,
+                "name":"title",
+                component:title,
                 params:{
                     title:title,
                     // Daliy:Daliy,
@@ -36,8 +40,13 @@ export default class MeView extends React.Component {
                         })
                     }
                 }
-            })
+            });
+            console.log('--------------->',title)
         }
+    }
+
+    QuitAction () {
+
     }
 
     render (){
@@ -58,37 +67,37 @@ export default class MeView extends React.Component {
                         tintColor={'rgb(61,171,236)'}/>
                 </View>
                 <View style={{flexDirection:'column',alignItems:'flex-start'}}>
-                    <TouchableOpacity onPress={this.JumpAction.bind(this,'Selfinfo')} style={{flexDirection:'row'}}>
+                    <TouchableOpacity onPress={this.JumpAction.bind(this,Selfinfo)} style={{flexDirection:'row'}}>
                         <View style={styles.sampleViewStyle}>
                                 <Image source={require('../image/gerenxinxi.png')} style={styles.imageStyle}/>
                                 <Text style={styles.textStyle}>个人信息</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={this.JumpAction.bind(this,'我的星标')} style={{flexDirection:'row'}}>
+                    <TouchableOpacity onPress={this.JumpAction.bind(this,StartView)} style={{flexDirection:'row'}}>
                         <View style={styles.sampleViewStyle}>
                                 <Image source={require('../image/start.png')} style={styles.imageStyle}/>
                                 <Text style={styles.textStyle}>我的星标</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={this.JumpAction.bind(this,'舆情报告')} style={{flexDirection:'row'}}>
+                    <TouchableOpacity onPress={this.JumpAction.bind(this,PublicOpinionReports)} style={{flexDirection:'row'}}>
                         <View style={styles.mb10}>
                                 <Image source={require('../image/zhuanbao.png')} style={styles.imageStyle}/>
                                 <Text style={styles.textStyle}>舆情报告</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={this.JumpAction.bind(this,'公告')} style={{flexDirection:'row'}}>
+                    <TouchableOpacity onPress={this.JumpAction.bind(this,Announcement)} style={{flexDirection:'row'}}>
                         <View style={styles.sampleViewStyle}>
                                 <Image source={require('../image/gonggaoa.png')} style={styles.imageStyle}/>
                                 <Text style={styles.textStyle}>公告</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={this.JumpAction.bind(this,'意见反馈')} style={{flexDirection:'row'}}>
+                    <TouchableOpacity onPress={this.JumpAction.bind(this,FeedBack)} style={{flexDirection:'row'}}>
                         <View style={styles.mb10}>
                                 <Image source={require('../image/wen.png')} style={styles.imageStyle}/>
                                 <Text style={styles.textStyle}>意见反馈</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={this.JumpAction.bind(this,'退出系统')} style={{flexDirection:'row'}}>
+                    <TouchableOpacity onPress={this.QuitAction.bind(this)} style={{flexDirection:'row'}}>
                         <View style={styles.sampleViewStyle}>
                                 <Image source={require('../image/no.png')} style={styles.imageStyle}/>
                                 <Text style={styles.textStyle}>退出系统</Text>
@@ -113,17 +122,10 @@ const styles = StyleSheet.create({
         borderBottomWidth:1,
         alignItems:'center'
     },
-    imageStyle:{
-        width:px2dp(70),
-        height:px2dp(70),
-        backgroundColor:'red',
-        margin:px2dp(20)
-
-    },
     textStyle:{
         marginLeft:1,
         alignSelf:'center',
-        fontSize:px2dp(14)
+        fontSize:14
     },
     imageStyle:{
         width:px2dp(20),
