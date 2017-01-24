@@ -23,5 +23,6 @@ module.exports = {
                 failCallback(err);
             })
     },
-    //loading:<ActivityIndicatorIOS color="#3E00FF" style={{marginTop:40}} />
+    //loading:<ActivityIndicatorIOS color="#3E00FF" style={{marginTop:40}} />\
+    loginStyle:false,
 };

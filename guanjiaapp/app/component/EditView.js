@@ -13,6 +13,9 @@ import {
     TouchableOpacity
 } from 'react-native';
 import px2dp from '../util/px2db'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import { Sae } from 'react-native-textinput-effects';
+
 export default class EditView extends Component {
     constructor(props) {
         super(props);
@@ -21,14 +24,17 @@ export default class EditView extends Component {
     render() {
         return (
             <View style={LoginStyles.TextInputView}>
-                <TextInput style={LoginStyles.TextInput}
-                           placeholder={this.props.name}
-                           onChangeText={
-                               (text) => {
-                                   this.setState({text});
-                                   this.props.onChangeText(text);
-                               }
-                           }
+
+                <Sae
+                    label={this.props.name}
+                    iconClass={FontAwesomeIcon}
+                    iconName={'pencil'}
+                    iconColor={'white'}
+                    onChangeText={
+                        (text) => {
+                            this.setState({text});
+                            this.props.onChangeText(text);
+                        }}
                 />
             </View>
         );
@@ -38,14 +44,15 @@ export default class EditView extends Component {
 
 const LoginStyles = StyleSheet.create({
     TextInputView: {
-        marginTop: px2dp(10),
-        height:px2dp(50),
-        backgroundColor: '#ffffff',
-        borderRadius:px2dp(5),
-        borderWidth:px2dp(0.3),
-        borderColor:'#000000',
-        flexDirection: 'column',
-        justifyContent: 'center',
+        // marginTop: px2dp(10),
+        // height:px2dp(50),
+        // backgroundColor: '#ffffff',
+        // borderRadius:px2dp(5),
+        // borderWidth:px2dp(0.3),
+        // borderColor:'#000000',
+        // flexDirection: 'column',
+        // justifyContent: 'center',
+        padding:16
     },
 
     TextInput: {

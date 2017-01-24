@@ -12,6 +12,9 @@ import {
     TextInput,
     TouchableOpacity,
     Alert,
+    AsyncStorage,
+    ScrollView,
+    Animated,
 } from 'react-native';
 import EditView from '../component/EditView';
 import LoginButton from '../component/LoginButton';
@@ -20,50 +23,64 @@ import TabNavGator from '../page/TabbarView'
 import {toastShort} from '../component/Toast'
 import px2dp from '../util/px2db'
 import TextButton from '../component/TextButton'
+import RegisterView from '../page/RegisterView'
+import InputScrollView from 'react-native-inputscrollview'
 export default class LoginActivity extends Component {
     constructor(props) {
         super(props);
-        this.userName = "";
-        this.password = "";
+        userName = "";
+        password = "";
         this.onPressCallback = this.onPressCallback.bind(this);
         this.onPressResister = this.onPressResister.bind(this);
+        this.state={
+            viewMarginTop: new Animated.Value(0),
+        }
     }
 
     render() {
-        return (
 
+        return (
+            <InputScrollView
+                style={LoginStyles.container}
+                distance = {100}
+            >
             <View style={LoginStyles.loginview}>
-                <View style={{flexDirection: 'row',height:px2dp(100),marginTop:px2dp(1),
+                <View style={{height:px2dp(150),
                     justifyContent: 'center',
-                    alignItems: 'flex-start',}}>
+                    alignItems: 'center',}}>
                     <Image source={require('../image/logo.png') } style={LoginStyles.logo2}/>
                 </View>
-                <View style={{marginTop:px2dp(180)}}>
+
+                <View style={{marginTop:px2dp(50)}}>
                     <EditView  name='输入用户名/注册手机号' onChangeText={(text) => {
                         this.userName = text;
                     }}/>
                     <EditView name='输入密码' onChangeText={(text) => {
-                        this.password = text;
+                        //this.password = text;
+                        this.setState({password:text})
                     }}/>
                     <LoginButton name='登录' onPressCallback={this.onPressCallback}/>
                 </View>
+
                 <View style={LoginStyles.registerStyle}>
                     {/*<Text style={{color:"#4A90E2",textAlign:'center',marginTop:px2dp(10)}} >忘记密码？</Text>*/}
                     {/*<Text style={{color:"#4A90E2",textAlign:'center',marginTop:px2dp(10)}} >注册账号</Text>*/}
                     <TextButton name = '忘记密码?'/>
-                    <TextButton name = '注册账号?'/>
+                    <TextButton name = '注册账号?' onPressResister={this.onPressResister}/>
                 </View>
             </View>
+            </InputScrollView>
+
         )
     }
 
     onPressCallback = () => {
         if (this.userName === ''){
-            toastShort('用户名不能为空...')
+            toastShort('用户名不能为空...');
             return;
         }
         if (this.password ===''){
-            toastShort('密码不能为空...')
+            toastShort('密码不能为空...');
             return;
         }
         if (this.userName !=='' && this.password !== ''){
@@ -86,10 +103,27 @@ export default class LoginActivity extends Component {
     };
     onPressResister = () => {
         //注册时间
-        toastShort('点击了注册按钮')
+        //toastShort('点击了注册按钮');
+        const { navigator } = this.props;
+        if (navigator) {
+            navigator.push({
+                name:'RegisterView',
+                component:RegisterView
+            })
+        }
     };
     //跳转到第二个页面去
-    onLoginSuccess(){
+
+    onLoginSuccess() {
+        if (this.userName !== '') {
+
+        json = JSON.stringify(this.userName);
+        AsyncStorage.setItem('UName', json).then(
+            ()=> {
+                toastShort('name保存成功' + json);
+            },
+        );
+    }
         const { navigator } = this.props;
         if (navigator) {
             navigator.push({
@@ -97,6 +131,7 @@ export default class LoginActivity extends Component {
                 component : TabNavGator,
             });
         }
+
     }
 }
 
@@ -108,12 +143,21 @@ const LoginStyles = StyleSheet.create({
     },
     logo2:{
         flexDirection:'row',
-        width:px2dp(200),
-        height:px2dp(200)
+        width:px2dp(150),
+        height:px2dp(150),
+        marginBottom:10
     },
     registerStyle:{
         flexDirection:'row',
         justifyContent:'space-between',
-        alignItems:'flex-end'
-    }
+        alignItems:'flex-end',
+        top:10
+    },
+    container: {
+        flex: 1,
+        paddingTop: 0,
+        backgroundColor: '#3dabec',
+        //distance:100
+    },
+
 });

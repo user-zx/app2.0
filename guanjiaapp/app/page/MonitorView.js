@@ -52,6 +52,7 @@ export default class MonitorView extends Component{
     /**
      * 显示搜索结果
      * @param result
+     * /^1(3|4|5|7|8)\d{9}$/
      */
     showResult(result) {
         var result = result;

@@ -11,13 +11,18 @@ import {
 } from 'react-native';
 import LoginView from '../page/LoginView';
 import TabbarView from '../page/TabbarView'
+import Seting from '../util/Seting'
+import GuideView from './GuideView'
 export default class navigator extends Component {
     constructor(props) {
         super(props);
     }
     render() {
-        let defaultName = 'TabbarView';
-        let defaultComponent = TabbarView;
+        // let defaultName = 'GuideView';
+        // let defaultComponent = GuideView;
+
+        let defaultName = 'LoginView';
+        let defaultComponent = LoginView;
         return (
             <Navigator
                 initialRoute = {{name : defaultName , component: defaultComponent}}

@@ -1,0 +1,42 @@
+/**
+ * Created by jiahailiang on 2017/1/18.
+ */
+import React, { Component } from 'react';
+import {
+    AppRegistry,
+    StyleSheet,
+    Text,
+    View,
+    Navigator
+} from 'react-native';
+// import LoginView from '../page/LoginView';
+import TabbarView from '../page/TabbarView'
+import Seting from '../util/Seting'
+//import GuideView from './GuideView'//引导页根据需要添加
+export default class navigator extends Component {
+    constructor(props) {
+        super(props);
+    }
+    render() {
+        // let defaultName = 'GuideView';
+        // let defaultComponent = GuideView;
+
+        let defaultName = 'TabbarView';
+        let defaultComponent = TabbarView;
+        return (
+            <Navigator
+                initialRoute = {{name : defaultName , component: defaultComponent}}
+                configureScene = {(route) => {
+                    //return Navigator.SceneConfigs.VerticalDownSwipeJump;
+                    return Navigator.SceneConfigs.FloatFromRight;
+                    //gestures: {}
+                }}
+                renderScene={(route,navigator) => {
+                    let Component = route.component;
+                    return <Component {...route.params} navigator = {navigator} />
+                }}
+            />
+        );
+    }
+
+};

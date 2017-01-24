@@ -39,9 +39,9 @@ export default class PublicOpinionArticles extends Component{
     _dropdown_6_onSelect(idx, value) {
         toastShort(idx,value);
 
-        this.setState({
-            dropdown_6_icon_heart: !this.state.dropdown_6_icon_heart,
-        })
+        // this.setState({
+        //     dropdown_6_icon_heart: !this.state.dropdown_6_icon_heart,
+        // })
     }
     buttonGoBack(){
         const {navigator} = this.props;

@@ -18,6 +18,7 @@ import POArticles from './PublicOpinionArticles';
 import POChatrs from './PublicOpinionCharts';
 import POEvolution from './PublicOpinionEvolution';
 import POSpecial from './PublicOpinionSpecial';
+import AnimaStion from './AnimaStion'
 export default class Affair extends Component{
     constructor(props){
         super(props);
@@ -63,7 +64,7 @@ export default class Affair extends Component{
                         tabBarTextStyle={{fontSize: 17}}>
                         <POArticles tabLabel='文章' {...this.props}/>
                         <POChatrs tabLabel='图表' {...this.props}/>
-                        <POEvolution tabLabel='专报' {...this.props}/>
+                        <AnimaStion tabLabel='专报' {...this.props}/>
                         <POSpecial tabLabel='导控' {...this.props}/>
                     </ScrollableTabView>
                 </View>

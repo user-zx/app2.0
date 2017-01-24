@@ -71,12 +71,42 @@ export default class StewardView extends React.Component {
             })
         }
     }
+    //测试是否能取到 AS 存储的值
+     componentWillMount(){
+        AsyncStorage.getItem('UName').then(
+            (result) => {//使用 Promise机制,如果操作成功不会调用 error 参数
+                if (result == null){
+                    //没有指定的 KEY
+                    return;
+                }
+                console.log('UName:----->'+result);
+            }
+        ).catch((error)=>{// 如果操作读取失败,胡子后台打印错误日志
+            console.log('error:---->'+error.message);
+        })
+    }
+
     render(){
         const rightButtonConfig = {
-          title:'搜索'
+          title:'搜索',
+            handler: () =>{
+                AsyncStorage.getItem('UName').then(
+                    (result) => {//使用 Promise机制,如果操作成功不会调用 error 参数
+                        if (result == null){
+                            //没有指定的 KEY
+                            return;
+                        }
+                        console.log('UName:---+++++-->'+result);
+                        alert(result);
+                    }
+                ).catch((error)=>{// 如果操作读取失败,胡子后台打印错误日志
+                    console.log('error:---->'+error.message);
+                });
+            }
         };
         const titleConfig = {
-          title:' 舆情管家'
+          title:' 舆情管家',
+
         };
         return(
             <View style={firstPageStyles.zheBigView}>
