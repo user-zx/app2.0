@@ -19,7 +19,9 @@ export default class TabBarView extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            selectedTab:'HomePage'
+            selectedTab:'HomePage',
+            badgeNumber: '2',
+            isBadge:true
         };
     }
     /*tabbar 属性
@@ -45,6 +47,12 @@ export default class TabBarView extends React.Component{
 
      allowFontScaling: PropTypes.bool,    是否允许字体自动缩放
      * tabbar 属性 */
+    renderBadge(){
+        return(
+            this.state.isBadge? <View style={styles.badgeView}><Text style={styles.badgeText}>{this.state.badgeNumber}</Text></View> :null
+        )
+
+    };
     render(){
 
         return(
@@ -85,9 +93,12 @@ export default class TabBarView extends React.Component{
                     selected={this.state.selectedTab === 'MyPage'}
                     selectedTitleStyle={styles.selectedTextStyle}
                     titleStyle={styles.textStyle}
+                    badgeText={this.state.badgeNumber}
+                    //在这里设置壳 badge 的方法,
+                    renderBadge={()=>this.renderBadge()}
                     renderIcon={() => <Image source={require("../image/我的-3@3x.png")} style={styles.iconStyle}/>}
                     renderSelectedIcon={() => <Image source={require("../image/我的－选中@2x.png")} style={styles.iconStyle}/>}
-                    onPress={() => this.setState({ selectedTab: 'MyPage' })}>
+                    onPress={() => this.setState({ selectedTab: 'MyPage',isBadge:false })}>
                     <MyPage {...this.props} />
                 </TabNavigator.Item>
             </TabNavigator>
@@ -103,6 +114,7 @@ const styles = StyleSheet.create({
     },
     textStyle:{
         color:'#FFFFFF',
+        marginBottom:4
     },
     selectedTextStyle:{
         color:'#0ca6ee',
@@ -114,4 +126,23 @@ const styles = StyleSheet.create({
         width:Px2dp(26),
         //height:Px2dp(26),
     },
+    badgeView:{
+        width:20,
+        height:14 ,
+        backgroundColor:'#f85959',
+        borderWidth:1,
+        marginLeft:10,
+        marginTop:3,
+        borderColor:'#FFF',
+        alignItems:'center',
+        justifyContent:'center',
+        borderRadius:8,
+
+    },
+    badgeText:{
+        color:'#fff',
+        fontSize:8,
+        // padding:5,
+        //borderRadius:8,
+    }
 });
