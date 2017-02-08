@@ -30,12 +30,25 @@
 		68F877FAF1464EB49DC1A335 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3A42EC917C84483C8B9DA345 /* Zocial.ttf */; };
 		7CE690084C174C1990D06549 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 12864166B2EA43C59DF1DA48 /* MaterialCommunityIcons.ttf */; };
 		7E7099DB0159485AAFA293DE /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8AE96685FC5B413A92B86CAC /* MaterialIcons.ttf */; };
+		8109EE97DDBB445DA0712FBA /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FA9F75328C84BE790671BDA /* libRCTActionSheet.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		85651DE33E994495A2A56655 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ABFF351BEAAC4C59A6B00A22 /* Ionicons.ttf */; };
 		A0AEF61CECB941E299C71CEE /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 956E1141CFBD406ABA010CA3 /* FontAwesome.ttf */; };
 		BDEE2C8E94B549999FEE74CA /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0C1EFAFBD5A54344A898C5E4 /* Octicons.ttf */; };
 		E78D6DAB7D9D4FB0B1915F3C /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EBD8D14F5B19412091A4D9A1 /* libRNVectorIcons.a */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXBuildRule section */
+		A09201E81E4AB63100DEFDAE /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			fileType = compiled.air;
+			isEditable = 1;
+			outputFiles = (
+			);
+			script = "# metallib\n";
+		};
+/* End PBXBuildRule section */
 
 /* Begin PBXContainerItemProxy section */
 		00C302AB1ABCB8CE00DB3ED1 /* PBXContainerItemProxy */ = {
@@ -220,6 +233,20 @@
 			remoteGlobalIDString = 58B5119B1A9E6C1200147676;
 			remoteInfo = RCTText;
 		};
+		A008FB931E49ED6100560CD2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A72FEBF7BE8424E9A5ECCB5 /* RefreshDemo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 13B07F961A680F5B00A75B9A;
+			remoteInfo = RefreshDemo;
+		};
+		A008FB951E49ED6100560CD2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A72FEBF7BE8424E9A5ECCB5 /* RefreshDemo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 00E356EE1AD99517003FC87E;
+			remoteInfo = RefreshDemoTests;
+		};
 		A0CB15FF1E30B183008ABB7B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = AB8FCC7B290E4147A11D287C /* RNVectorIcons.xcodeproj */;
@@ -251,7 +278,9 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = JQYQ/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = JQYQ/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
+		1A72FEBF7BE8424E9A5ECCB5 /* RefreshDemo.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RefreshDemo.xcodeproj; path = "../node_modules/react-native-swRefresh/RefreshDemo/ios/RefreshDemo.xcodeproj"; sourceTree = "<group>"; };
 		3A42EC917C84483C8B9DA345 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
+		4FA9F75328C84BE790671BDA /* libRCTActionSheet.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTActionSheet.a; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
@@ -291,6 +320,7 @@
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				E78D6DAB7D9D4FB0B1915F3C /* libRNVectorIcons.a in Frameworks */,
+				8109EE97DDBB445DA0712FBA /* libRCTActionSheet.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -436,6 +466,7 @@
 				00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */,
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
 				AB8FCC7B290E4147A11D287C /* RNVectorIcons.xcodeproj */,
+				1A72FEBF7BE8424E9A5ECCB5 /* RefreshDemo.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -467,6 +498,15 @@
 			children = (
 				13B07F961A680F5B00A75B9A /* JQYQ.app */,
 				00E356EE1AD99517003FC87E /* JQYQTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A008FB711E49ED6100560CD2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A008FB941E49ED6100560CD2 /* RefreshDemo.app */,
+				A008FB961E49ED6100560CD2 /* RefreshDemoTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -508,6 +548,7 @@
 				00E356EC1AD99517003FC87E /* Resources */,
 			);
 			buildRules = (
+				A09201E81E4AB63100DEFDAE /* PBXBuildRule */,
 			);
 			dependencies = (
 				00E356F51AD99517003FC87E /* PBXTargetDependency */,
@@ -609,6 +650,10 @@
 				{
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+				},
+				{
+					ProductGroup = A008FB711E49ED6100560CD2 /* Products */;
+					ProjectRef = 1A72FEBF7BE8424E9A5ECCB5 /* RefreshDemo.xcodeproj */;
 				},
 				{
 					ProductGroup = A0CB15E31E30B183008ABB7B /* Products */;
@@ -799,6 +844,20 @@
 			remoteRef = 832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		A008FB941E49ED6100560CD2 /* RefreshDemo.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = RefreshDemo.app;
+			remoteRef = A008FB931E49ED6100560CD2 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		A008FB961E49ED6100560CD2 /* RefreshDemoTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = RefreshDemoTests.xctest;
+			remoteRef = A008FB951E49ED6100560CD2 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		A0CB16001E30B183008ABB7B /* libRNVectorIcons.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -910,6 +969,8 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/JQYQ.app/JQYQ";
@@ -927,6 +988,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -948,6 +1011,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.zhongkedianji.junquanyuqing;
 				PRODUCT_NAME = JQYQ;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -966,6 +1030,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.zhongkedianji.junquanyuqing;
 				PRODUCT_NAME = JQYQ;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

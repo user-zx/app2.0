@@ -7,7 +7,9 @@ import {
     View,
     Text,
     Image,
-    StyleSheet
+    StyleSheet,
+    Platform,
+    BackAndroid
 } from 'react-native';
 import TabNavigator from 'react-native-tab-navigator';
 import MyPage from './MyPage';//我的
@@ -24,6 +26,32 @@ export default class TabBarView extends React.Component{
             isBadge:true
         };
     }
+    componentWillMount() {
+        if (Platform.OS === 'android') {
+            BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
+        }
+    }
+
+    componentWillUnmount() {
+        if (Platform.OS === 'android') {
+            BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+        }
+    }
+    onBackAndroid = () => {
+        const nav = this.props.navigator;
+        const routers = nav.getCurrentRoutes();
+        if (routers.length > 1) {
+            nav.pop();
+            return true;
+        }
+        return false;
+        // if (navigator && navigator.getCurrentRoutes().length > 1) {
+        //     navigator.pop();
+        //     return true;
+        // }
+        // return false;
+
+    };
     /*tabbar 属性
      renderIcon: PropTypes.func,       加载Tab图标
 

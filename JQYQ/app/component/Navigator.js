@@ -7,7 +7,9 @@ import {
     StyleSheet,
     Text,
     View,
-    Navigator
+    Navigator,
+    BackAndroid,
+    Platform
 } from 'react-native';
 // import LoginView from '../page/LoginView';
 import TabbarView from '../page/TabbarView'
@@ -17,6 +19,8 @@ export default class navigator extends Component {
     constructor(props) {
         super(props);
     }
+
+
     render() {
         // let defaultName = 'GuideView';
         // let defaultComponent = GuideView;
