@@ -22,7 +22,7 @@ import Network from '../util/Network';
 import px2dp from '../util/Px2dp';
 import TabbarView from './TabbarView';
 import {toastShort} from '../component/Toast';
-
+import RegisterView from './RegisterView'
 export default class LoginView extends Component{
     constructor (props) {
         super (props);
@@ -169,7 +169,9 @@ export default class LoginView extends Component{
                     </TouchableOpacity>
 
 
-                    <Text style={styles.registerText} onPress={() => alert('1122')}>没有账号?立即申请</Text>
+                    <Text style={styles.registerText} onPress={() =>{
+                        this.JumpAction(RegisterView);
+                    }}>没有账号?立即申请</Text>
 
                 </Image>
                 </Animated.View>
