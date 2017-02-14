@@ -66,6 +66,7 @@
   [self.window makeKeyAndVisible];
   return YES;
 }
+//微信
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {

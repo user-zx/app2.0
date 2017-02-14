@@ -15,11 +15,11 @@
     "react-native-responsive-image": "^2.0.1",
     "react-native-root-toast": "^1.0.3",
     "react-native-scrollable-tab-view": "^0.7.1",
+    "react-native-storage": "^0.1.5",
     "react-native-swRefresh": "^1.2.3",
     "react-native-swipeout": "^2.0.12",
     "react-native-tab-navigator": "^0.3.3",
-    "react-native-vector-icons": "^4.0.0",
-    "react-native-wechat": "^1.8.0"
+    "react-native-vector-icons": "^4.0.0"
   },
   "devDependencies": {
     "babel-jest": "18.0.0",

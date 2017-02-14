@@ -15,6 +15,7 @@ import {
 import TabbarView from '../page/TabbarView'
 import Seting from '../util/Seting'
 //import GuideView from './GuideView'//引导页根据需要添加
+import LoginView from '../page/LoginView'
 export default class navigator extends Component {
     constructor(props) {
         super(props);
@@ -22,11 +23,11 @@ export default class navigator extends Component {
 
 
     render() {
-        // let defaultName = 'GuideView';
-        // let defaultComponent = GuideView;
+        let defaultName = 'LoginView';
+        let defaultComponent = LoginView;
 
-        let defaultName = 'TabbarView';
-        let defaultComponent = TabbarView;
+        // let defaultName = 'TabbarView';
+        // let defaultComponent = TabbarView;
         return (
             <Navigator
                 initialRoute = {{name : defaultName , component: defaultComponent}}
