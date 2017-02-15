@@ -4,52 +4,59 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    Dimensions
+    Dimensions,
+    Image,
+    StyleSheet,
 } from 'react-native';
 
 import Picker from 'react-native-picker';
 import area from '../util/area.json';
+import px2dp from '../util/Px2dp'
+import NavigationBar from 'react-native-navbar';
+import {NavGoBack} from '../component/NavGoBack';
+import RegisterViewSecond from './RegisterViewSecond'
+
+
+
+
+const {width,height}=Dimensions.get('window');
+
 
 export default class RegisterView extends Component {
 
     constructor(props, context) {
         super(props, context);
+        this.buttonGoBack = this.buttonGoBack.bind(this);
+        this.state = {
+            cityArr:[],       //城市
+            userName:'',      //用户名
+            phoneNumber:'',   //手机号
+            compony:''        //公司名
+
+        }
     }
 
-    _createDateData() {
-        let date = [];
-        for(let i=1950;i<2050;i++){
-            let month = [];
-            for(let j = 1;j<13;j++){
-                let day = [];
-                if(j === 2){
-                    for(let k=1;k<29;k++){
-                        day.push(k+'日');
-                    }
-                    //Leap day for years that are divisible by 4, such as 2000, 2004
-                    if(i%4 === 0){
-                        day.push(29+'日');
-                    }
+    buttonGoBack(){
+        const {navigator} = this.props;
+        return NavGoBack(navigator);
+    };
+
+
+    _jumpAction(){
+        const {navigator} = this.props;
+        if (navigator) {
+            navigator.push({
+                name:'RegisterViewSecond',
+                component:RegisterViewSecond,
+                //通过 props 传到下一页的参数
+                params:{
+                    cityArr:this.state.cityArr,                  //城市
+                    userName:this.state.userName,          //用户名
+                    phoneNumber:this.state.phoneNumber,    //手机号
+                    compony:this.state.compony             //公司名
                 }
-                else if(j in {1:1, 3:1, 5:1, 7:1, 8:1, 10:1, 12:1}){
-                    for(let k=1;k<32;k++){
-                        day.push(k+'日');
-                    }
-                }
-                else{
-                    for(let k=1;k<31;k++){
-                        day.push(k+'日');
-                    }
-                }
-                let _month = {};
-                _month[j+'月'] = day;
-                month.push(_month);
-            }
-            let _date = {};
-            _date[i+'年'] = month;
-            date.push(_date);
+            })
         }
-        return date;
     }
 
     _createAreaData() {
@@ -70,157 +77,158 @@ export default class RegisterView extends Component {
         return data;
     }
 
-    _showDatePicker() {
-        Picker.init({
-            pickerData: this._createDateData(),
-            pickerToolBarFontSize: 16,
-            pickerFontSize: 16,
-            pickerFontColor: [255, 0 ,0, 1],
-            onPickerConfirm: (pickedValue, pickedIndex) => {
-                console.log('date', pickedValue, pickedIndex);
-            },
-            onPickerCancel: (pickedValue, pickedIndex) => {
-                console.log('date', pickedValue, pickedIndex);
-            },
-            onPickerSelect: (pickedValue, pickedIndex) => {
-                console.log('date', pickedValue, pickedIndex);
-            }
-        });
-        Picker.show();
-    }
+
 
     _showAreaPicker() {
+        let _this = this;
         Picker.init({
+            pickerTitleText: '选择城市',
+            pickerConfirmBtnText:'确认',
+            pickerCancelBtnText	:'取消',
             pickerData: this._createAreaData(),
-            selectedValue: ['河北', '唐山', '古冶区'],
+            selectedValue: ['北京', '北京', '东城区'],
             onPickerConfirm: pickedValue => {
-                console.log('area', pickedValue);
+                console.log('area------->', pickedValue);
+                _this.setState({
+                    cityArr:pickedValue,
+                });
+                console.log('++++++>>>>',this.state.city)
+
             },
             onPickerCancel: pickedValue => {
                 console.log('area', pickedValue);
             },
             onPickerSelect: pickedValue => {
                 //Picker.select(['山东', '青岛', '黄岛区'])
-                console.log('area', pickedValue);
+                console.log('area========>', pickedValue);
             }
         });
         Picker.show();
     }
 
-    _showTimePicker() {
-        let years = [],
-            months = [],
-            days = [],
-            hours = [],
-            minutes = [];
 
-        for(let i=1;i<51;i++){
-            years.push(i+1980);
-        }
-        for(let i=1;i<13;i++){
-            months.push(i);
-            hours.push(i);
-        }
-        for(let i=1;i<32;i++){
-            days.push(i);
-        }
-        for(let i=1;i<61;i++){
-            minutes.push(i);
-        }
-        let pickerData = [years, months, days, ['am', 'pm'], hours, minutes];
-        let date = new Date();
-        let selectedValue = [
-            [date.getFullYear()],
-            [date.getMonth()+1],
-            [date.getDate()],
-            [date.getHours() > 11 ? 'pm' : 'am'],
-            [date.getHours() === 12 ? 12 : date.getHours()%12],
-            [date.getMinutes()]
-        ];
-        Picker.init({
-            pickerData,
-            selectedValue,
-            pickerTitleText: 'Select Date and Time',
-            wheelFlex: [2, 1, 1, 2, 1, 1],
-            onPickerConfirm: pickedValue => {
-                console.log('area', pickedValue);
-            },
-            onPickerCancel: pickedValue => {
-                console.log('area', pickedValue);
-            },
-            onPickerSelect: pickedValue => {
-                let targetValue = [...pickedValue];
-                if(parseInt(targetValue[1]) === 2){
-                    if(targetValue[0]%4 === 0 && targetValue[2] > 29){
-                        targetValue[2] = 29;
-                    }
-                    else if(targetValue[0]%4 !== 0 && targetValue[2] > 28){
-                        targetValue[2] = 28;
-                    }
-                }
-                else if(targetValue[1] in {4:1, 6:1, 9:1, 11:1} && targetValue[2] > 30){
-                    targetValue[2] = 30;
-
-                }
-                // forbidden some value such as some 2.29, 4.31, 6.31...
-                if(JSON.stringify(targetValue) !== JSON.stringify(pickedValue)){
-                    // android will return String all the time，but we put Number into picker at first
-                    // so we need to convert them to Number again
-                    targetValue.map((v, k) => {
-                        if(k !== 3){
-                            targetValue[k] = parseInt(v);
-                        }
-                    });
-                    Picker.select(targetValue);
-                    pickedValue = targetValue;
-                }
-            }
-        });
-        Picker.show();
-    }
-
-    _toggle() {
-        Picker.toggle();
-    }
-
-    _isPickerShow(){
-        Picker.isPickerShow(status => {
-            alert(status);
-        });
-    }
 
     render() {
+        const leftButtonConfig = {
+            title: '←',
+            handler: () => this.buttonGoBack(),
+            fontSize:32
+        };
+        const titleConfig = {
+            title: '基本信息',
+            tintColor: '#FFF'
+        };
         return (
-            <View style={{height: Dimensions.get('window').height}}>
-                <TouchableOpacity style={{marginTop: 40, marginLeft: 20}} onPress={this._showDatePicker.bind(this)}>
-                    <Text>DatePicker</Text>
+            <View style={styles.cityViewL}>
+                <View style={{width:width }}>
+                    <NavigationBar
+                        title={titleConfig}
+                        leftButton={leftButtonConfig}
+                        tintColor={'#18242e'}
+                    />
+                </View>
+                <View style={[styles.inputView,{marginTop:px2dp(35)}]}>
+                    <Image source={require('../image/risgiter/我的@3x.png')}style={{alignSelf:'center',marginLeft:px2dp(15)}}/>
+                    <TextInput
+                        placeholder={'请输入您的姓名'}
+                        style={styles.inputText}
+                        onChangeText={(text)=>{
+                            this.setState({
+                                    userName:text
+                                })
+                        }}
+                    />
+                </View>
+                <View style={[styles.inputView,{marginTop:px2dp(16)}]}>
+                    <Image source={require('../image/risgiter/手机@3x.png')}style={{alignSelf:'center',marginLeft:px2dp(15)}}/>
+                    <TextInput
+                        placeholder={'请输入您的手机号码'}
+                        style={styles.inputText}
+                        onChangeText={(text)=>{
+                            this.setState({
+                                phoneNumber:text
+                            })
+                        }}
+                    />
+                </View>
+                <View style={[styles.inputView,{marginTop:px2dp(16)}]}>
+                    <Image source={require('../image/risgiter/单位@3x.png')}style={{alignSelf:'center',marginLeft:px2dp(15)}}/>
+                    <TextInput
+                        placeholder={'请输入您的单位名称'}
+                        style={styles.inputText}
+                        onChangeText={(text)=>{
+                            this.setState({
+                                compony:text
+                            })
+                        }}
+                    />
+                </View>
+
+                <View style={[styles.regView,{marginTop:px2dp(16)}]}>
+                    <Image source={require('../image/risgiter/省份@3x.png')} style={{alignSelf:'center',marginLeft:px2dp(15)}}></Image>
+                    <TextInput
+                        placeholder='请选择所在城市'
+                        style={styles.cityText}
+                        defaultValue={this.state.cityArr[0]+this.state.cityArr[1]+this.state.cityArr[2]}
+                    />
+                    <TouchableOpacity onPress={this._showAreaPicker.bind(this)} style={{alignSelf:'center',marginRight:px2dp(15)}}>
+                     <Image source={require('../image/risgiter/下拉@3x.png')} style={{alignSelf:'center'}} ></Image>
+                     </TouchableOpacity>
+                </View>
+                <TouchableOpacity onPress={this._jumpAction.bind(this)}>
+                    <View style={styles.nextButton}>
+                        <Text style={{color:'#FFF'}}>下一步</Text>
+                    </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={{marginTop: 10, marginLeft: 20}} onPress={this._showTimePicker.bind(this)}>
-                    <Text>TimePicker</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{marginTop: 10, marginLeft: 20}} onPress={this._showAreaPicker.bind(this)}>
-                    <Text>AreaPicker</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{marginTop: 10, marginLeft: 20}} onPress={this._toggle.bind(this)}>
-                    <Text>toggle</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{marginTop: 10, marginLeft: 20}} onPress={this._isPickerShow.bind(this)}>
-                    <Text>isPickerShow</Text>
-                </TouchableOpacity>
-                <TextInput
-                    placeholder="test picker with input"
-                    style={{
-                        height: 40,
-                        borderColor: 'gray',
-                        borderWidth: 1,
-                        marginLeft: 20,
-                        marginRight: 20,
-                        marginTop: 10,
-                        padding: 5
-                    }}
-                />
+
             </View>
         );
     }
 };
 
+const styles = StyleSheet.create({
+    cityViewL:{
+        flex:1,
+        flexDirection:'column',
+        //justifyContent:'center',
+        alignItems:'center',
+        backgroundColor:'#F4F4F4',
+
+    },
+    regView:{
+        width:px2dp(297),
+        height:px2dp(35),
+        flexDirection:'row',
+        backgroundColor:'#FFF'
+
+
+    },
+    nextButton:{
+        width:px2dp(297),
+        height:px2dp(40),
+        backgroundColor:'#0ca6ee',
+        marginTop:26,
+        alignItems:'center',
+        justifyContent:'center',
+    },
+    cityText:{
+        height: px2dp(35),
+        width:px2dp(220),
+        marginLeft:px2dp(15),
+        marginRight:px2dp(5),
+        fontSize:16
+
+    },
+    inputText:{
+        width:px2dp(240),
+        height:px2dp(35),
+        marginLeft:px2dp(15),
+        fontSize:16
+    },
+    inputView:{
+        width:px2dp(297),
+        height:px2dp(35),
+        flexDirection:'row',
+        backgroundColor:'#FFF',
+    },
+});
