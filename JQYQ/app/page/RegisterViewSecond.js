@@ -105,7 +105,7 @@ export default class RegisterViewSecond extends Component{
                     let params=new Object();
                     params.name=this.state.userName;
                     params.phone=this.state.phoneNumber;
-                    params.city = this.state.cityArr;
+                    params.city = this.state.cityArr[1];
                     params.company = this.state.compony;
                     params.need = this.state.commitText;
 

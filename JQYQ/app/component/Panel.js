@@ -117,16 +117,16 @@ import {
                 fontSize:15,
             },
             button      : {
-                width:16,
-                height:16,
+                //width:16,
+                //height:16,
                 //top:0,
                 //left:60,
                 marginTop:0,
                 marginLeft:60
             },
             buttonImage : {
-                width   : 16,
-                height  : 16,
+                //width   : 16,
+               // height  : 16,
             },
             body        : {
                 padding     : 10,

@@ -11,11 +11,9 @@ import {
     Alert,
     ScrollView,
     Dimensions,
-    ListView,
     AsyncStorage,
     TouchableHighlight,
     Platform,
-    //Alert,
     BackAndroid,
     NativeModules,
 
@@ -25,12 +23,15 @@ import NavigationBar from 'react-native-navbar';
 import px2dp from '../util/Px2dp';
 import NewsClass from './NewClass';
 import ResponsiveImage from 'react-native-responsive-image';
-import Panel from '../component/Panel'
+import Panel from '../component/Panel';
+import Network from '../util/Network';
+import {toastLong} from '../component/Toast';
+
+
 const {width,height}=Dimensions.get('window');
 var NativeCommonTools = NativeModules.CommonTools;
 
 export default class HomePage extends Component{
-    _ds = new ListView.DataSource({rowHasChanged:(r1,r2)=>r1 !== r2});
     constructor (props) {
         super(props);
         // BackAndroidTool.customHandleBack(this.props.navigator,() => {
@@ -38,44 +39,26 @@ export default class HomePage extends Component{
         //         [{text:'取消',onPress:() => {}},
         //             {text:'确定',onPress:() => { this.props.navigator.pop(); }}
         //         ]);
-        //     // 一定要 return true; 原因上面的参考链接里有
+        //     // 一定要 return true;
         //     return true;
         // });
         this.state = {
-            dataSource:this._ds.cloneWithRows(this.getDataArr()),
-            text : '全部监测: 45733621',
+            //text :'',
             resultMessage:'热点',
+            yujing:'',
+            xiangguan:'',
+            quanbu:'',
+            fumian:'',
+            yuqing:'',
+            columnNameArr:[],
+            lableNameArr:[],
+
         };
     }
-    getDataArr(){
-        const dataArr = [];
-        for(let i = 0 ; i< 10 ; i ++ ){
-            dataArr.push(
-                {
-                    title:'相关站点信息' + i,
-                    text:'Lorem ipsum dolor sit amet, ius ad pertinax oportereaccommodare,' +
-                    ' an vix civibus corrumpit referrentur. Te nam case ludusinciderint, te mea' +
-                    ' facilisi adipiscing. Sea id integre luptatum. In tota saleconsequuntur nec.' +
-                    ' Erat ocurreret mei ei. Eu paulo sapientem vulputateest, vel an accusam intellegam interesset.' +
-                    ' Nam eu stet periculareprimique, ea vim illud modus, putant invidunt reprehendunt ne qui' + i
-                }
-            );
-        }
-        return dataArr;
-    }
-
-    renderRow(rowData,sectionID,rowID,heightlightRow){
-        return(
-            <View style={{flex:1,flexDirection:'row',borderBottomWidth:1,borderBottomColor:'#F2F2F2',borderLeftWidth:1,borderLeftColor:'#F2F2F2'}}>
-                <Text style={{width:width/4,textAlign:'center',fontSize:16,padding:px2dp(10)}}>{rowData.title}</Text>
-                <View style={{width:1,height:70,backgroundColor:'#F2F2F2'}} />
-                <Text style={{width:(width/4*3)-1 ,textAlign:'center',fontSize:16,padding:px2dp(20)}}>{rowData.text}</Text>
-            </View>
-        )
-    }
 
 
-    pressAction(title){
+
+    pressAction(title,carrie){
         var  _this = this;
         const {navigator} = this.props;
         if (navigator){
@@ -83,7 +66,7 @@ export default class HomePage extends Component{
                 name:'NewsClass',
                 component:NewsClass,
                 params:{
-                    message:'asdfasdfa',
+                    message:carrie,
                     title:title,
                     getResult:function(messageReturn){
                         _this.setState({
@@ -119,6 +102,65 @@ export default class HomePage extends Component{
     //     BackAndroidTool.removeBackAndroidListener();
     // }
 
+    componentWillMount(){
+        Network.post('app2/aggrNature',{},(responseText)=>{
+            this.setState({
+                yujing:responseText.data.result.预警信息,
+                xiangguan:responseText.data.result.相关信息,
+                quanbu:responseText.data.result.全部,
+                fumian:responseText.data.result.负面信息,
+                yuqing:responseText.data.result.舆情信息,
+
+            });
+        },
+            (err)=>{
+                toastLong(err)
+            }
+        );
+        Network.post('appanalyse2/findColumn2',{},(responseArr)=>{
+            this.setState({
+                columnNameArr:responseArr.data
+            });
+            //let arr=this.state.columnNameArr;
+        },(err)=>{toastLong(err)});
+    }
+
+    _showColumns(){
+        let allData = [];
+        let arr=this.state.columnNameArr;
+        for(let i in arr){
+            for (let j in arr[i].columnTags){
+                allData.push(
+                    //<TouchableOpacity  onPress = {()=>alert(arr[i].columnTags[j].name)}>
+                    <TouchableOpacity key = {i}>
+                        <Panel title={arr[i].name}>
+                            <Text>{arr[i].columnTags[j].name}</Text>
+                        </Panel>
+                    </TouchableOpacity>
+                );
+            }
+        }
+        return allData;
+    }
+    _showColumn(){
+
+        let allData = [];
+        for (let i = 0;i< this.state.columnNameArr.length;i++){
+            let  badge = this.state.columnNameArr.name[i];
+            allData.push(
+                //  key={i} ：for循环的创建的组件必须设置唯一标示，不然会抱警告
+                <View key={i} style={{width:width,height:90,backgroundColor:'#FFF'}}>
+                    <TouchableOpacity  onPress = {()=>alert(badge)}>
+                        <Panel title={badge.name}>
+                            <Text>{badge}</Text>
+                        </Panel>
+                        </TouchableOpacity>
+                </View>
+            );
+        }
+        return allData;
+    }
+
     render(){
 
         const rightButtonConfig = {
@@ -130,11 +172,11 @@ export default class HomePage extends Component{
                             //没有指定的 KEY
                             return;
                         }
-                        console.log('UName:---+++++-->'+result);
-                        alert(result);
+                        // console.log('UName:---+++++-->'+result);
+                       // alert(result);
                     }
                 ).catch((error)=>{// 如果操作读取失败,胡子后台打印错误日志
-                    console.log('error:---->'+error.message);
+                    // console.log('error:---->'+error.message);
                 });
             },
             style:{
@@ -163,18 +205,18 @@ export default class HomePage extends Component{
                     <View style={styles.loudouView}>
                         <Image source={require('../image/漏斗@2x.png')} style={styles.lodou}>
                             <View style={styles.textView}>
-                            <Text style={[styles.loudouText,styles.loudaoText]}>{this.state.text}</Text>
-                            <Text style={styles.loudouText}>{'456654'}</Text>
-                            <Text style={styles.loudouText}>{'123658'}</Text>
-                            <Text style={styles.loudouText}>{'789456'}</Text>
-                            <Text style={[styles.zuihou]}>{'123'}</Text>
+                            <Text style={[styles.loudouText,styles.loudaoText]}>{this.state.quanbu}</Text>
+                            <Text style={styles.loudouText}>{this.state.xiangguan}</Text>
+                            <Text style={styles.loudouText}>{this.state.yuqing}</Text>
+                            <Text style={styles.loudouText}>{this.state.fumian}</Text>
+                            <Text style={[styles.zuihou]}>{this.state.yujing}</Text>
                             </View>
                         </Image>
 
                     </View>
                     <View style={styles.imageButton}>
                         <View style={styles.imageButtonView}>
-                            <TouchableOpacity onPress={this.pressAction.bind(this,'预警')}>
+                            <TouchableOpacity onPress={this.pressAction.bind(this,'预警','appwarning2/getList')}>
                                 <ResponsiveImage source={require('../image/预警@2x.png')} style={styles.imageButtonPic}></ResponsiveImage>
                             </TouchableOpacity>
                         </View>
@@ -194,19 +236,17 @@ export default class HomePage extends Component{
                             </TouchableOpacity>
                         </View>
                     </View>
-                        <Panel title="业务相关" title2="gaggaga" onPress={this.pressAction.bind(this,'业务相关')}>
-                            <Text>Lorem ipsum dolor sit amet, {'\n'}consectetur adipiscing elit.</Text>
-                        </Panel>
-                        <Panel title="属地相关">
-                            <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Text>
-                        </Panel>
-                        <Panel title="载体相关">
-                            <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</Text>
-                        </Panel>
+
+                    <View>
+                        {this._showColumns()}
+                    </View>
+
                 </ScrollView>
             </View>
 
         )
+
+
     }
 }
 const styles = StyleSheet.create({

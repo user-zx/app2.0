@@ -50,17 +50,42 @@ module.exports = {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(params)
-        }).then((response) => response.json())
+        }).then((response) => response.text())
             .then((responseText) => {
-                if(responseText.status == 0) {
-                    successCallback(responseText);
-                }
-                else {
-                    failCallback(responseText.message);
+                var response = JSON.parse(responseText);
+                if(response.status == 0) {
+                    successCallback(response);
+                }else{
+                    failCallback(response.message);
                 }
             })
             .catch(function(err){
                 failCallback(String(err));
             });
     },
+    postSecond(url, params, successCallback, failCallback){
+        url = ServerBaseURL + url;
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: params
+        }).then((response) => response.text())
+            .then((responseText) => {
+                console.log(responseText);
+                var response = JSON.parse(responseText);
+                if(response.status == 0) {
+                    successCallback(response);
+                }
+                else {
+                    failCallback(response.message);
+                }
+            })
+            .catch(function(err){
+                failCallback(String(err));
+            });
+    },
+
 }

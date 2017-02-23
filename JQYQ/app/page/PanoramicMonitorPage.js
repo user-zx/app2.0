@@ -130,8 +130,6 @@ export default class PanoramicMonitorPage extends Component{
             tintColor: '#FFF'
         };
 
-
-
         return (
             <View style={{flex:1,flexDirection:'column'}}>
                 <View>

@@ -10,6 +10,7 @@ import {
     ListView,
     Dimensions,
     TouchableOpacity,
+    //Modal,
 } from 'react-native';
 //根据需要引入
 import {
@@ -21,8 +22,10 @@ import NavigationBar from 'react-native-navbar';
 import ArticleDetails from './ArticleDetails';
 import px2dp from '../util/Px2dp';
 import ModalDropdown from 'react-native-modal-dropdown';
-import {toastShort} from '../component/Toast'
-
+import {toastShort} from '../component/Toast';
+import Network from '../util/Network';
+import '../util/dateFormat';
+import Modal from '../component/Modal'
 
 
 export default class NewsClass extends Component{
@@ -38,11 +41,35 @@ export default class NewsClass extends Component{
             'xiangguan' : require('../image/source/相关@3x.png'),
             'yuqing'    : require('../image/source/舆情@3x.png'),
         };
+        this.jhl={
+            message:'titleName',
+            title:'titleName',
+            id:'2',
+            dataArr:[],         //载体数组
+            carrie:'all',       //载体
+            sort:'hot',         //排序器     publishTime、hot
+            nature:'',          //特征       舆情、相关、正面、负面
+            time:'week',        //时间       today、yesterday、week、month
+            rel:'true',         //排重       true/false
+            country:'',         //来源       境外/境内
+            pageNo:'1',         //第几页
+            pageSize:'10'  ,     //每页取多少条数据
+            start_time:'',       //开始时间
+            end_time:'',        //结束时间
+            mode:'',            //手动预警
+            nextTime:'',        //下一个时间
+            prevTime:'',        //上一个
+            limit:'',           //限制
+            offset:'',          //偏移
+
+
+        };
         this.state = {
-            dataSource:this._dataSource.cloneWithRows(this._getRows()),
+            dataSource:this._dataSource.cloneWithRows(this.jhl.dataArr),
             message:'',
             title:'',
-            id:'2'
+            id:'2',
+            open: false
         };
     }
 
@@ -51,59 +78,91 @@ export default class NewsClass extends Component{
         return NavGoBack(navigator);
     };
 
-    _getRows(){
+    /*_getRows(){
         const dataBlob = [];
-        for(let i = 0 ; i< 10 ; i ++ ){
+        /!*for(let i = 0 ; i< 10 ; i ++ ){
             dataBlob.push(
                 {title:'没错我就是标题' + i,
                     text:'微信 2016-11-16 13:00:00     🔥' +i,
 
                 }
             );
-        }
+        }*!/
+        const params=new Object();
+        params.carrier=this.state.carrier,
+            params.sequencer=this.state.sequencer,
+            params.aspect=this.state.aspect,
+            params.screen=this.state.screen,
+            Network.postSecond('appwarning2/getList',params,(response)=>{
+                console.log(response.total);
+                alert(response.total);
+                dataBlob:response.rows.result
+
+            },(err)=>{err});
         return dataBlob;
+    }*/
+
+
+
+    componentWillMount(){
+
     }
+    _dropdown_6_onSelect() {
 
-    _dropdown_6_onSelect(idx, value) {
-        toastShort(idx,value);
+        //let dataBlob = [];
+        let params=new FormData();
+            params.carrie=this.jhl.carrie;
+            params.time=this.jhl.time;
+            params.sort=this.jhl.sort;
+            params.rel=this.jhl.rel;
+            params.country = this.jhl.country;
+            params.pageNo = this.jhl.pageNo;
+            params.pageSize = this.jhl.pageSize;
+            params.start_time = this.jhl.start_time;
+            params.end_time = this.jhl.end_time;
+            params.mode = this.jhl.mode;
+            params.nextTime = this.jhl.nextTime;
+            params.prevTime = this.jhl.prevTime;
+            params.limit = this.jhl.limit;
+            params.offset = this.jhl.offset;
+            params.nature = this.jhl.nature;
 
-        // this.setState({
-        //     dropdown_6_icon_heart: !this.state.dropdown_6_icon_heart,
-        // })
+        //console.log(this.state.screen);
+            Network.post('appwarning2/getList',params,(response)=>{
+               let resArr= response.rows.result;
+                for (let i in resArr){
+                    resArr[i].createTime = new Date(resArr[i].createTime).Format("yyyy/MM/dd hh:mm");;
+                }
+                this.jhl.dataArr=resArr;
+                let timer = setTimeout(()=>{
+                    clearTimeout(timer);
+                    //this.refs.scrollView.beginRefresh()
+                    this.refs.listView.beginRefresh()
+                },500);
+                this.setState({
+                    //dataArr:response.data.natureList,
+                    dataSource:this._dataSource.cloneWithRows(dataArr),
+                })
+            },(err)=>{err});
+
+        //return dataArr;
     }
 
 
     _pressRow(title){
+        let messageArr = [];
+        for (let i in this.jhl.dataArr) {
+            messageArr = this.jhl.dataArr[i].content;
+        }
         var _this = this;
         const {navigator} = this.props;
         if (navigator) {
             navigator.push({
                 name:'ArticleDetails',
                 component:ArticleDetails,
+
                 params:{
-                    message:'作词：李宗盛作曲：李宗盛想得却不可得' +
-                    ' 你奈人生何该舍的舍不得 ' +
-                    '只顾著跟往事瞎扯等你发现时间是贼了' +
-                    ' 它早已偷光你的选择爱恋不过是一场高烧' +
-                    ' 思念是紧跟着的好不了的咳是不能原谅 ' +
-                    '却无法阻挡恨意在夜里翻墙是空空荡荡 ' +
-                    '却嗡嗡作响谁在你心里放冷枪' +
-                    '旧爱的誓言像极了一个巴掌' +
-                    '每当你记起一句就挨一个耳光' +
-                    '然后好几年都闻不得 闻不得女人香' +
-                    '往事并不如烟 是的 在爱里念旧也不算美德可惜恋爱不像写歌' +
-                    ' 再认真也成不了风格' +
-                    '我问你见过思念放过谁呢不管你是累犯还是从无前科' +
-                    '我认识的只有那合久的分了 没见过分久的合更多更详尽歌词 在 ※ Mojim.com　魔镜歌词网岁月你别催 ' +
-                    '该来的我不推该还的还 ' +
-                    '该给的我给岁月你别催 ' +
-                    '走远的我不追我不过是想弄清原委谁能告诉我' +
-                    ' 这是什么呢她的爱在心里 埋葬了 抹平了 几年了仍有余威是不能原谅 ' +
-                    '却无法阻挡爱意在夜里翻墙是空空荡荡 ' +
-                    '却嗡嗡作响谁在你心里放冷枪旧爱的誓言像极了一个巴掌每当你记起一句就挨一个耳光' +
-                    '然后好几年都闻不得 闻不得女人香然后好几年都闻不得 ' +
-                    '闻不得女人香想得却不可得 ' +
-                    '你奈人生何想得却不可得 情爱里无智者',
+                    message:messageArr,
                     title:title,
                     //添加回调方法
                     getResult:function (meMessage) {
@@ -140,36 +199,73 @@ export default class NewsClass extends Component{
                     />
                 </View>
                     <View style={{width:width,height:40,flexDirection:'row'}}>
-                    <ModalDropdown options={['全部', '综合','新闻','博客','论坛','微博','微信','QQ群','电子报','视频','手机WEB','其他']}
+                    <ModalDropdown options={this.state.dataArr}
                                    defaultValue='载体'
                                    textStyle={{fontSize:px2dp(15),padding:px2dp(10),textAlign:'center'}}
                                    style={styles.dropdown_1}
                                    dropdownStyle={styles.dropdown_9}
-                                   onSelect={(idx, value) => this._dropdown_6_onSelect(idx, value)}
+                                   onSelect={(idx, value) => {
+                                       this.jhl.carrie=value;
+                                       this._dropdown_6_onSelect(idx, value)
+                                   }}
                     />
-                    <ModalDropdown options={['全部', '大眼睛','小眼睛','高鼻梁','没鼻子','大嘴唇','三角眼','大屁股','小短腿','肤色黑']}
+                    <ModalDropdown
+                                   options={['不限', '相关','舆情','正面','负面']}
+                                   //options={this.state.dataArr}
                                    defaultValue='特征'
                                    textStyle={{fontSize:px2dp(15),padding:px2dp(10),textAlign:'center'}}
                                    style={styles.dropdown_1}
                                    dropdownStyle={styles.dropdown_9}
-                                   onSelect={(idx, value) => this._dropdown_6_onSelect(idx, value)}
+                                   onSelect={(idx, value) => {
+                                       this.jhl.aspect = value;
+                                       this._dropdown_6_onSelect(idx, value)
+                                   }}
                     />
 
-                    <ModalDropdown options={['全部', '热度降序','热度升序','阅读量降序','转发量降序','评论量降序']}
+                    <ModalDropdown options={['热度','时间']}
                                    defaultValue='排序'
                                    textStyle={{fontSize:px2dp(15),padding:px2dp(10),textAlign:'center'}}
                                    style={styles.dropdown_1}
                                    dropdownStyle={styles.dropdown_9}
-                                   onSelect={(idx, value) => this._dropdown_6_onSelect(idx, value)}
-                    />
-                    <ModalDropdown options={['全部', '一天内','一周内','一个月内','三个月','六个月','一年']}
+                                   onSelect={(idx, value) => {
+                                       this.state.sequence = value;
+                                       this._dropdown_6_onSelect(idx, value)
+                                   }}                    />
+                    {/*<ModalDropdown options={['全部', '一天内','一周内','一个月内','三个月','六个月','一年']}
                                    defaultValue='条件筛选'
                                    textStyle={{fontSize:px2dp(15),padding:px2dp(10),textAlign:'center'}}
                                    style={styles.dropdown_1}
                                    dropdownStyle={styles.dropdown_8}
-                                   onSelect={(idx, value) => this._dropdown_6_onSelect(idx, value)}
+                                   onSelect={(idx, value) => {
+                                       this.jhl.screen = value;
+                                       this._dropdown_6_onSelect(idx, value)
+                                   }}
                                    renderRow={this._renderDropdownView.bind(this)}
-                    />
+                    />*/}
+                        <Modal offset={this.state.offset}
+                               open={this.state.open}
+                               modalDidOpen={() => console.log('modal did open')}
+                               modalDidClose={() => this.setState({open: false})}
+                               style={styles.dropdown_1}>
+                            <View>
+                                <Text style={{fontSize: 20, marginBottom: 10}}>条件筛选</Text>
+                                <TouchableOpacity
+                                    style={{margin: 5}}
+                                    onPress={() => this.setState({offset: -100})}>
+                                    <Text>Move modal up</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={{margin: 5}}
+                                    onPress={() => this.setState({offset: 0})}>
+                                    <Text>Reset modal position</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={{margin: 5}}
+                                    onPress={() => this.setState({open: false})}>
+                                    <Text>Close modal</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </Modal>
                 </View>
 
                 <View style={{flex:1}}>{this._renderListView()}</View>
@@ -204,26 +300,39 @@ export default class NewsClass extends Component{
     }
     //每行 cell 的内容渲染
     _renderRow(rowData) {
-         const icon = this.icons['zhengmian'];
-        // let id = this.state.id;
-        // switch (id) {
-        //     case 'zhengmian' :
-        //         return(icon = this.icons['zhengmian']);
-        //     case 'fumian' :
-        //         return(icon = this.icons['fumian']);
-        // }
-                return(
-                    <TouchableOpacity onPress={() => this._pressRow(rowData.title)}>
-                        <View style={styles.cell}>
-                            <Text style={styles.cellTitle}>{'这是第' + rowData.title + '行'}</Text>
-                            <View style={styles.cellImageView}>
 
-                                <Image style={styles.cellImage} source={icon}></Image>
-                                <Text style={styles.cellText}>{rowData.text}</Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                );
+        // //let id = this.state.id;
+        // switch (this.state.id) {
+        //     case '1' :
+        //         return(icon = this.icons['zhengmian']);
+        //         break;
+        //
+        //     case '2' :
+        //         return(icon = this.icons['fumian']);
+        //         break;
+        //
+        //     default:icon = this.icons['zhengmian']
+        // }
+
+
+
+
+
+        return(
+            <TouchableOpacity onPress={() => this._pressRow(rowData.title)}>
+                <View style={styles.cell}>
+                    <Text style={styles.cellTitle}>{rowData.title}</Text>
+                    <View style={styles.cellImageView}>
+
+                        <Image style={styles.cellImage} source={icon}></Image>
+                        <Text style={styles.cellText}>{rowData.author}</Text>
+                        <Text style={styles.cellText}>{rowData.createTime}</Text>
+                        <Text style={styles.cellText}>{rowData.siteName}</Text>
+
+                    </View>
+                </View>
+            </TouchableOpacity>
+        );
 
 
     }
@@ -252,16 +361,8 @@ export default class NewsClass extends Component{
         let timer =  setTimeout(()=>{
             clearTimeout(timer);
             this._page=0;
-            let data = [];
-            for (let i = 0;i<10;i++){
-                data.push(
-                    {title:'没错我就是标题' + i,
-                        text:'微信 2016-11-16 13:00:00     🔥' +i
-                    }
-                )
-            }
             this.setState({
-                dataSource:this._dataSource.cloneWithRows(data)
+                dataSource:this._dataSource.cloneWithRows(this.jhl.dataArr)
             });
             this.refs.listView.resetStatus(); //重置上拉加载的状态
 
@@ -280,15 +381,8 @@ export default class NewsClass extends Component{
             clearTimeout(timer);
             this._page++;
             let data = [];
-            for (let i = 0;i<(this._page+1)*10;i++){
-                data.push(
-                    {title:'没错我就是标题' + i,
-                        text:'微信 2016-11-16 13:00:00     🔥' +i
-                    }
-                )
-            }
             this.setState({
-                dataSource:this._dataSource.cloneWithRows(data)
+                dataSource:this._dataSource.cloneWithRows(this.jhl.dataArr)
             });
             end(this._page > 2);//加载成功后需要调用end结束刷新 假设加载4页后数据全部加载完毕
 
@@ -298,19 +392,31 @@ export default class NewsClass extends Component{
     componentDidMount() {
         let timer = setTimeout(()=>{
             clearTimeout(timer);
-            // this.refs.scrollView.beginRefresh()
-            //this.refs.listView.beginRefresh()
+             //this.refs.scrollView.beginRefresh()
+            this.refs.listView.beginRefresh()
         },500);//自动调用刷新 新增方法
-        this.setState({
-            message:this.props.message,
-            title:this.props.title,
-            //dataSource: this.state.dataSource,
-        });
+        Network.post('apppanorama2',{},(response)=>{
+            this.setState({
+                dataArr:response.data.natureList,
+                message:this.props.message,
+                title:this.props.title,
+                //dataSource: this.state.dataSource,
+            })
+        },(err)=>{
+            toastShort(err)
+        })
     }
     _renderDropdownView(){
         return(
-            <View>
-                <Text>asasasasa</Text>
+            <View style={{flexDirection:'column'}}>
+                <Text>aaaaaaa</Text>
+                <Text>aaaaaaa</Text>
+                <View style={{flexDirection:'row'}}>
+                    <Text>ccccccc</Text>
+                    <Text>ccccccc</Text>
+                </View>
+                <Text>bbbbbbb</Text>
+                <Text>bbbbbbb</Text>
             </View>
         )
     }
@@ -353,6 +459,7 @@ const styles=StyleSheet.create({
 
     },
     cellImageView:{
+        flexDirection:'row',
 
     },
     cellImage:{
@@ -371,7 +478,7 @@ const styles=StyleSheet.create({
         //left: px2dp(10),
         height:px2dp(160),
         width:px2dp(80),
-        backgroundColor:'#666666'
+        backgroundColor:'#FFF'
     },
     dropdown_8: {
         flex: 1,

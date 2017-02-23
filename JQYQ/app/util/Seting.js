@@ -12,17 +12,6 @@ module.exports = {
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height
     },
-    get: function (url,successCallback,failCallback) {
-        fetch(url)
-            .then((response) => response.text())
-            .then((responseText) => {
-                console.log(responseText);
-                successCallback(JSON.parse(responseText));
-            })
-            .catch(function (err) {
-                failCallback(err);
-            })
-    },
     //loading:<ActivityIndicatorIOS color="#3E00FF" style={{marginTop:40}} />\
     loginStyle:false,
 };

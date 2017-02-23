@@ -13,7 +13,7 @@ import {
     Animated,
     TouchableHighlight,
 } from 'react-native';
-
+//封装左滑删除/收藏/分享等等.就是模拟苹果的左滑手势
 export default class Swipes extends Component {
 
     constructor(props) {
@@ -22,6 +22,7 @@ export default class Swipes extends Component {
         this.state = {
             isOpen: false,
             height: 0,
+            //初始化X坐标
             RowTranslateX: new Animated.Value(0),
             BtnTranslateX: new Animated.Value(0)
         };
@@ -35,19 +36,18 @@ export default class Swipes extends Component {
 
         this.moving(this.state.RowTranslateX, 0);
         this.moving(this.state.BtnTranslateX, 0);
-    }
+    };
 
     _getBtnBoxWidth() {
         let arr = [];
 
         this.props.rightBtn.map(function(item){
             return arr.push(item.width);
-        })
+        });
 
         return arr.reduce(function(pre, cur) {
             return pre + cur;
         });
-
     }
 
     componentWillMount() {

@@ -270,10 +270,7 @@ const styles=StyleSheet.create({
         alignItems:'center'
     },
     cell:{
-        //height:px2dp(100),
         backgroundColor:'#FFF',
-        //alignItems:'center',
-        //justifyContent:'center',
         borderBottomColor:'#ececec',
         borderBottomWidth:1,
 
@@ -306,8 +303,6 @@ const styles=StyleSheet.create({
         //borderBottomColor:'black',
         borderWidth:1,
         borderRadius:2
-
-
     },
     tabView:{
         flexDirection:'row',

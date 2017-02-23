@@ -7,6 +7,7 @@ import {
     Dimensions,
     Image,
     StyleSheet,
+    TouchableHighlight,
 } from 'react-native';
 
 import Picker from 'react-native-picker';
@@ -27,11 +28,13 @@ export default class RegisterView extends Component {
     constructor(props, context) {
         super(props, context);
         this.buttonGoBack = this.buttonGoBack.bind(this);
+        //this._panduan = this._panduan.bind(this);
         this.state = {
             cityArr:[],       //城市
             userName:'',      //用户名
             phoneNumber:'',   //手机号
-            compony:''        //公司名
+            compony:'',       //公司名
+            enableLoginButton:true
 
         }
     }
@@ -92,6 +95,7 @@ export default class RegisterView extends Component {
                 _this.setState({
                     cityArr:pickedValue,
                 });
+                //this._panduan();
                 console.log('++++++>>>>',this.state.city)
 
             },
@@ -106,7 +110,24 @@ export default class RegisterView extends Component {
         Picker.show();
     }
 
-
+    /*_panduan(){
+            if (this.state.compony!==null &&
+                this.state.cityArr!==null &&
+                this.state.phoneNumber!==null &&
+                this.state.userName!==null){
+                this.setState({
+                    enableLoginButton:true
+                })
+            }
+            if (this.state.compony == '' ||
+                this.state.cityArr == '' ||
+                this.state.phoneNumber == '' ||
+                this.state.userName == '') {
+                this.setState({
+                    enableLoginButton:false
+                })
+            }
+    }*/
 
     render() {
         const leftButtonConfig = {
@@ -118,6 +139,30 @@ export default class RegisterView extends Component {
             title: '基本信息',
             tintColor: '#FFF'
         };
+        var nextButton = (
+            <TouchableHighlight
+                style={[styles.nextButton, {backgroundColor: '#C9C9C9'}]}
+            >
+                <Text style={{color:'#FFF'}}>下一步</Text>
+            </TouchableHighlight>
+        );
+        if(this.state.enableLoginButton) {
+            nextButton = (
+                <TouchableHighlight
+                    underlayColor={'#0ca6ee'}
+                    style={[styles.nextButton, {backgroundColor:'#0ca6ee'}]}
+                    onPress={this._jumpAction.bind(this)}
+                >
+                    <Text style={{color:'#FFF'}}>下一步</Text>
+                </TouchableHighlight>
+            )
+        }
+
+
+
+
+
+
         return (
             <View style={styles.cityViewL}>
                 <View style={{width:width }}>
@@ -134,9 +179,12 @@ export default class RegisterView extends Component {
                         style={styles.inputText}
                         onChangeText={(text)=>{
                             this.setState({
-                                    userName:text
-                                })
+                                userName:text,
+
+                                });
+
                         }}
+                        //onEndEditing={()=>this._panduan()}
                     />
                 </View>
                 <View style={[styles.inputView,{marginTop:px2dp(16)}]}>
@@ -147,8 +195,11 @@ export default class RegisterView extends Component {
                         onChangeText={(text)=>{
                             this.setState({
                                 phoneNumber:text
-                            })
+                            });
+                            this._panduan();
                         }}
+                       // onEndEditing={()=>this._panduan()}
+
                     />
                 </View>
                 <View style={[styles.inputView,{marginTop:px2dp(16)}]}>
@@ -159,8 +210,10 @@ export default class RegisterView extends Component {
                         onChangeText={(text)=>{
                             this.setState({
                                 compony:text
-                            })
+                            });
                         }}
+                       // onEndEditing={()=>this._panduan()}
+
                     />
                 </View>
 
@@ -170,16 +223,19 @@ export default class RegisterView extends Component {
                         placeholder='请选择所在城市'
                         style={styles.cityText}
                         defaultValue={this.state.cityArr[0]+this.state.cityArr[1]+this.state.cityArr[2]}
+                        //onEndEditing={()=>this._panduan()}
+
                     />
                     <TouchableOpacity onPress={this._showAreaPicker.bind(this)} style={{alignSelf:'center',marginRight:px2dp(15)}}>
                      <Image source={require('../image/risgiter/下拉@3x.png')} style={{alignSelf:'center'}} ></Image>
                      </TouchableOpacity>
                 </View>
-                <TouchableOpacity onPress={this._jumpAction.bind(this)}>
+                {/*<TouchableOpacity onPress={this._jumpAction.bind(this)}>
                     <View style={styles.nextButton}>
                         <Text style={{color:'#FFF'}}>下一步</Text>
                     </View>
-                </TouchableOpacity>
+                </TouchableOpacity>*/}
+                {nextButton}
 
             </View>
         );
