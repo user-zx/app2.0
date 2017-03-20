@@ -9,17 +9,28 @@ import {
     Image,
     StyleSheet,
     Platform,
-    BackAndroid
+    BackAndroid,
+    Navigator,
+
 } from 'react-native';
 import TabNavigator from 'react-native-tab-navigator';
 import MyPage from './MyPage';//我的
 import PanoramicMonitorPage from './PanoramicMonitorPage';//全景监测
 import  EventAnalysisPage from './EventAnalysisPage';
 import HomePage from './HomePage';
-import Px2dp from '../util/Px2dp'
+import Px2dp from '../util/Px2dp';
+
+import {WXAppKey} from '../util/GlobalConst';
+import * as Wexin from 'react-native-wechat';
+
+
+
 export default class TabBarView extends React.Component{
     constructor(props) {
         super(props);
+
+
+        Wexin.registerApp(WXAppKey);
         this.state = {
             selectedTab:'HomePage',
             badgeNumber: '2',
@@ -27,10 +38,35 @@ export default class TabBarView extends React.Component{
         };
     }
     componentWillMount() {
-        if (Platform.OS === 'android') {
-            BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
-        }
-    }
+        BackAndroid.addEventListener('hardwareBackPress', (() => {
+            const navigator = this.refs.navigator;
+            if(!navigator) {
+                return false
+            }
+            const routes = navigator.getCurrentRoutes();
+            if(routes.length === 1) {
+
+                if(this.nextTimeExit) {
+                    return false
+                } else {
+                    this.nextTimeExit = true;
+                    alert("再按一次回退键退出程序");
+                    setTimeout( (() => {
+                        this.nextTimeExit = false
+                    }).bind(this), 5000);
+                    return false
+                }
+
+                return
+            } else if(routes.length > 1) {
+                navigator.pop();
+                return true
+            }
+
+        }).bind(this));
+
+
+}
 
     componentWillUnmount() {
         if (Platform.OS === 'android') {

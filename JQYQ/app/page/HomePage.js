@@ -14,36 +14,21 @@ import {
     AsyncStorage,
     TouchableHighlight,
     Platform,
-    BackAndroid,
-    NativeModules,
-
-
 } from 'react-native';
 import NavigationBar from 'react-native-navbar';
 import px2dp from '../util/Px2dp';
 import NewsClass from './NewClass';
 import ResponsiveImage from 'react-native-responsive-image';
-import Panel from '../component/Panel';
 import Network from '../util/Network';
 import {toastLong} from '../component/Toast';
-
+import NewClassWaring from './NewClassWaring';
 
 const {width,height}=Dimensions.get('window');
-var NativeCommonTools = NativeModules.CommonTools;
 
 export default class HomePage extends Component{
     constructor (props) {
         super(props);
-        // BackAndroidTool.customHandleBack(this.props.navigator,() => {
-        //     alert('提示','您还未保存记录,确定要返回么?',
-        //         [{text:'取消',onPress:() => {}},
-        //             {text:'确定',onPress:() => { this.props.navigator.pop(); }}
-        //         ]);
-        //     // 一定要 return true;
-        //     return true;
-        // });
         this.state = {
-            //text :'',
             resultMessage:'热点',
             yujing:'',
             xiangguan:'',
@@ -52,12 +37,13 @@ export default class HomePage extends Component{
             yuqing:'',
             columnNameArr:[],
             lableNameArr:[],
-
+        };
+        this.icons = {
+            'up'    : require('../image/up.png'),
+            'down'  : require('../image/down.png')
         };
     }
-
-
-
+    //用三个这方法,真是绝了....下个版本再改吧
     pressAction(title,carrie){
         var  _this = this;
         const {navigator} = this.props;
@@ -68,98 +54,48 @@ export default class HomePage extends Component{
                 params:{
                     message:carrie,
                     title:title,
-                    getResult:function(messageReturn){
-                        _this.setState({
-                            resultMessage:messageReturn,
-                        })
-                    }
+
                 }
             })
         }
     }
+    pressAction1(title,carrie){
+        var  _this = this;
+        const {navigator} = this.props;
+        if (navigator){
+            navigator.push({
+                name:'NewClassWaring',
+                component:NewClassWaring,
+                params:{
+                    message:carrie,
+                    title:title,
 
-
-    //测试是否能取到 AS 存储的值
-    // componentWillMount(){
-    //     AsyncStorage.getItem('UName').then(
-    //         (result) => {//使用 Promise机制,如果操作成功不会调用 error 参数
-    //             if (result == null){
-    //                 //没有指定的 KEY
-    //                 return;
-    //             }
-    //             console.log('UName:----->'+result);
-    //         }
-    //     ).catch((error)=>{// 如果操作读取失败,胡子后台打印错误日志
-    //         console.log('error:---->'+error.message);
-    //     })
-    // }
-    // componentDidMount(){
-    //     // 添加返回键监听
-    //     BackAndroidTool.addBackAndroidListener(this.props.navigator);
-    // }
-    // componentWillUnmount(){
-    //     // 移除返回键监听
-    //     BackAndroidTool.removeBackAndroidListener();
-    // }
-
-    componentWillMount(){
+                }
+            })
+        }
+    }
+    componentWillMount() {
         Network.post('app2/aggrNature',{},(responseText)=>{
-            this.setState({
-                yujing:responseText.data.result.预警信息,
-                xiangguan:responseText.data.result.相关信息,
-                quanbu:responseText.data.result.全部,
-                fumian:responseText.data.result.负面信息,
-                yuqing:responseText.data.result.舆情信息,
-
-            });
-        },
+                this.state.yujing=responseText.data.result.预警信息;
+                this.state.xiangguan=responseText.data.result.相关信息;
+                this.state.quanbu=responseText.data.result.全部;
+                this.state.fumian=responseText.data.result.负面信息;
+                this.state.yuqing=responseText.data.result.舆情信息;
+            },
             (err)=>{
                 toastLong(err)
             }
         );
-        Network.post('appanalyse2/findColumn2',{},(responseArr)=>{
+
+    }
+        componentDidMount(){
+       Network.post('appanalyse2/findColumn2',{},(responseArr)=>{
             this.setState({
                 columnNameArr:responseArr.data
             });
-            //let arr=this.state.columnNameArr;
-        },(err)=>{toastLong(err)});
+       },(err)=>{toastLong(err)});
     }
 
-    _showColumns(){
-        let allData = [];
-        let arr=this.state.columnNameArr;
-        for(let i in arr){
-            for (let j in arr[i].columnTags){
-                allData.push(
-                    //<TouchableOpacity  onPress = {()=>alert(arr[i].columnTags[j].name)}>
-                    <TouchableOpacity key = {i}>
-                        <Panel title={arr[i].name}>
-                            <Text>{arr[i].columnTags[j].name}</Text>
-                        </Panel>
-                    </TouchableOpacity>
-                );
-            }
-        }
-        return allData;
-    }
-    _showColumn(){
-
-        let allData = [];
-        for (let i = 0;i< this.state.columnNameArr.length;i++){
-            let  badge = this.state.columnNameArr.name[i];
-            allData.push(
-                //  key={i} ：for循环的创建的组件必须设置唯一标示，不然会抱警告
-                <View key={i} style={{width:width,height:90,backgroundColor:'#FFF'}}>
-                    <TouchableOpacity  onPress = {()=>alert(badge)}>
-                        <Panel title={badge.name}>
-                            <Text>{badge}</Text>
-                        </Panel>
-                        </TouchableOpacity>
-                </View>
-            );
-        }
-        return allData;
-    }
 
     render(){
 
@@ -172,31 +108,21 @@ export default class HomePage extends Component{
                             //没有指定的 KEY
                             return;
                         }
-                        // console.log('UName:---+++++-->'+result);
-                       // alert(result);
                     }
                 ).catch((error)=>{// 如果操作读取失败,胡子后台打印错误日志
-                    // console.log('error:---->'+error.message);
                 });
             },
-            style:{
-
-            },
-
         };
         const titleConfig = {
             title:'首页',
             tintColor:'#FFF'
         };
-
-
-
         return(
             <View style={styles.zheBigView}>
                 <View>
                     <NavigationBar
                         title={titleConfig}
-                        rightButton={rightButtonConfig}
+                        //rightButton={rightButtonConfig}
                         tintColor={'#18242e'}
                     >
                     </NavigationBar>
@@ -216,7 +142,7 @@ export default class HomePage extends Component{
                     </View>
                     <View style={styles.imageButton}>
                         <View style={styles.imageButtonView}>
-                            <TouchableOpacity onPress={this.pressAction.bind(this,'预警','appwarning2/getList')}>
+                            <TouchableOpacity onPress={this.pressAction1.bind(this,'预警','appwarning2/getList')}>
                                 <ResponsiveImage source={require('../image/预警@2x.png')} style={styles.imageButtonPic}></ResponsiveImage>
                             </TouchableOpacity>
                         </View>
@@ -238,7 +164,31 @@ export default class HomePage extends Component{
                     </View>
 
                     <View>
-                        {this._showColumns()}
+                        {
+                            this.state.columnNameArr.map((item,i)=>{
+                                return(
+                                    <View key={i} style={styles.columnItem}>
+                                        <View style={{width:width*0.25,marginLeft:px2dp(25),borderRightWidth:1,borderRightColor:"#666666",alignSelf:'center'}}>
+                                            <Text style={{fontSize:16}}>{item.name}</Text>
+                                        </View>
+                                        <View  style={styles.lableItem}>
+                                            {
+                                                item.columnTags.map((itemKey,index)=>{
+                                                    return(
+                                                        <TouchableOpacity key ={index}onPress={this.pressAction.bind(this,itemKey.name)}>
+                                                            <View key={index} style={{padding:(10,20,10,10)}}>
+                                                                <Text style={{color:'#666666'}}>{itemKey.name}</Text>
+                                                            </View>
+                                                        </TouchableOpacity>
+                                                    )
+                                                })
+                                            }
+                                        </View>
+
+                                    </View>
+                                )
+                            })
+                        }
                     </View>
 
                 </ScrollView>
@@ -344,5 +294,15 @@ const styles = StyleSheet.create({
         backgroundColor : '#f4f7f9',
         //paddingTop      : 30
     },
-
+    columnItem:{
+        flexDirection:"row",
+        borderBottomWidth:1,
+        borderBottomColor:'#666666'
+    },
+    lableItem:{
+        flexDirection:"row",
+        flexWrap:'wrap',
+        alignItems: 'flex-start',
+        width:width*0.75,
+    }
 }) ;

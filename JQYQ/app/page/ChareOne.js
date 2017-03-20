@@ -8,9 +8,15 @@ import {
     Text,
     View,
     TouchableOpacity,
-    Dimensions
+    Dimensions,
+    ScrollView,
+
 } from 'react-native';
 import Echarts from 'native-echarts';
+import Network from '../util/Network'
+import BGGlobal from '../util/BGGlobal'
+
+
 const {width,height}=Dimensions.get('window')
 export default class ChartOne extends Component {
     constructor(props) {
@@ -23,85 +29,58 @@ export default class ChartOne extends Component {
             data.push([r, i]);
         }
         this.state = {
-            option : {
-                title: {
-                    text: ''
-                },
-                tooltip: {
-                    trigger: 'axis'
-                },
-                legend: {
-                    data:['邮件营销','联盟广告','视频广告','直接访问','搜索引擎']
-                },
-                grid: {
-                    left: '3%',
-                    right: '4%',
-                    bottom: '3%',
-                    containLabel: true
-                },
-                // toolbox: {
-                //     feature: {
-                //         saveAsImage: {}
-                //     }
-                // },
+            option : '',
+            text: 'test',
+            jo:[],
 
-                calculable:false,
-                xAxis: {
-                    type: 'category',
-                    boundaryGap: false,
-                    data: ['周一','周二','周三','周四','周五','周六','周日']
-                },
-                yAxis: {
-                    type: 'value'
-                },
-                series: [
-                    {
-                        name:'邮件营销',
-                        type:'line',
-                        stack: '总量',
-                        data:[120, 132, 101, 134, 90, 230, 210]
-                    },
-                    {
-                        name:'联盟广告',
-                        type:'line',
-                        stack: '总量',
-                        data:[220, 182, 191, 234, 290, 330, 310]
-                    },
-                    {
-                        name:'视频广告',
-                        type:'line',
-                        stack: '总量',
-                        data:[150, 232, 201, 154, 190, 330, 410]
-                    },
-                    {
-                        name:'直接访问',
-                        type:'line',
-                        stack: '总量',
-                        data:[320, 332, 301, 334, 390, 330, 320]
-                    },
-                    {
-                        name:'搜索引擎',
-                        type:'line',
-                        stack: '总量',
-                        data:[820, 932, 901, 934, 1290, 1330, 1320]
-                    }
-                ]
-            },
-            text: 'test'
         };
     }
 
-    changeOption() {
-        this.setState({
+    componentDidMount() {
+        let params = new Object();
+        params.id = BGGlobal.propsID;
+        Network.post('appevent2/carrieTrend2',params,(res)=>{
+            this.setState({
+                option:res.data.option,
+                jo:res.data.jo
 
+            });
+            console.log(params.id,res.data.option,'222222222222222222222222');
+        },(err)=>{
+            console.log(err,'图表请求报错',params.id)
         })
     }
 
     render() {
+
         return (
-            <View style={styles.container}>
+            <ScrollView style={styles.container}>
+
                 <Echarts option={this.state.option}  height={300} />
-            </View>
+
+                <View style={{width:width,flexDirection:'column'}}>
+
+                    <View style={{flexDirection:'row',top:10,left:20,right:20}}>
+                        <View style={styles.tabHeader}>
+                            <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>载体</Text>
+                        </View>
+                        <View style={[styles.tabHeaderright,]}>
+                            <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>文章数</Text>
+                        </View>
+                    </View>
+
+                    {
+                        this.state.jo.map((item,i)=> {
+                            return (
+                                <View key={i} style={styles.tabStyle} >
+                                    <Text style={styles.tabText}>{item.name}</Text>
+                                    <Text style={styles.tabTextRight}>{item.content}</Text>
+                                </View>
+                            )
+                        })
+                    }
+                </View>
+            </ScrollView>
         );
     }
 }
@@ -109,19 +88,46 @@ export default class ChartOne extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
+        backgroundColor: '#FFF',
+        top:50,
     },
-    welcome: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 30,
+    tabHeader:{
+        backgroundColor:'red',
+        borderWidth:1,
+        borderColor:'#FFF',
+        width:(width-40)/3,
     },
-    button: {
-        backgroundColor: '#d9534f',
-        padding: 8,
-        borderRadius: 4,
-        marginBottom: 20
+    tabHeaderright:{
+        backgroundColor:'red',
+        borderWidth:1,
+        borderColor:'#FFF',
+        width:(width-40)/3*2,
+    },
+    tabStyle:{
+        flexDirection:'row',
+        top:10,
+        left:20,
+        right:20
+    },
+    tabText:{
+        backgroundColor:'blue',
+        borderWidth:1,
+        borderColor:'#FFF',
+        width:(width-40)/3,
+        //padding:(5.0),
+        color:'#FFF',
+        fontSize:11,
+        textAlign:'center',
+    },
+    tabTextRight:{
+        backgroundColor:'blue',
+        borderWidth:1,
+        borderColor:'#FFF',
+        width:(width-40)/3*2,
+        //padding:(5.0),
+        color:'#FFF',
+        fontSize:11,
+        textAlign:'center',
     }
+
 });

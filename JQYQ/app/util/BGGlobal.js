@@ -40,6 +40,15 @@ class BGGlobal {
             .catch(err => {
                 this.globalPassCode = '';
             });
+        storage.load({
+            key: "propsID"
+        })
+            .then( propsID => {
+                this.globalpropsID  = propsID;
+            })
+            .catch(err => {
+                this.globalpropsID = '';
+            });
 
         storage.load({
             key: "isDidLogin"
@@ -70,6 +79,14 @@ class BGGlobal {
             rawData: userInfo
         });
     }
+    set propsID(propsID) {
+        this.globalporpsID = propsID;
+        storage.save({
+            key: 'propsID',
+            rawData: propsID
+        });
+    }
+
     set passCode(passCode) {
         this.globalPassCode = passCode;
         storage.save({
@@ -91,6 +108,7 @@ class BGGlobal {
             rawData: deviceToken,
         });
     }
+
     get userInfo() {
         return this.globalUserInfo;
     }
@@ -103,6 +121,10 @@ class BGGlobal {
     get deviceToken() {
         return this.globalDeviceToken;
     }
+    get propsID() {
+        return this.globalporpsID;
+    }
+
 
     clearUserInfo() {
         this.isLogin = false;

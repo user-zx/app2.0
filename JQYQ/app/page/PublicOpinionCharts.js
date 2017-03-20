@@ -43,7 +43,7 @@ export default class PublicOpinionCharts extends Component {
                         <ChartOne {...this.props}/>
                     </TabNavigator.Item>
                     <TabNavigator.Item
-                        title="全景监测"
+                        title="载体分布"
                         selected={this.state.selectedTab === 'ChartSecond'}
                         selectedTitleStyle={styles.selectedTextStyle}
                         titleStyle={styles.textStyle}
@@ -53,7 +53,7 @@ export default class PublicOpinionCharts extends Component {
                         <ChartSecond {...this.props}/>
                     </TabNavigator.Item>
                     <TabNavigator.Item
-                        title="事件分析"
+                        title="文章属性"
                         selected={this.state.selectedTab === 'ChartThird'}
                         selectedTitleStyle={styles.selectedTextStyle}
                         titleStyle={styles.textStyle}
@@ -73,7 +73,7 @@ export default class PublicOpinionCharts extends Component {
                         <ChartFourth {...this.props}/>
                     </TabNavigator.Item>
                     <TabNavigator.Item
-                        title="站点分布"
+                        title="人物活跃度"
                         selected={this.state.selectedTab === 'ChartFifth'}
                         selectedTitleStyle={styles.selectedTextStyle}
                         titleStyle={styles.textStyle}

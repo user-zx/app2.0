@@ -11,10 +11,13 @@ import {
     Text,
     View,
     TouchableOpacity,
-    Dimensions
+    Dimensions,
+    ScrollView,
 } from 'react-native';
 import Echarts from 'native-echarts';
-const {width,height}=Dimensions.get('window')
+import Network from '../util/Network';
+import BGGlobal from '../util/BGGlobal';
+const {width,height}=Dimensions.get('window');
 export default class ChartThird extends Component {
     constructor(props) {
         super(props);
@@ -26,58 +29,54 @@ export default class ChartThird extends Component {
             data.push([r, i]);
         }
         this.state = {
-            option : {
-                color: ['#3398DB'],
-                tooltip : {
-                    trigger: 'axis',
-                    axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-                        type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-                    }
-                },
-                grid: {
-                    left: '3%',
-                    right: '4%',
-                    bottom: '3%',
-                    containLabel: true
-                },
-                xAxis : [
-                    {
-                        type : 'category',
-                        data : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                        axisTick: {
-                            alignWithLabel: true
-                        }
-                    }
-                ],
-                yAxis : [
-                    {
-                        type : 'value'
-                    }
-                ],
-                series : [
-                    {
-                        name:'直接访问',
-                        type:'bar',
-                        barWidth: '60%',
-                        data:[10, 52, 200, 334, 390, 330, 220]
-                    }
-                ]
-            },
-            text: 'test'
+            option :'',
+            text: 'test',
+            jo:[],
         };
     }
-
-    changeOption() {
-        this.setState({
-
+    componentDidMount() {
+        let params = new Object();
+        params.id = BGGlobal.propsID;
+        Network.post('appevent2/articleChart',params,(res)=>{
+            this.setState({
+                option:res.data.option,
+                jo:res.data.jo
+            });
+            console.log(params.id,res.data.option,'222222222222222222222222');
+        },(err)=>{
+            console.log(err,'图表请求报错',params.id)
         })
     }
-
     render() {
+
         return (
-            <View style={styles.container}>
+            <ScrollView style={styles.container}>
+
                 <Echarts option={this.state.option}  height={300} />
-            </View>
+
+                <View style={{width:width,flexDirection:'column'}}>
+
+                    <View style={{flexDirection:'row',top:10,left:20,right:20}}>
+                        <View style={styles.tabHeader}>
+                            <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>载体</Text>
+                        </View>
+                        <View style={[styles.tabHeaderright,]}>
+                            <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>文章数</Text>
+                        </View>
+                    </View>
+
+                    {
+                        this.state.jo.map((item,i)=> {
+                            return (
+                                <View key={i} style={styles.tabStyle} >
+                                    <Text style={styles.tabText}>{item.name}</Text>
+                                    <Text style={styles.tabTextRight}>{item.content}</Text>
+                                </View>
+                            )
+                        })
+                    }
+                </View>
+            </ScrollView>
         );
     }
 }
@@ -85,19 +84,46 @@ export default class ChartThird extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
+        backgroundColor: '#FFF',
+        top:50,
     },
-    welcome: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 30,
+    tabHeader:{
+        backgroundColor:'red',
+        borderWidth:1,
+        borderColor:'#FFF',
+        width:(width-40)/3,
     },
-    button: {
-        backgroundColor: '#d9534f',
-        padding: 8,
-        borderRadius: 4,
-        marginBottom: 20
+    tabHeaderright:{
+        backgroundColor:'red',
+        borderWidth:1,
+        borderColor:'#FFF',
+        width:(width-40)/3*2,
+    },
+    tabStyle:{
+        flexDirection:'row',
+        top:10,
+        left:20,
+        right:20
+    },
+    tabText:{
+        backgroundColor:'blue',
+        borderWidth:1,
+        borderColor:'#FFF',
+        width:(width-40)/3,
+        //padding:(5.0),
+        color:'#FFF',
+        fontSize:11,
+        textAlign:'center',
+    },
+    tabTextRight:{
+        backgroundColor:'blue',
+        borderWidth:1,
+        borderColor:'#FFF',
+        width:(width-40)/3*2,
+        //padding:(5.0),
+        color:'#FFF',
+        fontSize:11,
+        textAlign:'center',
     }
+
 });

@@ -1,0 +1,537 @@
+/**
+ * Created by jiahailiang on 2017/3/13.
+ */
+import React,{Component} from 'react';
+import {
+    Text,
+    Image,
+    View,
+    StyleSheet,
+    Dimensions,
+    ScrollView,
+} from 'react-native';
+
+const {width,height}=Dimensions.get('window');
+
+import Echarts from 'native-echarts';
+import Network from '../util/Network'
+import BGGlobal from '../util/BGGlobal';
+import px2dp from '../util/Px2dp'
+import NavigationBar from 'react-native-navbar';
+import {NavGoBack} from '../component/NavGoBack';
+import *as WeChat from 'react-native-wechat'
+import {ActionSheetCustom as ActionSheet} from 'react-native-actionsheet';
+import {toastShort} from '../component/Toast';
+const buttons = ['取消', '微信', '朋友圈'];
+const CANCEL_INDEX = 0;
+const DESTRUCTIVE_INDEX = 1;
+
+export default class PublicsentPerview extends Component{
+
+    constructor(props) {
+        super(props);
+        //WeChat.registerApp('wxb467fdb6e1d079f8');
+        this.buttonGoBack = this.buttonGoBack.bind(this);
+
+        var data = [];
+
+        for (var i = 0; i <= 360; i++) {
+            var t = i / 180 * Math.PI;
+            var r = Math.sin(2 * t) * Math.cos(2 * t);
+            data.push([r, i]);
+        }
+        this.state = {
+            option1 : '',
+            option2 : '',
+            option3 : '',
+            option4 : '',
+            text: 'test',
+            jo:[],
+            jo1:[],
+            jo2:[],
+            jo3:[],
+            jo4:[],
+            eventSummary:'',//事件简介
+            dataSummary:'',//数据分析
+            siteSummary:'',//站点分析
+            trendStr:'',//趋势分析
+            peopleSummary:'',//网民分析
+            rowData:[],
+            rowData2:[],
+            id:'',
+            title:'',
+            time:'',
+        };
+        this.icons = {
+            yuqing:require('../image/lable/yuqing@3x.png'),
+            zhengmian:require('../image/lable/zhengmian@3x.png'),
+            fumian:require('../image/lable/fumian@3x.png'),
+            xiangguan:require('../image/lable/xiangguan@3x.png'),
+        }
+    }
+    buttonGoBack(){
+        const {navigator} = this.props;
+        return NavGoBack(navigator);
+    };
+
+    _handlePress(index) {
+        console.log(index)
+        let URL = 'http://114.55.179.202:8989/phone/html/articleReport.html?time='+this.state.time+'&id='+this.state.id+'&dataTime='+this.state.title
+        console.log(URL,'拼接后的 URL 是')
+        if (index ==1 ){
+            //分享给微信好友(连接)
+            WeChat.isWXAppInstalled()
+                .then((isInstalled) => {
+                    if (isInstalled) {
+                        WeChat.shareToSession({
+                            title:'微信好友测试链接',
+                            description: '分享自:军犬舆情管家(www.51candy.org)',
+                            thumbImage: source(require('../image/share_icon_wechat.png')),
+                            type: 'news',
+                            webpageUrl: URL
+                        })
+                            .catch((error) => {
+                                toastShort(error.message);
+                            });
+                    } else {
+                        toastShort('没有安装微信软件，请您安装微信之后再试');
+                    }
+                });
+
+        }else {
+            //分享给微信朋友圈(连接)
+            WeChat.isWXAppInstalled()
+                .then((isInstalled) => {
+                    if (isInstalled) {
+                        WeChat.shareToTimeline({
+                            title:'微信朋友圈测试链接',
+                            description: '分享自:军犬舆情管家(www.51candy.org)',
+                            thumbImage: source(require('../image/share_icon_wechat.png')),
+                            type: 'news',
+                            webpageUrl: 'http://www.51candy.org'
+                        })
+                            .catch((error) => {
+                                toastShort(error.message);
+                            });
+                    } else {
+                        toastShort('没有安装微信软件，请您安装微信之后再试');
+                    }
+                });
+
+        }
+
+
+
+
+    }
+
+    show() {
+        this.ActionSheet.show();
+    }
+
+
+    render(){
+        const leftButtonConfig = {
+            title: '←',
+            handler: () => this.buttonGoBack(),
+            fontSize: 32
+        };
+        const titleConfig = {
+            title: this.state.title+'舆情报告',
+            tintColor: '#FFF'
+        };
+        const RightButtonConfig = {
+            title: '分享',
+            handler: () => this.show(),
+            fontSize: 32
+        };
+
+
+
+
+        return(
+
+            <View style={{flex:1}}>
+                <View>
+                    <NavigationBar
+                        title={titleConfig}
+                        leftButton={leftButtonConfig}
+                        tintColor={'#18242e'}
+                        rightButton={RightButtonConfig}
+                    />
+                </View>
+                <ActionSheet
+                    ref={(o) => this.ActionSheet = o}
+                    title="分享到？"
+                    options={buttons}
+                    cancelButtonIndex={CANCEL_INDEX}
+                    destructiveButtonIndex={DESTRUCTIVE_INDEX}
+                    onPress={this._handlePress.bind(this)}
+                />
+                <ScrollView>
+                    <View style={styles.lableHeader}>
+                        <Image source={require('../image/evolution/事件简介@3x.png')} style={styles.headerImage}/>
+                        <Text>舆情导读</Text>
+                    </View>
+                    {
+                        this.state.rowData.map((item,index)=>{
+                            let icon;
+                            if(item.ispositive == 1){
+                                icon = this.icons['zhengmian'];
+                            } else if(item.isnegative ==1){
+                                //alert(rowData.isnegative);
+                                icon = this.icons['fumian'];
+                            } else {
+                                if(item.isyuqing ==1 ){
+                                    icon = this.icons['yuqing'];
+                                } else {
+                                    icon = this.icons['xiangguan'];
+                                }
+                            }
+                            return(
+                                <View style={styles.cell} key = {index}>
+                                    <View style={{width:width,height:px2dp(70)}}>
+                                        <Text style={styles.cellTitle}>{item.title}</Text>
+                                    </View>
+                                    <View style={{flexDirection:'row',width:width,justifyContent:'space-between'}}>
+                                        <View style={{flexDirection:'row'}}>
+                                            <Image source={icon} style={{marginLeft:px2dp(15),marginBottom:px2dp(15),marginTop:px2dp(5)}} />
+                                            <Text style={styles.cellText}>{item.siteName}</Text>
+                                            <Text style={styles.cellText}>{item.author}</Text>
+                                        </View>
+                                        <View style={{marginBottom:px2dp(10)}}>
+                                            <Text style={{marginBottom:px2dp(10),marginRight:15,fontSize:11, color:'#999999',}}>{item.time}</Text>
+                                        </View>
+                                    </View>
+
+                                </View>
+
+                            )})
+                    }
+                    <View style={styles.lableHeader}>
+                        <Image source={require('../image/evolution/趋势分析@3x.png')} style={styles.headerImage}/>
+                        <Text>舆情图表</Text>
+                    </View>
+                    <View>
+                        <Echarts option={this.state.option1}  height={300} />
+                        <View style={{width:width,flexDirection:'column'}}>
+                            <View style={{flexDirection:'row',top:10,left:20,right:20}}>
+                                <View style={styles.tabHeader}>
+                                    <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>载体</Text>
+                                </View>
+                                <View style={[styles.tabHeaderright,]}>
+                                    <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>文章数</Text>
+                                </View>
+                            </View>
+
+                            {
+                                this.state.jo1.map((item,i)=> {
+                                    return (
+                                        <View key={i} style={styles.tabStyle} >
+                                            <Text style={styles.tabText}>{item.name}</Text>
+                                            <Text style={styles.tabTextRight}>{item.value}</Text>
+                                        </View>
+                                    )
+                                })
+                            }
+                        </View>
+                    </View>
+
+                    <View style={styles.lableHeader}>
+                        <Image source={require('../image/evolution/数据分析@3x.png')} style={styles.headerImage}/>
+                        <Text>文章特征</Text>
+                    </View>
+                    <View>
+                        <Echarts option={this.state.option2}  height={300} />
+                        <View style={{width:width,flexDirection:'column'}}>
+
+                            <View style={{flexDirection:'row',top:10,left:20,right:20}}>
+                                <View style={styles.tabHeader}>
+                                    <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>特征</Text>
+                                </View>
+                                <View style={[styles.tabHeaderright,]}>
+                                    <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>文章数</Text>
+                                </View>
+                            </View>
+
+                            {
+                                this.state.jo2.map((item,i)=> {
+                                    return (
+                                        <View key={i} style={styles.tabStyle} >
+                                            <Text style={styles.tabText}>{item.name}</Text>
+                                            <Text style={styles.tabTextRight}>{item.content}</Text>
+                                        </View>
+                                    )
+                                })
+                            }
+                        </View>
+                    </View>
+                    <View style={styles.lableHeader}>
+                        <Image source={require('../image/evolution/站点分析@3x.png')} style={styles.headerImage}/>
+                        <Text>站点分布</Text>
+                    </View>
+                    <View>
+                        <Echarts option={this.state.option3}  height={300} />
+                        <View style={{width:width,flexDirection:'column'}}>
+
+                            <View style={{flexDirection:'row',top:10,left:20,right:20}}>
+                                <View style={styles.tabHeader}>
+                                    <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>排名</Text>
+                                </View>
+                                <View style={styles.tabHeader}>
+                                    <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>媒体</Text>
+                                </View>
+
+                                <View style={styles.tabHeader}>
+                                    <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>相关</Text>
+                                </View>
+                                <View style={styles.tabHeader}>
+                                    <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>正面</Text>
+                                </View>
+                                <View style={styles.tabHeader}>
+                                    <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>负面</Text>
+                                </View>
+
+                            </View>
+
+                            {
+                                this.state.jo3.map((item,i)=> {
+                                    return (
+                                        <View key={i} style={styles.tabStyle} >
+                                            <Text style={styles.tabText}>{i+1}</Text>
+                                            <Text style={styles.tabText}>{item.name}</Text>
+                                            <Text style={styles.tabText}>{item.content.相关文章}</Text>
+                                            <Text style={styles.tabText}>{item.content.负面文章}</Text>
+                                            <Text style={styles.tabText}>{item.content.正面文章}</Text>
+                                        </View>
+                                    )
+                                })
+                            }
+                        </View>
+                    </View>
+                    <View style={styles.lableHeader}>
+                        <Image source={require('../image/evolution/网民分析@3x.png')} style={styles.headerImage}/>
+                        <Text>人物活跃度</Text>
+                    </View>
+                    <View>
+                        <Echarts option={this.state.option4}  height={300} />
+                        <View style={{flexDirection:'row',top:10,left:20,right:20}}>
+                            <View style={styles.tabHeader}>
+                                <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>排名</Text>
+                            </View>
+                            <View style={styles.tabHeader}>
+                                <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>媒体</Text>
+                            </View>
+
+                            <View style={styles.tabHeader}>
+                                <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>相关</Text>
+                            </View>
+                            <View style={styles.tabHeader}>
+                                <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>负面</Text>
+                            </View>
+                            <View style={styles.tabHeader}>
+                                <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>正面</Text>
+                            </View>
+
+                        </View>
+                        {
+                            this.state.jo4.map((item,i)=> {
+                                return (
+                                    <View key={i} style={styles.tabStyle} >
+                                        <Text style={styles.tabText}>{i+1}</Text>
+                                        <Text style={styles.tabText}>{item.name}</Text>
+                                        <Text style={styles.tabText}>{item.content.相关文章}</Text>
+                                        <Text style={styles.tabText}>{item.content.负面文章}</Text>
+                                        <Text style={styles.tabText}>{item.content.正面文章}</Text>
+                                    </View>
+                                )
+                            })
+                        }
+                    </View>
+                    <View style={styles.lableHeader}>
+                        <Image source={require('../image/evolution/热门文章@3x.png')} style={styles.headerImage}/>
+                        <Text>推荐阅读</Text>
+                    </View>
+                    {
+                        this.state.rowData2.map((item,index)=>{
+                            let icon;
+                            if(item.ispositive == 1){
+                                icon = this.icons['zhengmian'];
+                            } else if(item.isnegative ==1){
+                                //alert(rowData.isnegative);
+                                icon = this.icons['fumian'];
+                            } else {
+                                if(item.isyuqing ==1 ){
+                                    icon = this.icons['yuqing'];
+                                } else {
+                                    icon = this.icons['xiangguan'];
+                                }
+                            }
+                            return(
+                                <View style={styles.cell} key = {index}>
+                                    <View style={{width:width,height:px2dp(70)}}>
+                                        <Text style={styles.cellTitle}>{item.title}</Text>
+                                    </View>
+                                    <View style={{flexDirection:'row',width:width,justifyContent:'space-between'}}>
+                                        <View style={{flexDirection:'row'}}>
+                                            <Image source={icon} style={{marginLeft:px2dp(15),marginBottom:px2dp(15),marginTop:px2dp(5)}} />
+                                            <Text style={styles.cellText}>{item.siteName}</Text>
+                                            <Text style={styles.cellText}>{item.author}</Text>
+                                        </View>
+                                        <View style={{marginBottom:px2dp(10)}}>
+                                            <Text style={{marginBottom:px2dp(10),marginRight:15,fontSize:11, color:'#999999',}}>{item.time}</Text>
+                                        </View>
+                                    </View>
+
+                                </View>
+
+                            )})
+                    }
+                </ScrollView>
+            </View>
+        )
+    }
+    componentDidMount() {
+        this.setState({
+            title:this.props.title,
+            id:this.props.id,
+            time:this.props.time,
+        });
+        // 1 导读
+        let params = new Object();
+        params.id = this.props.id;
+        Network.post('appbriefing2/getBriefingList',params,(res)=>{
+            let resArr = res.data.result;
+            for (let i in resArr){
+                resArr[i].createTime = new Date(resArr[i].createTime).Format("yyyy/MM/dd hh:mm");
+                console.log(resArr+'我是模拟刷新');
+            }
+            this.setState({
+                rowData:resArr,
+            });
+            console.log(res.data.result,'134134134134134')
+        },(err)=>{err});
+        //第二部分
+        params.time = 'today';
+        Network.post('appbriefing2/getAppAggrCarrieDistribute',params,(res)=>{
+            this.setState({
+                option1:res.data.option,
+                jo1:res.data.jo,
+            })
+        },(err)=>{err});
+        //第三部分
+        Network.post('appbriefing2/getAppAggrCarrieTaday',params,(res)=>{
+            this.setState({
+                option2:res.data.option,
+                jo2:res.data.jo,
+            })
+        },(err)=>{err});
+        //第四部分
+        Network.post('appbriefing2/getAppSiteDistribute',params,(res)=>{
+            this.setState({
+                option3:res.data.option,
+                jo3:res.data.jo,
+            })
+        },(err)=>{err});
+        //第五
+        Network.post('appbriefing2/getAppAggrAuthorTop',params,(res)=>{
+            this.setState({
+                option4:res.data.option,
+                jo4:res.data.jo,
+            })
+        },(err)=>{err});
+        //第六
+        Network.post('appbriefing2/getBriefingTable',params,(res)=>{
+                    this.setState({
+                        rowData2:res.data
+                    })
+                },(err)=>{err});
+
+
+
+    }
+
+
+}
+const styles = StyleSheet.create({
+    lableHeader:{
+        backgroundColor:'#F2F2F2',
+        flexDirection:'row',
+        //justifyContent:'center',
+        alignItems:'center',
+        width:width,
+        //height:50
+    },
+    headerImage:{
+        marginRight:5,
+        marginLeft:15,
+        marginTop:10,
+        marginBottom:10,
+    },
+    cell:{
+        height:px2dp(100),
+        backgroundColor:'#FFF',
+        //alignItems:'center',
+        //justifyContent:'center',
+        borderBottomColor:'#ececec',
+        borderBottomWidth:1
+    },
+    cellTitle:{
+        paddingTop:px2dp(17),
+        paddingLeft:px2dp(15),
+        //numberOfLines:1,
+        paddingRight:px2dp(15),
+        paddingBottom:px2dp(15),
+        fontSize:15,
+        color:'#333333',
+
+
+    },
+    cellText:{
+        fontSize:11,
+        color:'#999999',
+        marginLeft:px2dp(10),
+        marginBottom:px2dp(10),
+        marginTop:px2dp(5)
+
+    },
+    cellImageView:{
+        flexDirection:'row',
+
+    },
+    cellImage:{
+
+    },
+    tabStyle:{
+        flexDirection:'row',
+        top:10,
+        left:20,
+        right:20
+    },
+    tabText:{
+        backgroundColor:'blue',
+        borderWidth:1,
+        borderColor:'#FFF',
+        width:(width-40)/3,
+        //padding:(5.0),
+        color:'#FFF',
+        fontSize:11,
+        textAlign:'center',
+    },
+    tabTextRight:{
+        backgroundColor:'blue',
+        borderWidth:1,
+        borderColor:'#FFF',
+        width:(width-40)/3*2,
+        //padding:(5.0),
+        color:'#FFF',
+        fontSize:11,
+        textAlign:'center',
+    },
+    tabHeader:{
+        backgroundColor:'red',
+        borderWidth:1,
+        borderColor:'#FFF',
+        width:(width-40)/3,
+    },
+});

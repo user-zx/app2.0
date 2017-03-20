@@ -16,7 +16,7 @@ import NavigationBar from 'react-native-navbar';
 import {NavGoBack} from '../component/NavGoBack';
 import px2dp from '../util/Px2dp'
 import Network from '../util/Network';
-
+import {toastLong} from '../component/Toast';
 
 const {width,height}=Dimensions.get('window');
 
@@ -65,7 +65,8 @@ export default class RegisterViewSecond extends Component{
         const leftButtonConfig = {
             title: '←',
             handler: () => this.buttonGoBack(),
-            fontSize:32
+            fontSize:32,
+            tintColor: '#FFF'
         };
         const titleConfig = {
             title: '监测需求',
@@ -110,9 +111,11 @@ export default class RegisterViewSecond extends Component{
                     params.need = this.state.commitText;
 
                     Network.post('app2/register',params,(response)=>{
-                        alert(response.result);
+                        //alert(response.result);
+                        toastLong('您的申请已经提交,工作人员会以最快的速度为您开通账号')
                     },(err)=>{
                         alert(err);
+                        toastLong('填写有错误',err)
                     })
                 }}>
                     <View style={styles.commitButton}>

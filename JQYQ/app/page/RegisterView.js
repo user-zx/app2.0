@@ -133,7 +133,8 @@ export default class RegisterView extends Component {
         const leftButtonConfig = {
             title: '←',
             handler: () => this.buttonGoBack(),
-            fontSize:32
+            fontSize:32,
+            tintColor: '#FFF'
         };
         const titleConfig = {
             title: '基本信息',
@@ -196,7 +197,7 @@ export default class RegisterView extends Component {
                             this.setState({
                                 phoneNumber:text
                             });
-                            this._panduan();
+                            //this._panduan();
                         }}
                        // onEndEditing={()=>this._panduan()}
 

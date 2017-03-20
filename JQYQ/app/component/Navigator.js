@@ -15,9 +15,13 @@ import {
 import TabbarView from '../page/TabbarView'
 import Seting from '../util/Seting'
 //import GuideView from './GuideView'//引导页根据需要添加
-import LoginView from '../page/LoginView'
+import LoginView from '../page/LoginView';
+import BGGlobal from '../util/BGGlobal';
+
 export default class navigator extends Component {
     constructor(props) {
+        var MySceneConfigs = Navigator.SceneConfigs.PushFromRight;
+        MySceneConfigs.gestures.pop = null;
         super(props);
     }
 
@@ -31,14 +35,15 @@ export default class navigator extends Component {
         return (
             <Navigator
                 initialRoute = {{name : defaultName , component: defaultComponent}}
+
+                renderScene={(route,navigator) => {
+                    let Component = route.component;
+                    return <Component {...route.params} navigator = {navigator} />
+                }}
                 configureScene = {(route) => {
                     //return Navigator.SceneConfigs.VerticalDownSwipeJump;
                     return Navigator.SceneConfigs.FloatFromRight;
                     //gestures: {}
-                }}
-                renderScene={(route,navigator) => {
-                    let Component = route.component;
-                    return <Component {...route.params} navigator = {navigator} />
                 }}
             />
         );

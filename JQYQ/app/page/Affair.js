@@ -8,9 +8,7 @@ import {
     View,
     Image,
     StyleSheet,
-    Alert,
     TouchableOpacity,
-
 } from 'react-native';
 import ScrollableTabView,{DefaultTabBar} from 'react-native-scrollable-tab-view';
 import NavigationBar from 'react-native-navbar';
@@ -19,19 +17,20 @@ import POArticles from './PublicOpinionArticles';
 import POChatrs from './PublicOpinionCharts';
 import POEvolution from './PublicOpinionEvolution';
 import POSpecial from './PublicOpinionSpecial';
-//import AnimaStion from './AnimaStion'
 export default class Affair extends Component{
     constructor(props){
         super(props);
         this.buttonGoBack = this.buttonGoBack.bind(this);
         this.state = {
             title:'',
+            id:'',
         }
     }
     componentDidMount(){
         this.setState({
             title:this.props.title,
-        })
+            id:this.props.id
+        });
     }
     buttonGoBack() {
         const {navigator} = this.props;
@@ -39,14 +38,20 @@ export default class Affair extends Component{
     }
     render(){
         const liftButtonConfig = {
-            title:'返回',
-            handler:() => this.buttonGoBack(),
+            title: '←',
+            handler: () => this.buttonGoBack(),
+            fontSize:32,
+            tintColor: '#FFF'
         };
         const titleConfig = {
             title:this.state.title,
             color:'#FFF',
-            //fontSize:20
-            tintColor:'#FFF'
+            tintColor:'#FFF',
+            style:{
+                marginLeft:60,
+                marginRight:60,
+            },
+            numberOfLines:0
         };
         return(
             <View style={{flex:1,flexDirection:'column'}}>
@@ -55,6 +60,8 @@ export default class Affair extends Component{
                         title={titleConfig}
                         leftButton={liftButtonConfig}
                         tintColor={'#18242e'}
+                        numberOfLines={1}
+
                     />
                 </View>
                 <View style={{flex:1,}}>

@@ -27,8 +27,8 @@ export default class LoginView extends Component{
         super (props);
 
         this.state = {
-            userName:'',
-            password:'',
+            userName:'jxyqgj',
+            password:'123456',
             userToken:'',
             mobileInputOnFocus: true,
             translateX:new Animated.Value(0),
@@ -63,6 +63,26 @@ export default class LoginView extends Component{
             //进行其他操作
         );
     }
+    rememberAccount(){
+        this.setState ({
+            iconsRem: !this.state.iconsRem
+        });
+        if (this.state.iconsRem){
+            BGGlobal.clearUserInfo;
+            console.log(BGGlobal.userInfo,BGGlobal.password,'用户信息清除')
+
+        }else {
+            BGGlobal.userInfo = this.state.userName;
+            BGGlobal.password = this.state.password;
+            console.log(BGGlobal.userInfo,BGGlobal.password,'储存用户信息')
+        }
+    }
+    clearUserInfo(){
+        this.state.iconsRem = !this.state.iconsRem;
+        BGGlobal.clearUserInfo;
+
+    }
+
 
     render(){
         var animationStyle = {
@@ -93,6 +113,8 @@ export default class LoginView extends Component{
                                 }}
                                 value={this.state.userName}
                                 placeholder={'请输入用户名'}
+                                autoCorrect={false}
+                                autoCapitalize="none"
                             >
                             </TextInput>
                         </View>
@@ -111,7 +133,7 @@ export default class LoginView extends Component{
                                 }}
                                 value={this.state.password}
                                 placeholder={'请输入密码'}
-                                //secureTextEntry=
+                                secureTextEntry={true}
                             >
                             </TextInput>
                         </View>
@@ -119,9 +141,9 @@ export default class LoginView extends Component{
                         <View style={styles.remanberView}>
                             <Image source={icon}  style={{width:15,height:15}}/>
                             <Text style={styles.remanberText} onPress = {()=>{
-                                this.setState ({
-                                    iconsRem: !this.state.iconsRem
-                                })
+
+                                this.rememberAccount();
+
                             }}>记住账号</Text>
                         </View>
                     <TouchableOpacity
@@ -181,10 +203,15 @@ export default class LoginView extends Component{
             username:this.state.userName,
             password:this.state.password,
         },(response)=>{
-            // 将用户信息存入本地
-            BGGlobal.userInfo = response.result;
-            console.log(response.msg);
-            console.log(this.state.userName);
+            if (this.state.iconsRem){
+                BGGlobal.userInfo = this.state.userName;
+                BGGlobal.password = this.state.password;
+                BGGlobal.isLogin = true;
+                console.log(BGGlobal.userInfo,BGGlobal.password,'储存用户信息')
+            }else {
+                BGGlobal.clearUserInfo;
+                console.log(BGGlobal.userInfo,BGGlobal.password,'用户信息清除')
+            }
             console.log("****************-----------------*************");
             _this.JumpAction(TabbarView);
         },(err)=>{
@@ -206,7 +233,8 @@ const styles =  StyleSheet.create({
     inPutStyle:{
         width:px2dp(257),
         height:50,
-        fontSize:12
+        fontSize:12,
+        //textAlign:'center',
     },
     loginButton:{
         width:px2dp(297),

@@ -17,8 +17,8 @@ import {
                 super(props);
 
                 this.icons = {
-                    'up'    : require('../image/上.png'),
-                    'down'  : require('../image/下.png')
+                    'up'    : require('../image/up.png'),
+                    'down'  : require('../image/down.png')
                 };
 
                 this.state = {
@@ -74,18 +74,18 @@ import {
                             <TouchableHighlight
                                 onPress={this.props.onPress}
                             >
-                                <Text style={styles.title}>{this.state.title2}</Text>
+                                <Text style={styles.title}> {this.state.title2}</Text>
 
                             </TouchableHighlight>
 
                             <TouchableHighlight
                                 style={styles.button}
                                 onPress={this.toggle.bind(this)}
-                                underlayColor="#f1f1f1">
+                                underlayColor="#f1f1f1" >
                                 <Image
                                     style={styles.buttonImage}
-                                    source={icon}
-                                ></Image>
+                                    source={icon} >
+                                </Image>
                             </TouchableHighlight>
                         </View>
 

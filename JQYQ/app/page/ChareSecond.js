@@ -11,87 +11,82 @@ import {
     Text,
     View,
     TouchableOpacity,
-    Dimensions
+    Dimensions,
+    ScrollView,
+
 } from 'react-native';
 import Echarts from 'native-echarts';
-const {width,height}=Dimensions.get('window')
+import Network from '../util/Network'
+import BGGlobal from '../util/BGGlobal'
+const {width,height}=Dimensions.get('window');
 export default class ChartSecond extends Component {
+    _option='';
     constructor(props) {
         super(props);
         var data = [];
-
         for (var i = 0; i <= 360; i++) {
             var t = i / 180 * Math.PI;
             var r = Math.sin(2 * t) * Math.cos(2 * t);
             data.push([r, i]);
         }
         this.state = {
-            option: {
-                tooltip: {
-                    trigger: 'item',
-                    formatter: "{a} <br/>{b}: {c} ({d}%)"
-                },
-                // legend: {
-                //     orient: 'vertical',
-                //     x: 'left',
-                //     data:['直达','营销广告','搜索引擎','邮件营销','联盟广告','视频广告','百度','谷歌','必应','其他']
-                // },
-                series: [
-                    {
-                        name:'访问来源',
-                        type:'pie',
-                        selectedMode: 'single',
-                        radius: [0, '30%'],
+            option:'',
+            text: 'test',
+            jo:[],
 
-                        label: {
-                            normal: {
-                                position: 'inner'
-                            }
-                        },
-                        labelLine: {
-                            normal: {
-                                show: false
-                            }
-                        },
-                        data:[
-                            {value:335, name:'直达', selected:true},
-                            {value:679, name:'营销广告'},
-                            {value:1548, name:'搜索引擎'}
-                        ]
-                    },
-                    {
-                        name:'访问来源',
-                        type:'pie',
-                        radius: ['40%', '55%'],
-
-                        data:[
-                            {value:335, name:'直达'},
-                            {value:310, name:'邮件营销'},
-                            {value:234, name:'联盟广告'},
-                            {value:135, name:'视频广告'},
-                            {value:1048, name:'百度'},
-                            {value:251, name:'谷歌'},
-                            {value:147, name:'必应'},
-                            {value:102, name:'其他'}
-                        ]
-                    }
-                ]
-            },
-            text: 'test'
         };
     }
-
-    changeOption() {
-        this.setState({
-
+    componentDidMount() {
+        let params = new Object();
+        params.id = BGGlobal.propsID;
+        Network.post('appevent2/carriePie',params,(res)=>{
+            this.setState({
+                option:res.data.option.option,
+                jo:res.data.jo
+            });
+        },(err)=>{
+        console.log(err,'图表请求报错',params.id)
         })
     }
 
+
+
+
     render() {
+
         return (
-            <View style={styles.container}>
+            <ScrollView style={styles.container}>
+
                 <Echarts option={this.state.option}  height={300} />
-            </View>
+
+                <View style={{width:width,flexDirection:'column'}}>
+
+                    <View style={{flexDirection:'row',top:10,left:20,right:20}}>
+                        <View style={styles.tabHeader}>
+                            <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>载体</Text>
+                        </View>
+                        <View style={styles.tabHeader}>
+                            <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>正面</Text>
+                        </View>
+                        <View style={styles.tabHeader}>
+                            <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>负面</Text>
+                        </View>
+
+                    </View>
+
+                    {
+                        this.state.jo.map((item,i)=> {
+                            return (
+                                <View key={i} style={styles.tabStyle} >
+                                    <Text style={styles.tabText}>{item.name}</Text>
+                                    <Text style={styles.tabText}>{item.content.正面文章}</Text>
+                                    <Text style={styles.tabText}>{item.content.负面文章}</Text>
+                                </View>
+                            )
+                        })
+                    }
+                </View>
+            </ScrollView>
         );
     }
 }
@@ -99,19 +94,32 @@ export default class ChartSecond extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
+        //justifyContent: 'center',
+        // alignItems: 'center',
+        backgroundColor: '#FFF',
+        top:50,
     },
-    welcome: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 30,
+    tabHeader:{
+        backgroundColor:'red',
+        borderWidth:1,
+        borderColor:'#FFF',
+        width:(width-40)/3,
     },
-    button: {
-        backgroundColor: '#d9534f',
-        padding: 8,
-        borderRadius: 4,
-        marginBottom: 20
+    tabStyle:{
+        flexDirection:'row',
+        top:10,
+        left:20,
+        right:20
+    },
+    tabText:{
+        backgroundColor:'blue',
+        borderWidth:1,
+        borderColor:'#FFF',
+        width:(width-40)/3,
+        //padding:(5.0),
+        color:'#FFF',
+        fontSize:11,
+        textAlign:'center',
     }
+
 });

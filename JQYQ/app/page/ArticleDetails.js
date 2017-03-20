@@ -9,48 +9,144 @@ import {
     StyleSheet,
     ScrollView,
     Dimensions,
+    WebView,
 } from 'react-native';
 import NavigationBar from 'react-native-navbar';
 import {NavGoBack} from '../component/NavGoBack';
+import px2dp from '../util/Px2dp';
+import Network from '../util/Network'
+import {ServerBaseURL} from '../util/GlobalConst'
+import *as WeChat from 'react-native-wechat'
+import {ActionSheetCustom as ActionSheet} from 'react-native-actionsheet';
 import {toastShort} from '../component/Toast';
-import px2dp from '../util/Px2dp'
+const buttons = ['取消', '微信', '朋友圈','添加到收藏'];
+const CANCEL_INDEX = 0;
+const DESTRUCTIVE_INDEX = 1;
+const {width,height}=Dimensions.get('window');
 
 var ScreenWidth = Dimensions.get('window').width;
 export default class ArticleDetails extends Component {
+
     constructor (props) {
         super (props);
         this.buttonGoBack = this.buttonGoBack.bind(this);
         this.state = {
             message:"",
             title:'',
+            id:'',
+            number:'1'
         }
     }
     componentDidMount(){
         this.setState({
-            message:this.props.message,
+            id:this.props.id,
             title:this.props.title,
+
         });
+        var params = new Object();
+        params.id = this.props.id;
+        console.log(params);
+        Network.post('apparticle2',params,(response)=>{
+
+            console.log(response);
+            this.setState({
+                message:response.data.artile.content,
+            });
+
+        },(err)=>{err});
     };
     buttonGoBack(){
         const {navigator} = this.props;
         return NavGoBack(navigator);
     };
-    startAction(){
-        toastShort('添加星标成功');
-        // alert('添加星标成功');
-    };
+
+
+    _handlePress(index) {
+        let URL = 'http://114.55.179.202:8989/phone/html/articleDetail.html?id='+this.state.id;
+        console.log(index)
+        if (index ==1 ){
+            //分享给微信好友(连接)
+            WeChat.isWXAppInstalled()
+                .then((isInstalled) => {
+                    if (isInstalled) {
+                        WeChat.shareToSession({
+                            title:'微信好友测试链接',
+                            description: '分享自:军犬舆情管家(www.51candy.org)',
+                            thumbImage: source(require('../image/share_icon_wechat.png')),
+                            type: 'news',
+                            webpageUrl: URL
+                        })
+                            .catch((error) => {
+                                toastShort(error.message);
+                            });
+                    } else {
+                        toastShort('没有安装微信软件，请您安装微信之后再试');
+                    }
+                });
+
+        }else if (index == 2){
+            //分享给微信朋友圈(连接)
+            WeChat.isWXAppInstalled()
+                .then((isInstalled) => {
+                    if (isInstalled) {
+                        WeChat.shareToTimeline({
+                            title:'微信朋友圈测试链接',
+                            description: '分享自:军犬舆情管家(www.51candy.org)',
+                            thumbImage: source(require('../image/share_icon_wechat.png')),
+                            type: 'news',
+                            webpageUrl: URL
+                        })
+                            .catch((error) => {
+                                toastShort(error.message);
+                            });
+                    } else {
+                        toastShort('没有安装微信软件，请您安装微信之后再试');
+                    }
+                });
+
+        } else if(index == 3) {
+            let params = new Object();
+            params.id = this.state.id;
+            Network.post('apparticle2/saveFavorites',params,(res)=>{
+                console.log('添加成功')
+            },(err)=>{err})
+            toastShort('添加星标成功');
+
+        }
+
+
+
+
+    }
+
+    show() {
+        this.ActionSheet.show();
+    }
+
     render () {
         const leftButtonConfig = {
-            title: '返回',
+            title: '←',
             handler: () => this.buttonGoBack(),
+            fontSize:32,
+            tintColor: '#FFF'
         };
         const titleConfig = {
             title:this.state.title,
-            tintColor:'#FFF'
+            tintColor:'#FFF',
+            style:{
+                marginLeft:60,
+                marginRight:60,
+            },
+            numberOfLines:0
+
         };
         const startButton = {
-            title:'关注',
-            handler: () => this.startAction(),
+            title:'···',
+            handler: () => this.show(),
+            tintColor:'#FFF'
+        };
+        const styles1 = {
+            numberOfLines:1
         }
         return(
 
@@ -61,38 +157,25 @@ export default class ArticleDetails extends Component {
                         leftButton={leftButtonConfig}
                         rightButton={startButton}
                         tintColor={'#18242e'}
-                    />
+                        numberOfLines={1}
+                />
                 </View>
+                <ActionSheet
+                    ref={(o) => this.ActionSheet = o}
+                    title="分享到？"
+                    options={buttons}
+                    cancelButtonIndex={CANCEL_INDEX}
+                    destructiveButtonIndex={DESTRUCTIVE_INDEX}
+                    onPress={this._handlePress.bind(this)}
+                />
                 <ScrollView style={{width:ScreenWidth}}>
-                    <View style={ADstyles.relatedStyle}>
-                        <Text style={ADstyles.viewTitle}>作者:</Text>
-                        <Text style={ADstyles.viewTitle}>贾海亮</Text>
-                        <Text style={ADstyles.viewTitle}>时间:</Text>
-                        <Text style={ADstyles.viewTitle}>2016-11-16 14:47:00</Text>
-                        <Text style={ADstyles.viewTitle}>来源:</Text>
-                        <Text style={ADstyles.viewTitle}>微信</Text>
-                    </View>
-                    <View style={ADstyles.relatedStyle}>
-                        <Text style={ADstyles.viewTitle}>👍</Text>
-                        <Text style={ADstyles.viewTitle}>199</Text>
-                        <Text style={ADstyles.viewTitle}>评论数:</Text>
-                        <Text style={ADstyles.viewTitle}>99</Text>
-                    </View>
-                    <View style={ADstyles.keywordsStyle}>
-                        <View style={{flexDirection:'row'}}>
-                            <Text style={{marginLeft:10,marginTop:15,color:'blue'}}>相关词:</Text>
-                            <Text style={{marginLeft:10,marginTop:15}}>微软</Text>
-                        </View>
-                        <View style={{flexDirection:'row',}}>
-                            <Text style={{marginLeft:10,marginTop:15,color:'purple'}}>舆情词:</Text>
-                            <Text style={{marginLeft:10,marginTop:15,flex:1,marginBottom:15}}>哈哈  哈哈  哈哈 哈哈  哈哈  哈哈  哈哈  哈哈  哈 哈哈  哈哈  哈哈  哈哈  哈哈  哈哈  哈哈  哈哈哈</Text>
-                        </View>
-                    </View>
-                    <View>
-                        <Text style={{marginLeft:10,marginRight:10,marginTop:15,fontSize:20}}>{this.state.message},{this.state.title}</Text>
-                    </View>
+                    <WebView
+                        source={{uri:ServerBaseURL+'phone/html/articleDetail2.html?id='+this.props.id}}
+                        //source={{uri:'http://114.55.179.202:8989/phone/html/articleDetail2.html?id=7444d56e8c5123af09e107fe8a3dddfa'}}
+                        style={{backgroundColor:'#FFF',width:width,height:height-64}}
+                    />
                 </ScrollView>
-            </View>
+            </View> 
         )
     }
 }

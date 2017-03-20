@@ -8,7 +8,7 @@
  */
 
 #import "AppDelegate.h"
-
+#import <React/RCTLinkingManager.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 
@@ -32,5 +32,12 @@
   [self.window makeKeyAndVisible];
   return YES;
 }
+
+// 微信分享
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{  return [RCTLinkingManager application:application openURL:url                            sourceApplication:sourceApplication annotation:annotation];
+}
+
 
 @end
