@@ -19,7 +19,7 @@ import {ServerBaseURL} from '../util/GlobalConst'
 import *as WeChat from 'react-native-wechat'
 import {ActionSheetCustom as ActionSheet} from 'react-native-actionsheet';
 import {toastShort} from '../component/Toast';
-const buttons = ['取消', '微信', '朋友圈','添加到收藏'];
+const buttons = ['取消', '微信好友', '朋友圈','添加到收藏'];
 const CANCEL_INDEX = 0;
 const DESTRUCTIVE_INDEX = 1;
 const {width,height}=Dimensions.get('window');
@@ -29,6 +29,7 @@ export default class ArticleDetails extends Component {
 
     constructor (props) {
         super (props);
+        WeChat.registerApp('wxb467fdb6e1d079f8');
         this.buttonGoBack = this.buttonGoBack.bind(this);
         this.state = {
             message:"",
@@ -63,26 +64,10 @@ export default class ArticleDetails extends Component {
 
     _handlePress(index) {
         let URL = 'http://114.55.179.202:8989/phone/html/articleDetail.html?id='+this.state.id;
-        console.log(index)
+        console.log(index);
         if (index ==1 ){
             //分享给微信好友(连接)
-            WeChat.isWXAppInstalled()
-                .then((isInstalled) => {
-                    if (isInstalled) {
-                        WeChat.shareToSession({
-                            title:'微信好友测试链接',
-                            description: '分享自:军犬舆情管家(www.51candy.org)',
-                            thumbImage: source(require('../image/share_icon_wechat.png')),
-                            type: 'news',
-                            webpageUrl: URL
-                        })
-                            .catch((error) => {
-                                toastShort(error.message);
-                            });
-                    } else {
-                        toastShort('没有安装微信软件，请您安装微信之后再试');
-                    }
-                });
+            this.pressAction();
 
         }else if (index == 2){
             //分享给微信朋友圈(连接)
@@ -90,11 +75,11 @@ export default class ArticleDetails extends Component {
                 .then((isInstalled) => {
                     if (isInstalled) {
                         WeChat.shareToTimeline({
-                            title:'微信朋友圈测试链接',
-                            description: '分享自:军犬舆情管家(www.51candy.org)',
-                            thumbImage: source(require('../image/share_icon_wechat.png')),
+                            title:'分享自:军犬舆情管家(www.junquanyuqing.com.cn)',
+                            description: this.state.title,
+                            thumbImage: 'http://mta.zttit.com:8080/images/ZTT_1404756641470_image.jpg',
                             type: 'news',
-                            webpageUrl: URL
+                            webpageUrl: 'http://114.55.179.202:8989/phone/html/articleDetail.html?id='+this.state.id
                         })
                             .catch((error) => {
                                 toastShort(error.message);
@@ -107,17 +92,35 @@ export default class ArticleDetails extends Component {
         } else if(index == 3) {
             let params = new Object();
             params.id = this.state.id;
+            //这里接口只要传过去参数 ID 就 OK, 不管返回什么都是已经添加到收藏, POST 的方法里面判断的不对,所以会执行 errCallBack
             Network.post('apparticle2/saveFavorites',params,(res)=>{
-                console.log('添加成功')
-            },(err)=>{err})
+                console.log('添加成功',res);
+            },(err)=>{err});
             toastShort('添加星标成功');
-
         }
 
-
-
-
     }
+
+    pressAction= ()=>{
+        WeChat.isWXAppInstalled()
+            .then((isInstalled) => {
+                if (isInstalled) {
+                    WeChat.shareToSession({
+                        title:'分享自:军犬舆情管家(www.junquan.com.cn)',
+                        description:this.state.title,
+                        thumbImage: 'http://mta.zttit.com:8080/images/ZTT_1404756641470_image.jpg',
+                        type: 'news',
+                        webpageUrl: 'http://114.55.179.202:8989/phone/html/articleDetail.html?id='+this.state.id
+                    })
+                        .catch((error) => {
+                            toastShort(error.message);
+                        });
+                } else {
+                    toastShort('没有安装微信软件，请您安装微信之后再试');
+                }
+            });
+    };
+
 
     show() {
         this.ActionSheet.show();
@@ -143,7 +146,8 @@ export default class ArticleDetails extends Component {
         const startButton = {
             title:'···',
             handler: () => this.show(),
-            tintColor:'#FFF'
+            tintColor:'#FFF',
+            fontSize:34,
         };
         const styles1 = {
             numberOfLines:1
@@ -168,14 +172,13 @@ export default class ArticleDetails extends Component {
                     destructiveButtonIndex={DESTRUCTIVE_INDEX}
                     onPress={this._handlePress.bind(this)}
                 />
-                <ScrollView style={{width:ScreenWidth}}>
-                    <WebView
-                        source={{uri:ServerBaseURL+'phone/html/articleDetail2.html?id='+this.props.id}}
-                        //source={{uri:'http://114.55.179.202:8989/phone/html/articleDetail2.html?id=7444d56e8c5123af09e107fe8a3dddfa'}}
-                        style={{backgroundColor:'#FFF',width:width,height:height-64}}
-                    />
-                </ScrollView>
-            </View> 
+
+                <WebView
+                    source={{uri:ServerBaseURL+'phone/html/articleDetail2.html?id='+this.props.id}}
+                    //source={{uri:'http://114.55.179.202:8989/phone/html/articleDetail2.html?id=7444d56e8c5123af09e107fe8a3dddfa'}}
+                    style={{backgroundColor:'#FFF',width:width,height:height-64}}
+                />
+            </View>
         )
     }
 }

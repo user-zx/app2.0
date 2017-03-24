@@ -37,7 +37,8 @@ export default class TabBarView extends React.Component{
             isBadge:true
         };
     }
-    componentWillMount() {
+    //控制安卓物理返回键问题
+    componentDidMount() {
         BackAndroid.addEventListener('hardwareBackPress', (() => {
             const navigator = this.refs.navigator;
             if(!navigator) {
@@ -53,7 +54,7 @@ export default class TabBarView extends React.Component{
                     alert("再按一次回退键退出程序");
                     setTimeout( (() => {
                         this.nextTimeExit = false
-                    }).bind(this), 5000);
+                    }).bind(this), 2000);
                     return false
                 }
 
@@ -127,8 +128,8 @@ export default class TabBarView extends React.Component{
                     selectedTitleStyle={styles.selectedTextStyle}
                     titleStyle={styles.textStyle}
                     tabStyle={styles.tabStyle}
-                    renderIcon={() => <Image source={require("../image/首页@2x.png")} style={styles.iconStyle}/>}
-                    renderSelectedIcon={() => <Image source={require("../image/首页选中@3x.png")} style={styles.iconStyle}/>}
+                    renderIcon={() => <Image source={require("../image/shouye@2x.png")} style={styles.iconStyle}/>}
+                    renderSelectedIcon={() => <Image source={require("../image/shouyexuanzhong@3x.png")} style={styles.iconStyle}/>}
                     onPress={() => this.setState({ selectedTab: 'HomePage' })}>
                     <HomePage {...this.props} />
                 </TabNavigator.Item>
@@ -137,8 +138,8 @@ export default class TabBarView extends React.Component{
                     selected={this.state.selectedTab === 'PanoramicMonitorPage'}
                     selectedTitleStyle={styles.selectedTextStyle}
                     titleStyle={styles.textStyle}
-                    renderIcon={() => <Image source={require("../image/全景监测@3x.png")} style={styles.iconStyle}/>}
-                    renderSelectedIcon={() => <Image source={require("../image/全景监测－选中@2x.png")} style={styles.iconStyle}/>}
+                    renderIcon={() => <Image source={require("../image/quanjingjiance@3x.png")} style={styles.iconStyle}/>}
+                    renderSelectedIcon={() => <Image source={require("../image/quanjingjiance-xuanzhong@2x.png")} style={styles.iconStyle}/>}
                     onPress={() => this.setState({ selectedTab: 'PanoramicMonitorPage' })}>
                     <PanoramicMonitorPage {...this.props} />
                 </TabNavigator.Item>
@@ -147,8 +148,8 @@ export default class TabBarView extends React.Component{
                     selected={this.state.selectedTab === 'EventAnalysisPage'}
                     selectedTitleStyle={styles.selectedTextStyle}
                     titleStyle={styles.textStyle}
-                    renderIcon={() => <Image source={require("../image/事件分析@3x.png")} style={styles.iconStyle}/>}
-                    renderSelectedIcon={() => <Image source={require("../image/事件分析－选中@2x.png")} style={styles.iconStyle}/>}
+                    renderIcon={() => <Image source={require("../image/shijianfenxi@3x.png")} style={styles.iconStyle}/>}
+                    renderSelectedIcon={() => <Image source={require("../image/shijianfenxi-xuanzhong@2x.png")} style={styles.iconStyle}/>}
                     onPress={() => this.setState({ selectedTab: 'EventAnalysisPage' })}>
                     <EventAnalysisPage {...this.props} />
                 </TabNavigator.Item>
@@ -160,8 +161,8 @@ export default class TabBarView extends React.Component{
                     badgeText={this.state.badgeNumber}
                     //在这里设置壳 badge 的方法,
                     renderBadge={()=>this.renderBadge()}
-                    renderIcon={() => <Image source={require("../image/我的-3@3x.png")} style={styles.iconStyle}/>}
-                    renderSelectedIcon={() => <Image source={require("../image/我的－选中@2x.png")} style={styles.iconStyle}/>}
+                    renderIcon={() => <Image source={require("../image/wode-3@3x.png")} style={styles.iconStyle}/>}
+                    renderSelectedIcon={() => <Image source={require("../image/wode-xuanzhong@2x.png")} style={styles.iconStyle}/>}
                     onPress={() => this.setState({ selectedTab: 'MyPage',isBadge:false })}>
                     <MyPage {...this.props} />
                 </TabNavigator.Item>

@@ -22,7 +22,7 @@ import {NavGoBack} from '../component/NavGoBack';
 import *as WeChat from 'react-native-wechat'
 import {ActionSheetCustom as ActionSheet} from 'react-native-actionsheet';
 import {toastShort} from '../component/Toast';
-const buttons = ['取消', '微信', '朋友圈'];
+const buttons = ['取消', '微信好友', '朋友圈'];
 const CANCEL_INDEX = 0;
 const DESTRUCTIVE_INDEX = 1;
 
@@ -84,11 +84,11 @@ export default class PublicsentPerview extends Component{
                 .then((isInstalled) => {
                     if (isInstalled) {
                         WeChat.shareToSession({
-                            title:'微信好友测试链接',
-                            description: '分享自:军犬舆情管家(www.51candy.org)',
-                            thumbImage: source(require('../image/share_icon_wechat.png')),
+                            title:'分享自:军犬舆情管家(www.junquan.com.cn)',
+                            description:this.state.title,
+                            thumbImage: 'http://mta.zttit.com:8080/images/ZTT_1404756641470_image.jpg',
                             type: 'news',
-                            webpageUrl: URL
+                            webpageUrl:URL
                         })
                             .catch((error) => {
                                 toastShort(error.message);
@@ -98,17 +98,17 @@ export default class PublicsentPerview extends Component{
                     }
                 });
 
-        }else {
+        }else if(index == 2){
             //分享给微信朋友圈(连接)
             WeChat.isWXAppInstalled()
                 .then((isInstalled) => {
                     if (isInstalled) {
                         WeChat.shareToTimeline({
-                            title:'微信朋友圈测试链接',
-                            description: '分享自:军犬舆情管家(www.51candy.org)',
-                            thumbImage: source(require('../image/share_icon_wechat.png')),
+                            title:'分享自:军犬舆情管家(www.junquanyuqing.com.cn)',
+                            description: this.state.title,
+                            thumbImage: 'http://mta.zttit.com:8080/images/ZTT_1404756641470_image.jpg',
                             type: 'news',
-                            webpageUrl: 'http://www.51candy.org'
+                            webpageUrl: URL
                         })
                             .catch((error) => {
                                 toastShort(error.message);
@@ -170,7 +170,7 @@ export default class PublicsentPerview extends Component{
                 />
                 <ScrollView>
                     <View style={styles.lableHeader}>
-                        <Image source={require('../image/evolution/事件简介@3x.png')} style={styles.headerImage}/>
+                        <Image source={require('../image/evolution/shijianjianjie@3x.png')} style={styles.headerImage}/>
                         <Text>舆情导读</Text>
                     </View>
                     {
@@ -209,7 +209,7 @@ export default class PublicsentPerview extends Component{
                             )})
                     }
                     <View style={styles.lableHeader}>
-                        <Image source={require('../image/evolution/趋势分析@3x.png')} style={styles.headerImage}/>
+                        <Image source={require('../image/evolution/qushifenxi@3x.png')} style={styles.headerImage}/>
                         <Text>舆情图表</Text>
                     </View>
                     <View>
@@ -238,7 +238,7 @@ export default class PublicsentPerview extends Component{
                     </View>
 
                     <View style={styles.lableHeader}>
-                        <Image source={require('../image/evolution/数据分析@3x.png')} style={styles.headerImage}/>
+                        <Image source={require('../image/evolution/shujufenxi@3x.png')} style={styles.headerImage}/>
                         <Text>文章特征</Text>
                     </View>
                     <View>
@@ -267,7 +267,7 @@ export default class PublicsentPerview extends Component{
                         </View>
                     </View>
                     <View style={styles.lableHeader}>
-                        <Image source={require('../image/evolution/站点分析@3x.png')} style={styles.headerImage}/>
+                        <Image source={require('../image/evolution/zhandianfenxi@3x.png')} style={styles.headerImage}/>
                         <Text>站点分布</Text>
                     </View>
                     <View>
@@ -310,7 +310,7 @@ export default class PublicsentPerview extends Component{
                         </View>
                     </View>
                     <View style={styles.lableHeader}>
-                        <Image source={require('../image/evolution/网民分析@3x.png')} style={styles.headerImage}/>
+                        <Image source={require('../image/evolution/wanminfenxi@3x.png')} style={styles.headerImage}/>
                         <Text>人物活跃度</Text>
                     </View>
                     <View>
@@ -349,7 +349,7 @@ export default class PublicsentPerview extends Component{
                         }
                     </View>
                     <View style={styles.lableHeader}>
-                        <Image source={require('../image/evolution/热门文章@3x.png')} style={styles.headerImage}/>
+                        <Image source={require('../image/evolution/remenwenzhang@3x.png')} style={styles.headerImage}/>
                         <Text>推荐阅读</Text>
                     </View>
                     {

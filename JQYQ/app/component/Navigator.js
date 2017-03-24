@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 // import LoginView from '../page/LoginView';
 import TabbarView from '../page/TabbarView'
-import Seting from '../util/Seting'
 //import GuideView from './GuideView'//引导页根据需要添加
 import LoginView from '../page/LoginView';
 import BGGlobal from '../util/BGGlobal';
@@ -24,7 +23,52 @@ export default class navigator extends Component {
         MySceneConfigs.gestures.pop = null;
         super(props);
     }
+    componentDidMount() {
+        BackAndroid.addEventListener('hardwareBackPress', (() => {
+            const navigator = this.refs.navigator;
+            if(!navigator) {
+                return false
+            }
+            const routes = navigator.getCurrentRoutes();
+            if(routes.length === 1) {
 
+                if(this.nextTimeExit) {
+                    return false
+                } else {
+                    this.nextTimeExit = true;
+                    alert("再按一次回退键退出程序");
+                    setTimeout( (() => {
+                        this.nextTimeExit = false
+                    }).bind(this), 2000);
+                    return false
+                }
+
+                return
+            } else if(routes.length > 1) {
+                navigator.pop();
+                return true
+            }
+
+        }).bind(this));
+
+
+    }
+
+    componentWillUnmount() {
+        if (Platform.OS === 'android') {
+            BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+        }
+    }
+    onBackAndroid = () => {
+        const nav = this.props.navigator;
+        const routers = nav.getCurrentRoutes();
+        if (routers.length > 1) {
+            nav.pop();
+            return true;
+        }
+        return false;
+
+    };
 
     render() {
         let defaultName = 'LoginView';

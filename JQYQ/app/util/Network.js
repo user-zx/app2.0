@@ -91,13 +91,18 @@ module.exports = {
         fetch(url, {
             method: 'POST',
             headers: {
-
                 'Accept': 'application/json',
-                'Content-Type': 'text/plain',
+                'Content-Type': 'application/json',
             },
-            body: params
-        }).then((response) => {
+            body: JSON.stringify(params)
+        }).then((response) => response.text())
+            .then((responseText) => {
+                var response = JSON.parse(responseText);
+                if(response) {
                     successCallback(response);
+                }else{
+                    failCallback(response.message);
+                }
             })
             .catch(function(err){
                 failCallback(String(err));

@@ -80,7 +80,7 @@ export default class PublicOpinionSpecial extends Component {
 
         return (
             <View style={{flex: 1, flexDirection: 'column',alignItems:'center',width:width,height:height}}>
-                <Image source={require('../image/导控@3x.png')} style={{marginTop:50}} onPress={this._download.bind(this)} />
+                <Image source={require('../image/daokong@3x.png')} style={{marginTop:50}} onPress={this._download.bind(this)} />
                 <Text style={{marginTop:15,fontSize:24}}>{this.state.text}</Text>
                 <Text>{this.state.time}</Text>
                 <TouchableOpacity onPress={this._download.bind(this)}>

@@ -91,29 +91,29 @@ export default class MyPage extends React.Component {
                 <View style={{flexDirection:'column',alignItems:'flex-start'}}>
                     <TouchableOpacity onPress={this.JumpAction.bind(this,Selfinfo)} style={{flexDirection:'row'}}>
                         <View style={[styles.firstView]}>
-                            <Image source={require('../image/我的@3x.png')} style={styles.imageStyle}/>
+                            <Image source={require('../image/wode@3x.png')} style={styles.imageStyle}/>
                             <View style={styles.firstVIewText}>
                                 <Text style={{marginTop:px2dp(25)}}>个人信息</Text>
                                 <Text style={{marginTop:px2dp(7.5),color:'#666666',fontSize:13}}>账号: {this.state.selfNumber}</Text>
                             </View>
-                            <Image source={require('../image/右箭头@3x.png')} style={styles.rightImage}></Image>
+                            <Image source={require('../image/youjiantou@3x.png')} style={styles.rightImage}></Image>
 
                         </View>
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={this.JumpAction.bind(this,PublicOpinionReports)} style={{flexDirection:'row'}}>
                         <View style={styles.sampleViewStyle}>
-                            <Image source={require('../image/舆情报告@3x.png')} style={styles.imageStyle}/>
+                            <Image source={require('../image/yuqingbaogao@3x.png')} style={styles.imageStyle}/>
                             <Text style={styles.textStyle}>舆情报告</Text>
-                            <Image source={require('../image/右箭头@3x.png')} style={styles.rightImage}></Image>
+                            <Image source={require('../image/youjiantou@3x.png')} style={styles.rightImage}></Image>
 
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={this.JumpAction.bind(this,StartView)} style={{flexDirection:'row'}}>
                         <View style={styles.mb10}>
-                            <Image source={require('../image/收藏@3x.png')} style={styles.imageStyle}/>
+                            <Image source={require('../image/shoucang@3x.png')} style={styles.imageStyle}/>
                             <Text style={styles.textStyle}>我的收藏</Text>
-                            <Image source={require('../image/右箭头@3x.png')} style={styles.rightImage}></Image>
+                            <Image source={require('../image/youjiantou@3x.png')} style={styles.rightImage}></Image>
 
                         </View>
                     </TouchableOpacity>
@@ -123,18 +123,18 @@ export default class MyPage extends React.Component {
 
                     <TouchableOpacity onPress={this.JumpAction.bind(this,Announcement)} style={{flexDirection:'row'}}>
                         <View style={styles.sampleViewStyle}>
-                            <Image source={require('../image/公告@3x.png')} style={styles.imageStyle}/>
+                            <Image source={require('../image/gaonggao@3x.png')} style={styles.imageStyle}/>
                             <Text style={styles.textStyle}>公告</Text>
                             {this.badgeView()}
-                            <Image source={require('../image/右箭头@3x.png')} style={styles.rightImage}></Image>
+                            <Image source={require('../image/youjiantou@3x.png')} style={styles.rightImage}></Image>
 
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={this.JumpAction.bind(this,FeedBack)} style={{flexDirection:'row'}}>
                         <View style={styles.mb10}>
-                            <Image source={require('../image/意见反馈@3x.png')} style={styles.imageStyle}/>
+                            <Image source={require('../image/yijianfankui@3x.png')} style={styles.imageStyle}/>
                             <Text style={styles.textStyle}>意见反馈</Text>
-                            <Image source={require('../image/右箭头@3x.png')} style={styles.rightImage}></Image>
+                            <Image source={require('../image/youjiantou@3x.png')} style={styles.rightImage}></Image>
 
                         </View>
                     </TouchableOpacity>
@@ -143,7 +143,7 @@ export default class MyPage extends React.Component {
 
                     <TouchableOpacity onPress={this.QuitAction.bind(this)} style={{flexDirection:'row'}}>
                         <View style={styles.sampleViewStyle}>
-                            <Image source={require('../image/退出@3x.png')} style={styles.imageStyle}/>
+                            <Image source={require('../image/tuichu@3x.png')} style={styles.imageStyle}/>
                             <Text style={styles.textStyle}>退出系统</Text>
                         </View>
                     </TouchableOpacity>

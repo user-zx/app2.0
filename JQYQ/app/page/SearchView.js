@@ -264,13 +264,13 @@ export default class AnnouncementAT extends Component{
     _SearchAction = (text) =>{
         let params = new  Object();
         params.all = text;
-        console.log(text,'search;;;;;;;;;;;;;;;;;')
+        console.log(text,'search;;;;;;;;;;;;;;;;;');
         Network.post('apppanorama2/getList',params,(response)=>{
             let resArr= response.rows;
             for (let i in resArr){
                 resArr[i].createTime = new Date(resArr[i].createTime).Format("yyyy/MM/dd hh:mm");
             }
-            console.log(response,'ppppppppppppppprrrr')
+            console.log(response,'ppppppppppppppprrrr');
             //this._dataArr = this._dataArr.concat(resArr);
             this._dataArr = resArr;
             this.setState({

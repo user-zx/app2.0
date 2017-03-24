@@ -16,6 +16,10 @@ import Echarts from 'native-echarts';
 import Network from '../util/Network'
 import BGGlobal from '../util/BGGlobal'
 
+//uri：'file：///android_asset/tpl.html'
+
+//import 'file：///android_asset/tpl.html'
+
 
 const {width,height}=Dimensions.get('window')
 export default class ChartOne extends Component {

@@ -69,8 +69,9 @@ export default class FeedBack extends Component{
     }
     render(){
         const leftButtonConfig = {
-            title:'返回',
-            handler:()=>this.buttonGoBack(),
+            title: '←',
+            handler: () => this.buttonGoBack(),
+            fontSize:32,
             tintColor: '#FFF'
         };
         const titleConfig ={

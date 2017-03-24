@@ -57,14 +57,14 @@ export default class PublicOpinionEvolution extends Component{
 
             <ScrollView>
                 <View style={styles.lableHeader}>
-                    <Image source={require('../image/evolution/事件简介@3x.png')} style={styles.headerImage}/>
+                    <Image source={require('../image/evolution/shijianjianjie@3x.png')} style={styles.headerImage}/>
                     <Text>事件简介</Text>
                 </View>
                 <View style={{width:width}}>
                     <Text style={{padding:15}}>{this.state.eventSummary}</Text>
                 </View>
                 <View style={styles.lableHeader}>
-                    <Image source={require('../image/evolution/趋势分析@3x.png')} style={styles.headerImage}/>
+                    <Image source={require('../image/evolution/qushifenxi@3x.png')} style={styles.headerImage}/>
                     <Text>趋势分析</Text>
                 </View>
                 <View>
@@ -72,7 +72,7 @@ export default class PublicOpinionEvolution extends Component{
                     <Text style={{padding:15}}>{this.state.trendStr}</Text>
                 </View>
                 <View style={styles.lableHeader}>
-                    <Image source={require('../image/evolution/数据分析@3x.png')} style={styles.headerImage}/>
+                    <Image source={require('../image/evolution/shujufenxi@3x.png')} style={styles.headerImage}/>
                     <Text>数据分析</Text>
                 </View>
                 <View>
@@ -81,7 +81,7 @@ export default class PublicOpinionEvolution extends Component{
                     <Text style={{padding:15}}>{this.state.dataSummary}</Text>
                 </View>
                 <View style={styles.lableHeader}>
-                    <Image source={require('../image/evolution/站点分析@3x.png')} style={styles.headerImage}/>
+                    <Image source={require('../image/evolution/zhandianfenxi@3x.png')} style={styles.headerImage}/>
                     <Text>站点分析</Text>
                 </View>
                 <View>
@@ -89,7 +89,7 @@ export default class PublicOpinionEvolution extends Component{
                     <Text style={{padding:15}}>{this.state.siteSummary}</Text>
                 </View>
                 <View style={styles.lableHeader}>
-                    <Image source={require('../image/evolution/网民分析@3x.png')} style={styles.headerImage}/>
+                    <Image source={require('../image/evolution/wanminfenxi@3x.png')} style={styles.headerImage}/>
                     <Text>网民分析</Text>
                 </View>
                 <View>
@@ -97,7 +97,7 @@ export default class PublicOpinionEvolution extends Component{
                     <Text style={{padding:15}}>{this.state.peopleSummary}</Text>
                 </View>
                 <View style={styles.lableHeader}>
-                    <Image source={require('../image/evolution/热门文章@3x.png')} style={styles.headerImage}/>
+                    <Image source={require('../image/evolution/remenwenzhang@3x.png')} style={styles.headerImage}/>
                     <Text>热门文章</Text>
                 </View>
 

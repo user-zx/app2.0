@@ -84,7 +84,7 @@ export default class RegisterViewSecond extends Component{
                     />
                 </View>
                 <View style={styles.wrightView}>
-                    <Image source={require('../image/risgiter/填写@3x.png')} style={{alignSelf:'center'}}></Image>
+                    <Image source={require('../image/risgiter/tianxie@3x.png')} style={{alignSelf:'center'}}></Image>
                     <Text style={{alignSelf:'center',marginLeft:5}}>请填写您的监测需求</Text>
                 </View>
                 <View style={styles.xuqiuView}>

@@ -174,7 +174,7 @@ export default class RegisterView extends Component {
                     />
                 </View>
                 <View style={[styles.inputView,{marginTop:px2dp(35)}]}>
-                    <Image source={require('../image/risgiter/我的@3x.png')}style={{alignSelf:'center',marginLeft:px2dp(15)}}/>
+                    <Image source={require('../image/risgiter/wode@3x.png')} style={{alignSelf:'center',marginLeft:px2dp(15)}}/>
                     <TextInput
                         placeholder={'请输入您的姓名'}
                         style={styles.inputText}
@@ -189,7 +189,7 @@ export default class RegisterView extends Component {
                     />
                 </View>
                 <View style={[styles.inputView,{marginTop:px2dp(16)}]}>
-                    <Image source={require('../image/risgiter/手机@3x.png')}style={{alignSelf:'center',marginLeft:px2dp(15)}}/>
+                    <Image source={require('../image/risgiter/shouji@3x.png')} style={{alignSelf:'center',marginLeft:px2dp(15)}}/>
                     <TextInput
                         placeholder={'请输入您的手机号码'}
                         style={styles.inputText}
@@ -204,7 +204,7 @@ export default class RegisterView extends Component {
                     />
                 </View>
                 <View style={[styles.inputView,{marginTop:px2dp(16)}]}>
-                    <Image source={require('../image/risgiter/单位@3x.png')}style={{alignSelf:'center',marginLeft:px2dp(15)}}/>
+                    <Image source={require('../image/risgiter/danwei@3x.png')} style={{alignSelf:'center',marginLeft:px2dp(15)}}/>
                     <TextInput
                         placeholder={'请输入您的单位名称'}
                         style={styles.inputText}
@@ -219,7 +219,7 @@ export default class RegisterView extends Component {
                 </View>
 
                 <View style={[styles.regView,{marginTop:px2dp(16)}]}>
-                    <Image source={require('../image/risgiter/省份@3x.png')} style={{alignSelf:'center',marginLeft:px2dp(15)}}></Image>
+                    <Image source={require('../image/risgiter/shengfen@3x.png')} style={{alignSelf:'center',marginLeft:px2dp(15)}}></Image>
                     <TextInput
                         placeholder='请选择所在城市'
                         style={styles.cityText}
@@ -228,7 +228,7 @@ export default class RegisterView extends Component {
 
                     />
                     <TouchableOpacity onPress={this._showAreaPicker.bind(this)} style={{alignSelf:'center',marginRight:px2dp(15)}}>
-                     <Image source={require('../image/risgiter/下拉@3x.png')} style={{alignSelf:'center'}} ></Image>
+                     <Image source={require('../image/risgiter/xiala@3x.png')} style={{alignSelf:'center'}} ></Image>
                      </TouchableOpacity>
                 </View>
                 {/*<TouchableOpacity onPress={this._jumpAction.bind(this)}>

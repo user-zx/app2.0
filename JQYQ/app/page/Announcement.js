@@ -19,7 +19,7 @@ const {width,height}=Dimensions.get('window');
 import NavigationBar from 'react-native-navbar';
 import px2dp from '../util/Px2dp';
 import {NavGoBack} from '../component/NavGoBack';
-import AnnouncementAT from './AnnouncementAT';
+import AnnouncementAT from './SearchView';
 import Network from '../util/Network'
 export default class Announcement extends Component{
     _page=0;
@@ -59,8 +59,9 @@ export default class Announcement extends Component{
     };
     render(){
         const leftButtonConfig = {
-            title:'返回',
-            handler:()=>this.buttonGoBack(),
+            title: '←',
+            handler: () => this.buttonGoBack(),
+            fontSize:32,
             tintColor: '#FFF'
         };
         const titleConfig = {

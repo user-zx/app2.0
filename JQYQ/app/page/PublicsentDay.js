@@ -185,7 +185,7 @@ export default class PublicsentWeek extends Component {
                     onPress={this._showTimePicker.bind(this)} >
                     <Text style={{marginLeft:20}}>{this.state.year}年度</Text>
                     <Text style={{marginRight:40}}>{this.state.month}月份</Text>
-                    <Image source={require('../image/指向-bottom.png')} style={{marginRight:20}} />
+                    <Image source={require('../image/zhixiang-bottom.png')} style={{marginRight:20}} />
                 </TouchableOpacity>
 
                 <ScrollView>
@@ -204,7 +204,7 @@ export default class PublicsentWeek extends Component {
                                                   }}
                                                   onPress={() => this._pressRow(item.title,item.id,'today')} >
                                     <Text style={{marginLeft:20,color:'#666666'}}>{item.title}舆情日报</Text>
-                                    <Image style={{marginRight:20}} source={require('../image/指向-right.png')} />
+                                    <Image style={{marginRight:20}} source={require('../image/zhixiang-right.png')} />
                                 </TouchableOpacity>
                             )
                         })

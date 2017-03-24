@@ -36,7 +36,7 @@ export default class LoginView extends Component{
         };
         this.icons = {
             'remanber' : require('../image/remanber@3x.png'),
-            'clearRermanber' :require('../image/复选框@3x.png')
+            'clearRermanber' :require('../image/fuxuankuang@3x.png')
         }
     }
     JumpAction (title) {
@@ -120,7 +120,7 @@ export default class LoginView extends Component{
                         </View>
                         <View style={{justifyContent:'center',height:px2dp(1),width:px2dp(257),backgroundColor:"#F2F2F2"}}></View>
                         <View style={styles.inputListView}>
-                            <Image source={require('../image/密码@3x.png')} style={styles.inputimageView}>
+                            <Image source={require('../image/mima@3x.png')} style={styles.inputimageView}>
                             </Image>
                             <TextInput
                                 style={styles.inPutStyle}

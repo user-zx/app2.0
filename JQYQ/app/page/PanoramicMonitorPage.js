@@ -26,7 +26,7 @@ import {toastShort} from '../component/Toast';
 import Network from '../util/Network';
 import '../util/dateFormat';
 import Modal from 'react-native-root-modal';
-import AnnouncementAT from './AnnouncementAT'
+import AnnouncementAT from './SearchView'
 
 export default class NewClass extends Component{
     _page=0;
@@ -198,9 +198,9 @@ export default class NewClass extends Component{
 
     render(){
         const rightButtonConfig = {
-            title: '搜索',
+            title: '🔍',
             handler: () => {this._pressRow1()},
-            fontSize: 32,
+            fontSize: 34,
             tintColor:'#FFF'
         };
         const titleConfig = {

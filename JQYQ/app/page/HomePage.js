@@ -129,7 +129,7 @@ export default class HomePage extends Component{
                 </View>
                 <ScrollView style={styles.container}>
                     <View style={styles.loudouView}>
-                        <Image source={require('../image/漏斗@2x.png')} style={styles.lodou}>
+                        <Image source={require('../image/loudou@2x.png')} style={styles.lodou}>
                             <View style={styles.textView}>
                             <Text style={[styles.loudouText,styles.loudaoText]}>{this.state.quanbu}</Text>
                             <Text style={styles.loudouText}>{this.state.xiangguan}</Text>
@@ -143,22 +143,22 @@ export default class HomePage extends Component{
                     <View style={styles.imageButton}>
                         <View style={styles.imageButtonView}>
                             <TouchableOpacity onPress={this.pressAction1.bind(this,'预警','appwarning2/getList')}>
-                                <ResponsiveImage source={require('../image/预警@2x.png')} style={styles.imageButtonPic}></ResponsiveImage>
+                                <ResponsiveImage source={require('../image/yujing@2x.png')} style={styles.imageButtonPic}></ResponsiveImage>
                             </TouchableOpacity>
                         </View>
                         <View style={styles.imageButtonView}>
                             <TouchableOpacity onPress={this.pressAction.bind(this,'舆情')}>
-                                <Image source={require('../image/舆情@2x.png')} style={styles.imageButtonPic}></Image>
+                                <Image source={require('../image/yuqing@2x.png')} style={styles.imageButtonPic}></Image>
                             </TouchableOpacity>
                         </View>
                         <View style={styles.imageButtonView}>
                             <TouchableOpacity onPress={this.pressAction.bind(this,'正面')}>
-                                <Image source={require('../image/正面@2x.png')} style={styles.imageButtonPic}></Image>
+                                <Image source={require('../image/zhengmian@2x.png')} style={styles.imageButtonPic}></Image>
                             </TouchableOpacity>
                         </View>
                         <View style={styles.imageButtonView}>
                             <TouchableOpacity onPress={this.pressAction.bind(this,'负面')}>
-                                <Image source={require('../image/负面@2x.png')} style={styles.imageButtonPic}></Image>
+                                <Image source={require('../image/fumian@2x.png')} style={styles.imageButtonPic}></Image>
                             </TouchableOpacity>
                         </View>
                     </View>
