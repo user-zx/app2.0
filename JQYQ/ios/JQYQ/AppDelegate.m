@@ -33,6 +33,12 @@
   return YES;
 }
 
+
+
+
+
+
+
 // 微信分享
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication annotation:(id)annotation

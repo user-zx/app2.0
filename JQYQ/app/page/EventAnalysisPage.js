@@ -11,7 +11,6 @@ import {
     Dimensions,
     TouchableOpacity,
     Animated,
-
 } from 'react-native';
 import {
     SwRefreshListView, //支持下拉刷新和上拉加载的ListView
@@ -28,7 +27,7 @@ import BGGlobal from '../util/BGGlobal'
 import SwipeitemView from '../component/Swipes'
 
 export default class EventAnalysisPage extends Component{
-    _page=0;
+    _page=1;
     _dataArr=[];
     _dataSource = new ListView.DataSource({rowHasChanged:(row1,row2)=>row1 !== row2});
     _params = new Object();
@@ -75,9 +74,7 @@ export default class EventAnalysisPage extends Component{
         this._dataArr = this._dataArr.concat();
         this._dataArr.splice(rowID,1);
         this.setState({
-            //dataArr:resArr,
             dataSource:this._dataSource.cloneWithRows(this._dataArr),
-            //id:resArr.id
         });
         toastShort('删除成功');
         let timer = setTimeout(()=>{
@@ -122,7 +119,6 @@ export default class EventAnalysisPage extends Component{
 
             />
         )
-
     }
     _pressRow(title,id){
 
@@ -145,7 +141,6 @@ export default class EventAnalysisPage extends Component{
         let rightBtn = this._rightButtons(rowData.id,rowID);
         let id = '' + a + b;
         console.log(rowData,'00009090909090');
-        //let aa = 'qwe,er,ty',
         if (rowData.word){
             wordArr = rowData.word.split(',');
         }
@@ -184,7 +179,9 @@ export default class EventAnalysisPage extends Component{
     _onListRefersh(end){
         let timer =  setTimeout(()=>{
             clearTimeout(timer);
-            Network.post('appevent2/searchEvent',{},(response)=>{
+            let params = new Object();
+            params.pageSize = 20;
+            Network.post('appevent2/searchEvent',params,(response)=>{
                 let resArr=response.rows;
                 this.setState({
                     dataArr:resArr,
@@ -207,21 +204,25 @@ export default class EventAnalysisPage extends Component{
                     let resArr=response.rows;
                     this._dataArr = this._dataArr.concat(resArr);
                     this.setState({
-                        //dataArr:resArr,
+                        dataArr:resArr,
                         dataSource:this._dataSource.cloneWithRows(this._dataArr)
                     })
                 }
 
             },(err)=>{err});
-            end(this._page > 2);//加载成功后需要调用end结束刷新 假设加载4页后数据全部加载完毕
-        },2000)// 两秒后刷新结束
+            end(this.state.dataArr && this.state.dataArr.length < 10);//加载成功后需要调用end结束刷新
+        },2000); // 两秒后刷新结束
     }
     //首次进入页面后加载数据源并更新 state
     componentDidMount() {
-        Network.post('appevent2/searchEvent',{},(response)=>{
+        let params = new Object();
+        //pageSize 设置 每次请求都少条数据
+        params.pageSize = 20;
+        Network.post('appevent2/searchEvent',params,(response)=>{
             let resArr=response.rows;
-            this._dataArr = this._dataArr.concat(resArr)
+            this._dataArr = this._dataArr.concat(resArr);
             this.setState({
+                dataArr:resArr,
                 dataSource:this._dataSource.cloneWithRows(this._dataArr)
             })
         },(err)=>{err});

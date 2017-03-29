@@ -47,6 +47,7 @@ export default class NewClass extends Component{
             sequence:'',
             articleList:[],
             textId:'',//详情 id
+            sort:'',
 
         };
         this.icons = {
@@ -57,14 +58,15 @@ export default class NewClass extends Component{
         }
     }
 
-
 //下拉框点击事件
     _dropdown_6_onSelect(index,value) {
         let params=new FormData();
         params.carrie=this.state.carrie;//载体
-        params.aspect=this.state.aspect;//相关
-        params.sequence=this.state.sequence;//热度
-        Network.post('apppanorama2/getList',params,(response)=>{
+        params.time=this.state.aspect;//时间
+        params.nature=this.state.sequence;//特征
+        params.sort = this.state.sort; //排序
+
+        Network.post('appevent2/getList',params,(response)=>{
             let resArr= response.rows.result;
             console.log(resArr+'我是点击下拉框事件'+params.carrie,params.aspect,params.sequence);
             for (let i in resArr){
@@ -75,7 +77,6 @@ export default class NewClass extends Component{
                 dataSource:this._dataSource.cloneWithRows(resArr)
             })
         },(err)=>{err});
-
     }
 
     render(){
@@ -93,6 +94,24 @@ export default class NewClass extends Component{
                                        this._dropdown_6_onSelect(idx, value)
                                    }}
                     />
+                    <ModalDropdown options={['不限','今日','昨日','近七天','近30天',]}
+                                   defaultValue='时间'
+                                   textStyle={{fontSize:px2dp(15),padding:px2dp(10),textAlign:'center'}}
+                                   style={styles.dropdown_1}
+                                   dropdownStyle={styles.dropdown_9}
+                                   onSelect={(idx, value) => {
+                                       if(idx == 0){
+                                           this.state.sequence = 'today';
+                                       }else  if (idx == 1){
+                                           this.state.sequence = 'yesterday';
+                                       }else  if (idx == 2) {
+                                           this.state.sequence = 'week';
+                                       }else if  (idx == 3) {
+                                           this.state.sequence = 'month';
+                                       }
+                                       this._dropdown_6_onSelect(idx, value)
+                                   }}
+                    />
                     <ModalDropdown
                         options={['不限', '相关','舆情','正面','负面']}
                         //options={this.state.dataArr}
@@ -105,16 +124,6 @@ export default class NewClass extends Component{
                             this._dropdown_6_onSelect(idx, value)
                         }}
                     />
-                    <ModalDropdown options={['热度','时间']}
-                                   defaultValue='排序'
-                                   textStyle={{fontSize:px2dp(15),padding:px2dp(10),textAlign:'center'}}
-                                   style={styles.dropdown_1}
-                                   dropdownStyle={styles.dropdown_9}
-                                   onSelect={(idx, value) => {
-                                       this.state.sequence = value;
-                                       this._dropdown_6_onSelect(idx, value)
-                                   }}                    />
-
                         <ModalDropdown options={['全部', '热度降序','热度升序','阅读量降序','转发量降序','评论量降序']}
                                        defaultValue='排序'
                                        textStyle={{fontSize:px2dp(15),padding:px2dp(10),textAlign:'center'}}
@@ -127,9 +136,7 @@ export default class NewClass extends Component{
                 <View style={{flex:1}}>{this._renderListView()}</View>
             </View>
         );
-
     }
-
     _renderListView(){
         return(
             <SwRefreshListView
@@ -247,7 +254,7 @@ export default class NewClass extends Component{
             params.carrie=this.state.carrie;//载体
             params.aspect=this.state.aspect;//相关
             params.sequence=this.state.sequence;//热度
-            params.page = this._page;
+            params.pageNo = this._page;
             params.eventId = this.eventId;
 
             Network.post('appevent2/getList',params,(response)=>{
@@ -261,13 +268,14 @@ export default class NewClass extends Component{
                     dataSource:this._dataSource.cloneWithRows(resArr)
                 })
             },(err)=>{err});
-            end(this._page > 2);//加载成功后需要调用end结束刷新 假设加载4页后数据全部加载完毕
+            end(this._page > 4);//加载成功后需要调用end结束刷新 假设加载4页后数据全部加载完毕
 
         },2000)
 
     }
 
     componentDidMount() {
+        //加载下拉框内容
         Network.post('apppanorama2',{},(response)=>{
             this.setState({
                 downArr :response.data.natureList,
@@ -280,9 +288,10 @@ export default class NewClass extends Component{
         });
         let params=new Object();
         params.eventId = this.eventId;
+        params.pageSize = 100;
         Network.post('appevent2/getList',params,(response)=>{
             let resArr= response.rows.result;
-            console.log(response+'我是第一次进入舆情');
+            console.log(response+'事件文章');
             for (let i in resArr){
                 resArr[i].createTime = new Date(resArr[i].createTime).Format("yyyy/MM/dd hh:mm");
                 this._dataArr = resArr;
@@ -338,7 +347,6 @@ const styles=StyleSheet.create({
     },
     cellImageView:{
         flexDirection:'row',
-
     },
     cellImage:{
 

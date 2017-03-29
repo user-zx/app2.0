@@ -28,7 +28,7 @@ import '../util/dateFormat';
 import Modal from 'react-native-root-modal';
 
 export default class NewClass extends Component{
-    _page=0;
+    _page=1;
     _dataSource = new ListView.DataSource({rowHasChanged:(row1,row2)=>row1 !== row2});
     _dataArr=[];
     constructor(props) {
@@ -231,8 +231,8 @@ export default class NewClass extends Component{
     };
 //下拉框点击事件
     _dropdown_6_onSelect(index,value) {
-        this._page = 0;
-        let params=new FormData();
+       // this._page = 0;
+        let params=new Object();
         params.carrie=this.state.carrie;//载体
         params.nature=this.state.aspect;//相关
         params.sort=this.state.sequence;//热度
@@ -478,23 +478,22 @@ export default class NewClass extends Component{
             this._page++;
             let params=new Object();
             params.carrie=this.state.carrie;//载体
-            params.aspect=this.state.aspect;//相关
-            params.sequence=this.state.sequence;//热度
-            params.page = this._page;
+            params.nature=this.state.aspect;//相关
+            params.sort=this.state.sequence;//热度
+            params.pageNo = this._page;
             Network.post('apppanorama2/getList',params,(response)=>{
                 let resArr= response.rows;
                 console.log(response+'我是第一次进入舆情');
                 for (let i in resArr){
                     resArr[i].createTime = new Date(resArr[i].createTime).Format("yyyy/MM/dd hh:mm");
-                    //this._dataArr = resArr;
                 }
                 this._dataArr = this._dataArr.concat(resArr);
                 this.setState({
-                    // dataArr:resArr,
+                     dataArr:resArr,
                     dataSource:this._dataSource.cloneWithRows(this._dataArr)
                 })
             },(err)=>{err});
-            end(this._page > 6);//加载成功
+            end(this.state.dataArr && this.state.dataArr.length <10);//加载结束条件
 
         },2000)
 
@@ -509,12 +508,13 @@ export default class NewClass extends Component{
             });
             let timer = setTimeout(()=>{
                 clearTimeout(timer);
-            },500);//自动调用刷新 新增方法
+            },500);//自动调用刷新
         },(err)=>{
             toastShort(err)
         });
         let params=new Object();
         params.nature=this.props.title;
+
         Network.post('apppanorama2/getList',params,(response)=>{
             let resArr= response.rows;
             for (let i in resArr){
@@ -522,7 +522,7 @@ export default class NewClass extends Component{
             }
             this._dataArr = this._dataArr.concat(resArr);
             this.setState({
-               // dataArr:resArr,
+                dataArr:resArr,
                 dataSource:this._dataSource.cloneWithRows(this._dataArr)
             })
         },(err)=>{err});

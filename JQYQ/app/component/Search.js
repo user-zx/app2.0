@@ -48,7 +48,7 @@ class Search extends Component {
         /**
          * local variables
          */
-        this.placeholder = this.props.placeholder || '情输入关键字';
+        this.placeholder = this.props.placeholder || '请输入关键字';
         this.cancelTitle = this.props.cancelTitle || '取消';
     }
 

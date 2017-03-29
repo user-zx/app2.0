@@ -67,11 +67,11 @@ export default class SelfStart extends Component{
         console.log('取消收藏');
         let params = new Object();
         params.id = id;
-        this._dataArr = this._dataArr.concat()
-        this._dataArr.splice(rowId,1)
+        this._dataArr = this._dataArr.concat();
+        this._dataArr.splice(rowId,1);
         this.setState({
             dataSource:this._dataSource.cloneWithRows(this._dataArr),
-        })
+        });
         Network.post('apparticle2/saveFavorites',params,(res)=>{
             console.log('取消收藏成功');
             let resArr= res.rows.result;
@@ -79,11 +79,10 @@ export default class SelfStart extends Component{
                 resArr[i].createTime = new Date(resArr[i].createTime).Format("yyyy/MM/dd hh:mm");
             }
             this.setState({
-                // dataArr:resArr,
                 // dataSource:this._dataSource.cloneWithRows(resArr),
                 id:resArr.id
             });
-        },(err)=>{err})
+        },(err)=>{err});
         let timer = setTimeout(()=>{
             clearTimeout(timer);
             //this.refs.listView.beginRefresh()
@@ -219,7 +218,7 @@ export default class SelfStart extends Component{
             }
             this._dataArr = this._dataArr.concat(resArr);
             this.setState({
-                dataArr:resArr,
+                //dataArr:resArr,
                 dataSource:this._dataSource.cloneWithRows(this._dataArr),
                 id:resArr.id
             })

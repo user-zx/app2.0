@@ -47,7 +47,7 @@ export default class Announcement extends Component{
                 name:'AnnouncementAT',
                 component:AnnouncementAT,
                 params:{
-                    message:'情爱里无智者',
+                    message:'0000',
                     title:title,
                 }
             })
@@ -92,19 +92,16 @@ export default class Announcement extends Component{
                 onRefresh={this._onListRefersh.bind(this)}
             />
         )
-
     }
     //每行 cell 的内容渲染iew
     _renderRow(rowData) {
         return (
-
                 <View style={{flexDirection:'row'}}>
                     <View style={styles.cell}>
                         <Text style={styles.cellTitle}>{rowData.title}</Text>
                         <Text style={styles.cellText}>{rowData.timeString}</Text>
                     </View>
                 </View>
-
         )
 
     }

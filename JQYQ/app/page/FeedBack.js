@@ -111,9 +111,9 @@ export default class FeedBack extends Component{
                     params.content = this.state.commitText;
                     params.type = 2;
                     Network.post('appmessage2/saveUserAdvise',params,(response)=>{
-                        alert(response.result);
+                        toastShort('提交成功')
                     },(err)=>{
-                        alert(err);
+                        toastShort('提交失败')
                     })
                 }}>
                     <View style={styles.commitButton}>

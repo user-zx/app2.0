@@ -11,7 +11,7 @@ import {
     Dimensions,
     Animated,
     ScrollView,
-
+    AsyncStorage,
 } from 'react-native';
 import Search from '../component/Search';
 import Modal from 'react-native-root-modal';
@@ -220,12 +220,14 @@ export default class AnnouncementAT extends Component{
                                                     <Image source={require('../image/seacrh/history@3x.png')} style={{marginLeft:20}}/>
                                                     <Text style={{marginLeft:5,textAlign:'center',color:'#666666'}}>{item}</Text>
                                                 </View>
-                                                <Image  source={require('../image/seacrh/delate@3x.png')}
-                                                        style={{marginRight:15}}
-                                                        onPress={()=>{
-                                                            this.removeOne.bind(this,index)
-                                                        }}
-                                                />
+                                                <TouchableOpacity onPress={
+                                                    ()=> this.removeOne(index)
+                                                }>
+                                                    <Image  source={require('../image/seacrh/delate@3x.png')}
+                                                            style={{marginRight:15}}
+
+                                                    />
+                                                </TouchableOpacity>
                                             </View>
                                         )
                                     })
@@ -252,11 +254,20 @@ export default class AnnouncementAT extends Component{
         return new Promise((resolve, reject) => {
             console.log('onSearch', text);
            // this._searchARR = this._searchARR.concat(text);
+            //在数组第0个位置添加刚刚输入的内容
             this._searchARR.unshift(text);
+            //数组储存到本地
+            
+
+
+
+            //模态消失
             this.hideModal();
+            //更新state 属性
             this.setState({
                 searchArr:this._searchARR
             });
+            //调用搜索事件
             this._SearchAction(text);
             resolve();
         });

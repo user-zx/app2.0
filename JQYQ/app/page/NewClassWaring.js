@@ -29,7 +29,7 @@ import '../util/dateFormat';
 import Modal from 'react-native-root-modal';
 
 export default class NewClassWaring extends Component{
-    _page=0;
+    _page=1;
     _dataSource = new ListView.DataSource({rowHasChanged:(row1,row2)=>row1 !== row2});
     _dataArr=[];
     constructor(props) {
@@ -216,6 +216,7 @@ export default class NewClassWaring extends Component{
             params.publishSite = '关注'
         }
         console.log(params,'hahahhahhahahhahahahhaah');
+
         Network.post('appwarning2/getList',params,(response)=>{
             let resArr= response.rows.result;
             console.log(resArr+'我是点击下拉框事件');
@@ -234,7 +235,7 @@ export default class NewClassWaring extends Component{
     }
     //下拉框点击事件
     _dropdown_6_onSelect(index,value) {
-        this._page = 0;
+        this._page = 1;
         let params=new FormData();
         params.carrie=this.state.carrie;//载体
         params.nature=this.state.aspect;//相关
@@ -485,8 +486,9 @@ export default class NewClassWaring extends Component{
                     dataSource:this._dataSource.cloneWithRows(this._dataArr)
                 })
             },(err)=>{err});
-            end(this._page > 2);
-
+           // end(this._page > 6);
+            end(this.state.dataArr != '' && this.state.dataArr.length  < 10);
+            console.log(params,'0000000000000000000000000')
         },2000)
 
     }
@@ -509,11 +511,12 @@ export default class NewClassWaring extends Component{
             console.log(resArr+'我是第一次进入预警');
             for (let i in resArr){
                 resArr[i].createTime = new Date(resArr[i].createTime).Format("yyyy/MM/dd hh:mm");
-                this._dataArr = resArr;
             }
+            this._dataArr = this._dataArr.concat(resArr);
+
             this.setState({
                 dataArr:resArr,
-                dataSource:this._dataSource.cloneWithRows(resArr)
+                dataSource:this._dataSource.cloneWithRows(this._dataArr)
             })
         },(err)=>{err});
 
@@ -550,8 +553,6 @@ const styles=StyleSheet.create({
         paddingBottom:px2dp(15),
         fontSize:15,
         color:'#333333',
-
-
     },
     cellText:{
         fontSize:11,
@@ -562,7 +563,6 @@ const styles=StyleSheet.create({
     },
     cellImageView:{
         flexDirection:'row',
-
     },
     cellImage:{
 
