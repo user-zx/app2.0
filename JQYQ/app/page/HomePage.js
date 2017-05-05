@@ -22,6 +22,7 @@ import ResponsiveImage from 'react-native-responsive-image';
 import Network from '../util/Network';
 import {toastLong} from '../component/Toast';
 import NewClassWaring from './NewClassWaring';
+import NewClassPage from './NewClassPage';
 
 const {width,height}=Dimensions.get('window');
 
@@ -37,6 +38,7 @@ export default class HomePage extends Component{
             yuqing:'',
             columnNameArr:[],
             lableNameArr:[],
+            id :'',
         };
         this.icons = {
             'up'    : require('../image/up.png'),
@@ -44,8 +46,7 @@ export default class HomePage extends Component{
         };
     }
     //用三个这方法,真是绝了....下个版本再改吧
-    pressAction(title,carrie){
-        var  _this = this;
+    pressAction(title,carrie,id){
         const {navigator} = this.props;
         if (navigator){
             navigator.push({
@@ -54,6 +55,7 @@ export default class HomePage extends Component{
                 params:{
                     message:carrie,
                     title:title,
+                    id :id,
 
                 }
             })
@@ -61,7 +63,7 @@ export default class HomePage extends Component{
     }
     pressAction1(title,carrie){
         var  _this = this;
-        const {navigator} = this.props;
+        const {navigator} = _this.props;
         if (navigator){
             navigator.push({
                 name:'NewClassWaring',
@@ -70,6 +72,19 @@ export default class HomePage extends Component{
                     message:carrie,
                     title:title,
 
+                }
+            })
+        }
+    }
+    pressAction2(title,id){
+        const {navigator} = this.props;
+        if (navigator){
+            navigator.push({
+                name:'NewClassPage',
+                component:NewClassPage,
+                params:{
+                    title:title,
+                    id :id,
                 }
             })
         }
@@ -117,6 +132,9 @@ export default class HomePage extends Component{
             title:'首页',
             tintColor:'#FFF'
         };
+        const bar = {
+            style:'light-content',
+        };
         return(
             <View style={styles.zheBigView}>
                 <View>
@@ -124,6 +142,7 @@ export default class HomePage extends Component{
                         title={titleConfig}
                         //rightButton={rightButtonConfig}
                         tintColor={'#18242e'}
+                        statusBar={bar}
                     >
                     </NavigationBar>
                 </View>
@@ -168,14 +187,14 @@ export default class HomePage extends Component{
                             this.state.columnNameArr.map((item,i)=>{
                                 return(
                                     <View key={i} style={styles.columnItem}>
-                                        <View style={{width:width*0.25,marginLeft:px2dp(25),borderRightWidth:1,borderRightColor:"#666666",alignSelf:'center'}}>
+                                        <View style={{width:width*0.25,marginLeft:px2dp(25),borderRightWidth:1,borderRightColor:"#D9D9D9",alignSelf:'center'}}>
                                             <Text style={{fontSize:16}}>{item.name}</Text>
                                         </View>
                                         <View  style={styles.lableItem}>
                                             {
                                                 item.columnTags.map((itemKey,index)=>{
                                                     return(
-                                                        <TouchableOpacity key ={index}onPress={this.pressAction.bind(this,itemKey.name)}>
+                                                        <TouchableOpacity key ={index} onPress={this.pressAction2.bind(this,itemKey.name,itemKey.id)}>
                                                             <View key={index} style={{padding:(10,20,10,10)}}>
                                                                 <Text style={{color:'#666666'}}>{itemKey.name}</Text>
                                                             </View>

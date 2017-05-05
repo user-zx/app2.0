@@ -43,10 +43,7 @@ export default class ChartFifth extends Component {
                 option:res.data.option,
                 jo:res.data.jo
             });
-            console.log(res.data.jo,'66666666666666666');
-        },(err)=>{
-            console.log(err,'图表请求报错55555555',params.id)
-        })
+        },(err)=>{err})
     }
 
     render() {
@@ -56,7 +53,7 @@ export default class ChartFifth extends Component {
 
                 <Echarts option={this.state.option}  height={300} />
 
-                <View style={{width:width,flexDirection:'column'}}>
+                <View style={{width:width,flexDirection:'column',paddingBottom:20}}>
 
                     <View style={{flexDirection:'row',top:10,left:20,right:20}}>
                         <View style={styles.tabHeader}>
@@ -101,7 +98,7 @@ const styles = StyleSheet.create({
         top:50,
     },
     tabHeader:{
-        backgroundColor:'red',
+        backgroundColor:'rgb(111,190,203)',
         borderWidth:1,
         borderColor:'#FFF',
         width:(width-40)/4,
@@ -113,7 +110,7 @@ const styles = StyleSheet.create({
         right:20
     },
     tabText:{
-        backgroundColor:'blue',
+        backgroundColor:'rgb(116,140,210)',
         borderWidth:1,
         borderColor:'#FFF',
         width:(width-40)/4,

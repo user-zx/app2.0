@@ -23,13 +23,13 @@ export default class Downloader {
 
         var request = this.request || new XMLHttpRequest();
         request.onreadystatechange = () => {
-            console.log(request.readyState);
+            //console.log(request.readyState);
             if(request.readyState === request.HEADERS_RECEIVED) {
                 this.contentLength = parseInt(request.getResponseHeader('Content-Length'), 10);
-                console.log(this.contentLength);
+                //console.log(this.contentLength);
             }
             else if(request.readyState === request.LOADING) {
-                console.log(request.response);
+                //console.log(request.response);
                 progressCallback(request.responseText.length/this.contentLength);
             }
             else if(request.readyState === request.DONE) {
@@ -37,10 +37,10 @@ export default class Downloader {
                     this.canceled = false;
                     return;
                 }
-                console.log(request);
-                console.log("finish");
+                //console.log(request);
+               // console.log("finish");
                 if(request.status === 200) {
-                    console.log("successCallback");
+                    //console.log("successCallback");
                     successCallback(request.responseText);
                 }
                 else if(request.status !== 0) {
@@ -50,7 +50,7 @@ export default class Downloader {
                     failCallback('Error: ' + request.responseText);
                 }
             }
-        }
+        };
         //请求
         request.open('GET', this.url);
         //Avoid gzip so we can actually show progress

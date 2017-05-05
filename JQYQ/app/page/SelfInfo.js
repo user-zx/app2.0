@@ -40,12 +40,6 @@ export default class SelfInfo extends Component{
             userName:'',
         }
     }
-    ChangeName(){
-        console.log('哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈')
-    }
-    ChangePassword(){
-        console.log('呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵')
-    }
 
     buttonGoBack(){
         const {navigator} = this.props;
@@ -55,9 +49,7 @@ export default class SelfInfo extends Component{
 
     componentDidMount() {
         Network.post('app2/profile',{},(response)=>{
-            console.log(response.data.user,'[][][][][][][][][][')
             let data = new Date(response.data.user.createdAt.time).Format("yyyy/MM/dd hh:mm");
-            console.log(data,'yyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
             this.setState({
                 name:response.data.user.name,
                 email:response.data.user.email,
@@ -85,6 +77,9 @@ export default class SelfInfo extends Component{
             title:'个人信息',
             tintColor: '#FFF'
         };
+        const bar = {
+            style:'light-content',
+        };
         return(
             <View style={{ flex:1 ,flexDirection:'column' , backgroundColor:'#F2F2F2'}}>
                 <View>
@@ -92,62 +87,48 @@ export default class SelfInfo extends Component{
                         title={titleConfig}
                         tintColor={'#18242e'}
                         leftButton={leftButtonConfig}
+                        statusBar={bar}
                     />
                 </View>
                 <View style={styles.TabViewStyle}>
-                    <TouchableOpacity onPress={this.ChangeName.bind(this)}>
                         <View style={styles.smallViewStyle}>
                             <Text style={styles.textViewStyles}>账号</Text>
                             <Text style={styles.textViiewSmall}>{this.state.userName}</Text>
                         </View>
-                    </TouchableOpacity>
 
-                    <TouchableOpacity onPress={this.ChangePassword.bind(this)}>
-                        <View style={styles.smallViewStyle}>
-                            <Text style={styles.textViewStyles}>修改密码</Text>
-                            <Text style={styles.textViiewSmall}></Text>
-                        </View>
-                    </TouchableOpacity>
+                    {/*<TouchableOpacity onPress={this.ChangePassword.bind(this)}>*/}
+                        {/*<View style={styles.smallViewStyle}>*/}
+                            {/*<Text style={styles.textViewStyles}>修改密码</Text>*/}
+                            {/*<Text style={styles.textViiewSmall}></Text>*/}
+                        {/*</View>*/}
+                    {/*</TouchableOpacity>*/}
 
-                    <TouchableOpacity onPress={this.ChangePassword.bind(this)}>
                         <View style={styles.smallViewStyle}>
                             <Text style={styles.textViewStyles}>注册时间</Text>
                             <Text style={styles.textViiewSmall}>{this.state.registerTime}</Text>
                         </View>
-                    </TouchableOpacity>
 
-                    <TouchableOpacity onPress={this.ChangePassword.bind(this)}>
                         <View style={styles.smallViewStyle}>
                             <Text style={styles.textViewStyles}>姓名</Text>
                             <Text style={styles.textViiewSmall}>{this.state.name}</Text>
                         </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={this.ChangePassword.bind(this)}>
                         <View style={styles.smallViewStyle}>
                             <Text style={styles.textViewStyles}>邮箱</Text>
                             <Text style={styles.textViiewSmall}>{this.state.email}</Text>
                         </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={this.ChangePassword.bind(this)}>
                         <View style={styles.smallViewStyle}>
                             <Text style={styles.textViewStyles}>行业</Text>
                             <Text style={styles.textViiewSmall}>{this.state.industry}</Text>
                         </View>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={this.ChangePassword.bind(this)}>
                         <View style={styles.smallViewStyle}>
                             <Text style={styles.textViewStyles}>单位</Text>
                             <Text style={styles.textViiewSmall}>{this.state.company}</Text>
                         </View>
-                    </TouchableOpacity>
 
-                    <TouchableOpacity onPress={this.ChangePassword.bind(this)}>
                         <View style={styles.smallViewStyle}>
                             <Text style={styles.textViewStyles}>省份</Text>
                             <Text style={styles.textViiewSmall}>{this.state.city}</Text>
                         </View>
-                    </TouchableOpacity>
                 </View>
             </View>
         )

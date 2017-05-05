@@ -42,14 +42,13 @@ export default class ArticleDetails extends Component {
         this.setState({
             id:this.props.id,
             title:this.props.title,
-
         });
         var params = new Object();
         params.id = this.props.id;
-        console.log(params);
+        //console.log(params);
         Network.post('apparticle2',params,(response)=>{
 
-            console.log(response);
+            //console.log(response);
             this.setState({
                 message:response.data.artile.content,
             });
@@ -63,8 +62,8 @@ export default class ArticleDetails extends Component {
 
 
     _handlePress(index) {
-        let URL = 'http://114.55.179.202:8989/phone/html/articleDetail.html?id='+this.state.id;
-        console.log(index);
+        let URL = 'http://114.55.179.202:8989/apparticle2/share?id='+this.state.id;
+        //console.log(index);
         if (index ==1 ){
             //分享给微信好友(连接)
             this.pressAction();
@@ -79,7 +78,7 @@ export default class ArticleDetails extends Component {
                             description: this.state.title,
                             thumbImage: 'http://mta.zttit.com:8080/images/ZTT_1404756641470_image.jpg',
                             type: 'news',
-                            webpageUrl: 'http://114.55.179.202:8989/phone/html/articleDetail.html?id='+this.state.id
+                            webpageUrl: 'http://114.55.179.202:8989/apparticle2/share?id='+this.state.id
                         })
                             .catch((error) => {
                                 toastShort(error.message);
@@ -89,16 +88,18 @@ export default class ArticleDetails extends Component {
                     }
                 });
 
-        } else if(index == 3) {
+        } else if(index === 3) {
             let params = new Object();
             params.id = this.state.id;
+            console.log(params);
             //这里接口只要传过去参数 ID 就 OK, 不管返回什么都是已经添加到收藏, POST 的方法里面判断的不对,所以会执行 errCallBack
             Network.post('apparticle2/saveFavorites',params,(res)=>{
                 console.log('添加成功',res);
-            },(err)=>{err});
-            toastShort('添加星标成功');
+                if(res.status === 0){
+                    toastShort('添加收藏成功');
+                }
+            },(err)=>{toastShort('添加收藏失败',err);});
         }
-
     }
 
     pressAction= ()=>{
@@ -110,7 +111,7 @@ export default class ArticleDetails extends Component {
                         description:this.state.title,
                         thumbImage: 'http://mta.zttit.com:8080/images/ZTT_1404756641470_image.jpg',
                         type: 'news',
-                        webpageUrl: 'http://114.55.179.202:8989/phone/html/articleDetail.html?id='+this.state.id
+                        webpageUrl: 'http://114.55.179.202:8989/apparticle2/share?id='+this.state.id
                     })
                         .catch((error) => {
                             toastShort(error.message);
@@ -151,7 +152,10 @@ export default class ArticleDetails extends Component {
         };
         const styles1 = {
             numberOfLines:1
-        }
+        };
+        const bar = {
+            style:'light-content',
+        };
         return(
 
             <View style={ADstyles.bigViewStyles}>
@@ -162,6 +166,7 @@ export default class ArticleDetails extends Component {
                         rightButton={startButton}
                         tintColor={'#18242e'}
                         numberOfLines={1}
+                        statusBar={bar}
                 />
                 </View>
                 <ActionSheet

@@ -19,6 +19,10 @@ import Announcement from './Announcement';
 import PublicOpinionReports from './Publicsentiment';
 import FeedBack from './FeedBack';
 import px2dp from '../util/Px2dp';
+import Navigator from  '../component/Navigator'
+import Network from '../util/Network';
+import {remove} from './LoginView'
+
 var {width,height} = Dimensions.get('window');
 
 
@@ -27,7 +31,7 @@ export default class MyPage extends React.Component {
         super(props);
         this.state={
             selfNumber:'15712871715',
-            isBadge :true,
+            isBadge :false,
             badgeNumber : 13
         }
 
@@ -49,12 +53,14 @@ export default class MyPage extends React.Component {
                     }
                 }
             });
-            console.log('--------------->',title)
+            //console.log('--------------->',title)
         }
     }
 
     QuitAction () {
-
+        remove('userInfo');
+        this.JumpAction(Navigator);
+        Network.post('logout','',()=>{},()=>{})
     }
     badgeView(){
 
@@ -66,26 +72,30 @@ export default class MyPage extends React.Component {
                 return null;
             }
 
-
+    }
+    componentDidMount() {
+        Network.post('app2/profile',{},(response)=>{
+            this.setState({
+                selfNumber:response.data.user.phone,
+            })
+        },(err)=>{err})
     }
 
     render (){
-        const rightButtonConfig = {
-            title: '功能',
-            handler: () => alert('点击效果'),
-        };
         const titleConfig = {
             title: '我的',
             tintColor:'#FFF'
         };
-
+        const bar = {
+            style:'light-content',
+        };
         return (
             <View style={{backgroundColor:'#f4f4f4',flex:1,flexDirection:'column'}}>
                 <View>
                     <NavigationBar
                         title={titleConfig}
-                        //rightButton={rightButtonConfig}
                         tintColor={'#18242e'}
+                        statusBar={bar}
                     />
                 </View>
                 <View style={{flexDirection:'column',alignItems:'flex-start'}}>

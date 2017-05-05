@@ -36,7 +36,12 @@ export default class ChartOne extends Component {
             option : '',
             text: 'test',
             jo:[],
+            xAxis: [{
+                axisLabel: {
+                    interval: 2
+                }
 
+            }]
         };
     }
 
@@ -49,10 +54,7 @@ export default class ChartOne extends Component {
                 jo:res.data.jo
 
             });
-            console.log(params.id,res.data.option,'222222222222222222222222');
-        },(err)=>{
-            console.log(err,'图表请求报错',params.id)
-        })
+        },(err)=>{err})
     }
 
     render() {
@@ -62,13 +64,13 @@ export default class ChartOne extends Component {
 
                 <Echarts option={this.state.option}  height={300} />
 
-                <View style={{width:width,flexDirection:'column'}}>
+                <View style={{width:width,flexDirection:'column',paddingBottom:20}}>
 
-                    <View style={{flexDirection:'row',top:10,left:20,right:20}}>
+                    <View style={{flexDirection:'row' ,top:10,left:20,right:20}}>
                         <View style={styles.tabHeader}>
                             <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>载体</Text>
                         </View>
-                        <View style={[styles.tabHeaderright,]}>
+                        <View style={styles.tabHeaderright}>
                             <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>文章数</Text>
                         </View>
                     </View>
@@ -96,13 +98,13 @@ const styles = StyleSheet.create({
         top:50,
     },
     tabHeader:{
-        backgroundColor:'red',
+        backgroundColor:'rgb(111,190,203)',
         borderWidth:1,
         borderColor:'#FFF',
         width:(width-40)/3,
     },
     tabHeaderright:{
-        backgroundColor:'red',
+        backgroundColor:'rgb(111,190,203)',
         borderWidth:1,
         borderColor:'#FFF',
         width:(width-40)/3*2,
@@ -114,7 +116,7 @@ const styles = StyleSheet.create({
         right:20
     },
     tabText:{
-        backgroundColor:'blue',
+        backgroundColor:'rgb(116,140,210)',
         borderWidth:1,
         borderColor:'#FFF',
         width:(width-40)/3,
@@ -124,7 +126,7 @@ const styles = StyleSheet.create({
         textAlign:'center',
     },
     tabTextRight:{
-        backgroundColor:'blue',
+        backgroundColor:'rgb(116,140,210)',
         borderWidth:1,
         borderColor:'#FFF',
         width:(width-40)/3*2,

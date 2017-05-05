@@ -27,7 +27,7 @@ import '../util/dateFormat';
 import SwipeitemView from '../component/Swipes'
 
 export default class SelfStart extends Component{
-    _page=0;
+    _page=1;
     _dataSource = new ListView.DataSource({rowHasChanged:(row1,row2)=>row1 !== row2});
     _dataArr = [];
     constructor(props) {
@@ -43,7 +43,8 @@ export default class SelfStart extends Component{
             value:'',
             scrollEnable: true,
             hasIdOpen: false,
-
+            nextTime:'',
+            isMore:'',
         }
     }
 
@@ -64,7 +65,7 @@ export default class SelfStart extends Component{
         ]
     }
     _delegateAT(id,rowId){
-        console.log('取消收藏');
+        //console.log('取消收藏');
         let params = new Object();
         params.id = id;
         this._dataArr = this._dataArr.concat();
@@ -73,15 +74,22 @@ export default class SelfStart extends Component{
             dataSource:this._dataSource.cloneWithRows(this._dataArr),
         });
         Network.post('apparticle2/saveFavorites',params,(res)=>{
-            console.log('取消收藏成功');
+            //console.log('取消收藏成功');
             let resArr= res.rows.result;
-            for (let i in resArr){
-                resArr[i].createTime = new Date(resArr[i].createTime).Format("yyyy/MM/dd hh:mm");
+            if(response.rows.result =''||!response.rows.result){
+                toastShort('没有收藏的文章');
+                return;
             }
-            this.setState({
-                // dataSource:this._dataSource.cloneWithRows(resArr),
-                id:resArr.id
-            });
+            if(resArr){
+                for (let i in resArr){
+                    resArr[i].publishTime = new Date(resArr[i].publishTime).Format("yyyy/MM/dd hh:mm");
+                }
+                this.setState({
+                    // dataSource:this._dataSource.cloneWithRows(resArr),
+                    id:resArr.id
+                });
+            }
+
         },(err)=>{err});
         let timer = setTimeout(()=>{
             clearTimeout(timer);
@@ -99,6 +107,9 @@ export default class SelfStart extends Component{
             title: '我的收藏',
             tintColor: '#FFF'
         };
+        const bar = {
+            style:'light-content',
+        };
         return (
             <View style={{flex:1,flexDirection:'column'}}>
                 <View>
@@ -106,6 +117,7 @@ export default class SelfStart extends Component{
                         title={titleConfig}
                         leftButton={leftButtonConfig}
                         tintColor={'#18242e'}
+                        statusBar={bar}
                     />
                 </View>
 
@@ -125,6 +137,8 @@ export default class SelfStart extends Component{
                 renderRow={this._renderRow.bind(this)}
                 onRefresh={this._onListRefersh.bind(this)}
                 onLoadMore={this._onLoadMore.bind(this)}
+                enableEmptySections = {true}
+                pusuToLoadMoreTitle="加载中..."
 
             />
         )
@@ -157,7 +171,7 @@ export default class SelfStart extends Component{
                     <TouchableOpacity onPress={() => this._pressRow(rowData.title,rowData.id)}>
                         <View style={styles.cell}>
                             <Text style={styles.cellTitle}>{rowData.title}</Text>
-                            <Text style={styles.cellText}>{rowData.createTime}</Text>
+                            <Text style={styles.cellText}>{rowData.publishTime}</Text>
                         </View>
                     </TouchableOpacity>
                 </SwipeitemView>
@@ -169,14 +183,20 @@ export default class SelfStart extends Component{
             clearTimeout(timer);
             Network.post('app2favorites/getList',{},(response)=>{
                 let resArr= response.rows.result;
-                for (let i in resArr){
-                    resArr[i].createTime = new Date(resArr[i].createTime).Format("yyyy/MM/dd hh:mm");
+                if(response.rows.result =''||!response.rows.result){
+                    toastShort('没有收藏的文章');
+                    return;
                 }
-                this.setState({
-                    dataArr:resArr,
-                    dataSource:this._dataSource.cloneWithRows(resArr),
-                    id:resArr.id
-                })
+                    for (let i in resArr){
+                        resArr[i].publishTime = new Date(resArr[i].publishTime).Format("yyyy/MM/dd hh:mm");
+                    }
+
+                    this.setState({
+                        dataArr:resArr,
+                        dataSource:this._dataSource.cloneWithRows(resArr),
+                        id:resArr.id
+                    });
+                    toastShort('刷新成功');
             },(err)=>{err});//加载的状态
 
             end();//刷新成功后需要调用end结束刷新
@@ -189,22 +209,32 @@ export default class SelfStart extends Component{
         let timer =  setTimeout(()=>{
             clearTimeout(timer);
             this._page++;
-            let params=new FormData();
+            let params=new Object();
             params.pageNO = this._page;
             params.pageSize = 10;
+            params.nextTime = this.state.nextTime;
             Network.post('app2favorites/getList',params,(response)=>{
                 let resArr= response.rows.result;
+                    if(response.rows.result =''||!response.rows.result){
+                        toastShort('没有收藏的文章');
+                        return;
+                    }
+                //console.log(response.rows.result,'00000000');
+
                 for (let i in resArr){
-                    resArr[i].createTime = new Date(resArr[i].createTime).Format("yyyy/MM/dd hh:mm");
-                }
-                this._dataArr = this._dataArr.concat(resArr);
-                this.setState({
-                    //dataArr:resArr,
-                    dataSource:this._dataSource.cloneWithRows(this._dataArr),
-                    id:resArr.id
-                })
+                        resArr[i].publishTime = new Date(resArr[i].publishTime).Format("yyyy/MM/dd hh:mm");
+                    }
+                    this._dataArr = this._dataArr.concat(resArr);
+                    //this.state.isMore = resArr.length;
+                    this.setState({
+                        nextTime:response.rows.nextTime,
+                        dataSource:this._dataSource.cloneWithRows(this._dataArr),
+                        id:resArr.id,
+                        isMore:resArr.length,
+                    })
+
             },(err)=>{err});
-            end(this._page > 2);//加载成功后需要调用end结束刷新 假设加载4页后数据全部加载完毕
+            end(this.state.isMore< 10);//加载成功后需要调用end结束刷新 假设加载4页后数据全部加载完毕
 
         },1000)
 
@@ -213,22 +243,27 @@ export default class SelfStart extends Component{
     componentDidMount() {
         Network.post('app2favorites/getList',{},(response)=>{
             let resArr= response.rows.result;
-            for (let i in resArr){
-                resArr[i].createTime = new Date(resArr[i].createTime).Format("yyyy/MM/dd hh:mm");
+            if(response.rows.result =''||!response.rows.result){
+                toastShort('没有收藏的文章');
+                return;
             }
-            this._dataArr = this._dataArr.concat(resArr);
-            this.setState({
-                //dataArr:resArr,
-                dataSource:this._dataSource.cloneWithRows(this._dataArr),
-                id:resArr.id
-            })
+            console.log(response,'hahhahahhah');
+                for (let i in resArr){
+                    resArr[i].publishTime = new Date(resArr[i].publishTime).Format("yyyy/MM/dd hh:mm");
+                }
+                this._dataArr = this._dataArr.concat(resArr);
+                this.setState({
+                    dataSource:this._dataSource.cloneWithRows(this._dataArr),
+                    id:resArr.id,
+                    nextTime:response.rows.nextTime,
+                    isMore:resArr.length,
+                })
         },(err)=>{err});
-        let timer = setTimeout(()=>{
-            clearTimeout(timer);
-            this.refs.listView.beginRefresh()
-        },500);//自动调用刷新 新增方法
-    }
 
+    }
+    componentWillUnmount() {
+        //end();
+    }
 
 }
 

@@ -11,12 +11,15 @@ import {
     TouchableOpacity,
     Dimensions,
     ScrollView,
+    Animated,
 
 } from 'react-native';
 
 import Network from '../util/Network'
 import Picker from 'react-native-picker';
 import PublicsentPerview from './PublicsentPerview'
+import {toastShort} from '../component/Toast';
+import Modal from 'react-native-root-modal';
 
 const {width,height}=Dimensions.get('window');
 
@@ -31,7 +34,10 @@ export default class PublicsentMonth extends Component {
             Id:'',
             year: mayData.getFullYear(),
             month:mayData.getMonth()+1,
-
+            open: false,
+            visible: false,
+            scale: new Animated.Value(1),
+            x: new Animated.Value(0),
         }
     }
 
@@ -46,21 +52,27 @@ export default class PublicsentMonth extends Component {
         params.year = this.state.year;
         params.month = this.state.month;
         Network.post('appbriefing2',params,(res)=>{
+            if(res.rows.content==''){
+                toastShort('这个时间,没有报告');
+                return;
+            }
             this.setState({
                 TitleArr:res.rows.content,
                 id:res.rows.content.id,
             });
         },(err)=>{
-            console.log(err,'错误')
+            toastShort('请求出错');
         })
     }
 
 
     _showTimePicker() {
+        this.scaleModal();
+
         let years = [],
             months = [];
 
-        for(let i=1;i<18;i++){
+        for(let i=18;i>1;i--){
             years.push(i+2000);
         }
         for(let i=1;i<13;i++){
@@ -74,13 +86,15 @@ export default class PublicsentMonth extends Component {
             [date.getMonth()+1],
         ];
         Picker.init({
-            pickerData,
-            selectedValue,
+            pickerData:pickerData ,
+            selectedValue:[this.state.year,this.state.month],
             pickerConfirmBtnText:'确认',
             pickerCancelBtnText	:'取消',
             pickerTitleText: '选择时间',
             wheelFlex: [2, 1],
             onPickerConfirm: pickedValue => {
+                this.hideModal();
+
                 this.setState({
                     time:pickedValue,
                     year:pickedValue[0],
@@ -89,7 +103,9 @@ export default class PublicsentMonth extends Component {
                 this._timeActon()
             },
             onPickerCancel: pickedValue => {
-                console.log('取消', pickedValue);
+                this.hideModal();
+
+               // console.log('取消', pickedValue);
             },
             onPickerSelect: pickedValue => {
                 let targetValue = [...pickedValue];
@@ -119,10 +135,55 @@ export default class PublicsentMonth extends Component {
                 }
             }
         });
-        Picker.show();
+         Picker.show();
     }
 
+//显示模态
+    slideModal = () => {
+        this.state.x.setValue(-320);
+        this.state.scale.setValue(1);
+        Animated.spring(this.state.x, {
+            toValue: 0
+        }).start();
+        this.setState({
+            visible: true
+        });
+        this.slide = true;
+    };
+//设置模态
+    scaleModal = () => {
+        this.state.x.setValue(0);
+        this.state.scale.setValue(0);
+        Animated.spring(this.state.scale, {
+            toValue: 1
+        }).start();
+        this.setState({
+            visible: true
+        });
+        this.slide = false;
+    };
 
+//隐藏模态窗口
+    hideModal = () => {
+        if (this.slide) {
+            Animated.timing(this.state.x, {
+                toValue: -320
+            }).start(() => {
+                this.setState({
+                    visible: false
+                });
+            });
+        } else {
+            Animated.timing(this.state.scale, {
+                toValue: 0
+            }).start(() => {
+                this.setState({
+                    visible: false
+                });
+            });
+        }
+        //this.onSelect();
+    };
 
     render() {
 
@@ -141,7 +202,23 @@ export default class PublicsentMonth extends Component {
                     <Text style={{marginRight:40}}>{this.state.month}月份</Text>
                     <Image source={require('../image/zhixiang-bottom.png')} style={{marginRight:20}} />
                 </TouchableOpacity>
+                <Animated.Modal
+                    visible={this.state.visible}
+                    style={[styles.modal, {
+                        transform: [
+                            {
+                                scale: this.state.scale
+                            },
+                            {
+                                translateX: this.state.x
+                            }
+                        ]
+                    }]}
+                    onRequestClose = {this.hideModa}
 
+                >
+
+                </Animated.Modal>
                 <ScrollView>
                     {
                         this.state.TitleArr.map((item,index)=>{
@@ -196,5 +273,16 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         borderBottomWidth: 0.5,
         borderColor: '#d9d9d9'
-    }
-})
+    },
+    modal: {
+        //flex:1,
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        backgroundColor: '#00000000',
+        //flex:1,
+        flexDirection:'column',
+
+    },
+});

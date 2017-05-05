@@ -13,46 +13,30 @@ import {
 } from 'react-native';
 //根据需要引入
 import {
-    SwRefreshListView,
+    SwRefreshListView, //支持下拉刷新和上拉加载的ListView
 } from 'react-native-swRefresh'
 const {width,height}=Dimensions.get('window');
 import NavigationBar from 'react-native-navbar';
 import px2dp from '../util/Px2dp';
 import {NavGoBack} from '../component/NavGoBack';
-import AnnouncementAT from './SearchView';
 import Network from '../util/Network'
 export default class Announcement extends Component{
-    _page=0;
+    _page=1;
     _dataSource = new ListView.DataSource({rowHasChanged:(row1,row2)=>row1 !== row2});
     _dataArr=[];
     // 构造
     constructor(props) {
         super(props);
         this.buttonGoBack = this.buttonGoBack.bind(this);
-
         this.state = {
             dataSource:this._dataSource.cloneWithRows(this._dataArr),
             message:'',
             title:'',
             timeString:'',
-
+            dataArr:[],//列表数组
         };
     }
 
-    _pressRow(title){
-        var _this = this;
-        const {navigator} = this.props;
-        if (navigator) {
-            navigator.push({
-                name:'AnnouncementAT',
-                component:AnnouncementAT,
-                params:{
-                    message:'0000',
-                    title:title,
-                }
-            })
-        }
-    }
     buttonGoBack(){
         const {navigator} = this.props;
         return NavGoBack(navigator);
@@ -65,8 +49,11 @@ export default class Announcement extends Component{
             tintColor: '#FFF'
         };
         const titleConfig = {
-            title:'系统公告',
+            title:'公告',
             tintColor:'#FFF'
+        };
+        const bar = {
+            style:'light-content',
         };
         return (
             <View style={{flex:1,flexDirection:'column'}}>
@@ -75,6 +62,7 @@ export default class Announcement extends Component{
                         title={titleConfig}
                         tintColor={'#18242e'}
                         leftButton={leftButtonConfig}
+                        statusBar={bar}
                     />
                 </View>
                 <View style={{flex:1}}>{this._renderListView()}</View>
@@ -90,8 +78,11 @@ export default class Announcement extends Component{
                 ref="listView"
                 renderRow={this._renderRow.bind(this)}
                 onRefresh={this._onListRefersh.bind(this)}
+                //onLoadMore={this._onLoadMore.bind(this)}
+                isShowLoadMore={false}
             />
         )
+
     }
     //每行 cell 的内容渲染iew
     _renderRow(rowData) {
@@ -111,29 +102,35 @@ export default class Announcement extends Component{
             clearTimeout(timer);
             let params  = {pageSize:100};
             Network.post('appmessage2/guides',params,(response)=>{
-                this.setState({
-                    dataArr:response.data,
-                    dataSource:this._dataSource.cloneWithRows(response.data)
-                })
-            },(err)=>{err});//加载的状态
+                if(response){
+                    this.setState({
+                        dataArr:response.data,
+                        dataSource:this._dataSource.cloneWithRows(this.state.dataArr)
+                    })
+                }
 
+            },(err)=>{err});//加载的状态
             end();//刷新成功后需要调用end结束刷新
         },1500)
     }
 
 
     componentDidMount() {
+        let timer = setTimeout(()=>{
+            clearTimeout(timer)
+            this.refs.listView.beginRefresh()
             let params  = {pageSize:100};
             Network.post('appmessage2/guides',params,(response)=>{
-                this.setState({
-                    dataArr:response.data,
-                    dataSource:this._dataSource.cloneWithRows(response.data)
-                })
+                if (response){
+                    this.setState({
+                        dataArr:response.data,
+                        dataSource:this._dataSource.cloneWithRows(this.state.dataArr)
+                    })
+                }
+
             },(err)=>{err});//加载的状态
-        let timer = setTimeout(()=>{
-            clearTimeout(timer);
-            this.refs.listView.beginRefresh()
-        },500);//自动调用刷新 新增方法
+            //end();//刷新成功后需要调用end结束刷新
+        },500); //自动调用开始刷新 新增方法
 
     }
 

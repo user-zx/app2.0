@@ -4,18 +4,18 @@
 import React, { Component } from 'react';
 import {
     AppRegistry,
-    StyleSheet,
     Text,
     View,
     Navigator,
     BackAndroid,
-    Platform
+    Platform,
 } from 'react-native';
-// import LoginView from '../page/LoginView';
-import TabbarView from '../page/TabbarView'
 //import GuideView from './GuideView'//引导页根据需要添加
 import LoginView from '../page/LoginView';
 import BGGlobal from '../util/BGGlobal';
+
+//var defaultName = BGGlobal.isLogin ? 'LoginView' : 'TabbarView';
+//var defaultComponent = BGGlobal.isLogin ? LoginView : TabbarView;
 
 export default class navigator extends Component {
     constructor(props) {
@@ -50,8 +50,6 @@ export default class navigator extends Component {
             }
 
         }).bind(this));
-
-
     }
 
     componentWillUnmount() {
@@ -73,9 +71,6 @@ export default class navigator extends Component {
     render() {
         let defaultName = 'LoginView';
         let defaultComponent = LoginView;
-
-        // let defaultName = 'TabbarView';
-        // let defaultComponent = TabbarView;
         return (
             <Navigator
                 initialRoute = {{name : defaultName , component: defaultComponent}}
@@ -94,3 +89,4 @@ export default class navigator extends Component {
     }
 
 };
+

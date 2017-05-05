@@ -11,7 +11,6 @@ import {
     Dimensions,
     TouchableOpacity,
     Animated,
-
 } from 'react-native';
 
 import {
@@ -26,12 +25,13 @@ import ModalDropdown from 'react-native-modal-dropdown';
 import {toastShort} from '../component/Toast';
 import Network from '../util/Network';
 import '../util/dateFormat';
-import Modal from 'react-native-root-modal';
 
 export default class NewClassWaring extends Component{
     _page=1;
     _dataSource = new ListView.DataSource({rowHasChanged:(row1,row2)=>row1 !== row2});
     _dataArr=[];
+    params = new Object();
+
     constructor(props) {
         super(props);
         this.buttonGoBack = this.buttonGoBack.bind(this);
@@ -40,24 +40,9 @@ export default class NewClassWaring extends Component{
             message:'',
             title:'',
             id:'2',//图片
-            open: false,
-            visible: false,
-            scale: new Animated.Value(1),
-            x: new Animated.Value(0),
-            isAllTime: true,//时间
-            isTaday: false,
-            isYesterday: false,
-            isWeek: false,
-            isMonth: false,
-            isDomestic:false,
-            isForeign:false,
-            isAllSource:true,
-            isAllSite:true,
-            isFocus:false,
             downArr:[],//下拉框数组
             carrie:'',//载体
             dataArr:[],//列表数组
-            // nature:'',//
             value:'',
             aspect:'',
             sequence:'',
@@ -70,186 +55,36 @@ export default class NewClassWaring extends Component{
             xiangguan:require('../image/lable/xiangguan@3x.png'),
         }
     }
-    // 更新"全部/未处理/已处理"按钮的状态
-    _updateBtnSelectedState(currentPressed, array) {
-        if (currentPressed === null || currentPressed === 'undefined' || array === null || array === 'undefined') {
-            return;
-        }
 
-        let newState = {...this.state};
-
-        for (let type of array) {
-            if (currentPressed == type) {
-                newState[type] ? {} : newState[type] = !newState[type];
-                this.setState(newState);
-            } else {
-                newState[type] ? newState[type] = !newState[type] : {};
-                this.setState(newState);
-            }
-        }
-    }
-
-    // 返回设置的button
-    _getButton(style, selectedSate, stateType, buttonTitle, count) {
-        let BTN_SELECTED_STATE_ARRAY = ['isAllTime', 'isTaday', 'isYesterday','isWeek','isMonth',];
-        return(
-            <View style={[style, selectedSate ? {borderColor:'#32a7f5',borderWidth:1,borderRadius:10} : {}]}>
-                <Text
-                    style={[styles.button, selectedSate ? {color: '#32a7f5'} : {}]}
-                    onPress={ () => {this._updateBtnSelectedState(stateType, BTN_SELECTED_STATE_ARRAY)}}>
-                    {buttonTitle}{count}
-                </Text>
-            </View>
-        );
-    }
-
-    _getButton1(style, selectedSate, stateType, buttonTitle, count) {
-        let BTN_SELECTED_STATE_ARRAY1 = ['isAllSource', 'isDomestic', 'isForeign'];
-        return(
-            <View style={[style, selectedSate ? {borderColor:'#32a7f5',borderWidth:1,borderRadius:10,} : {}]}>
-                <Text
-                    style={[styles.button, selectedSate ? {color: '#32a7f5'} : {}]}
-                    onPress={ () => {this._updateBtnSelectedState(stateType, BTN_SELECTED_STATE_ARRAY1)}}>
-                    {buttonTitle}{count}
-                </Text>
-            </View>
-        );
-    }
-
-    _getButton2(style, selectedSate, stateType, buttonTitle, count) {
-        let BTN_SELECTED_STATE_ARRAY2 = ['isAllSite', 'isFocus'];
-        return(
-            <View style={[style, selectedSate ? {borderColor:'#32a7f5',borderWidth:1,borderRadius:10} : {}]}>
-                <Text
-                    style={[styles.button, selectedSate ? {color: '#32a7f5'} : {}]}
-                    onPress={ () => {this._updateBtnSelectedState(stateType, BTN_SELECTED_STATE_ARRAY2)}}>
-                    {buttonTitle}{count}
-                </Text>
-            </View>
-        );
-    }
     buttonGoBack(){
         const {navigator} = this.props;
         return NavGoBack(navigator);
     };
 
-//显示模态
-    slideModal = () => {
-        this.state.x.setValue(-320);
-        this.state.scale.setValue(1);
-        Animated.spring(this.state.x, {
-            toValue: 0
-        }).start();
-        this.setState({
-            visible: true
-        });
-        this.slide = true;
-    };
-//设置模态
-    scaleModal = () => {
-        this.state.x.setValue(0);
-        this.state.scale.setValue(0);
-        Animated.spring(this.state.scale, {
-            toValue: 1
-        }).start();
-        this.setState({
-            visible: true
-        });
-        this.slide = false;
-    };
 
-//隐藏模态窗口
-    hideModal = () => {
-        if (this.slide) {
-            Animated.timing(this.state.x, {
-                toValue: -320
-            }).start(() => {
-                this.setState({
-                    visible: false
-                });
-            });
-        } else {
-            Animated.timing(this.state.scale, {
-                toValue: 0
-            }).start(() => {
-                this.setState({
-                    visible: false
-                });
-            });
-        }
-        this.onSelect();
-
-    };
-    onSelect(){
-        let params=new FormData();
-        params.carrie=this.state.carrie;//载体
-        params.nature=this.state.aspect;//相关
-        params.sort=this.state.sequence;//热度
-        if (this.state.isAllTime){
-            params.time = 'all'
-        }
-        if (this.state.isTaday){
-            params.time = 'today'
-        }
-        if (this.state.isYesterday){
-            params.time = 'yesterday'
-        }
-        if (this.state.isWeek){
-            params.time = 'week'
-        }
-        if (this.state.isMonth){
-            params.time = 'months'
-        }
-        if (this.state.isAllSource){
-            params.country = '全部'
-        }
-        if (this.state.isDomestic){
-            params.country = '境内'
-        }
-        if (this.state.isForeign){
-            params.country = '境外'
-        }
-        if (this.state.isAllSite){
-            params.publishSite = '全部'
-        }
-        if(this.state.isFocus){
-            params.publishSite = '关注'
-        }
-        console.log(params,'hahahhahhahahhahahahhaah');
-
-        Network.post('appwarning2/getList',params,(response)=>{
-            let resArr= response.rows.result;
-            console.log(resArr+'我是点击下拉框事件');
-            for (let i in resArr){
-                resArr[i].createTime = new Date(resArr[i].createTime).Format("yyyy/MM/dd hh:mm");
-            }
-            this.setState({
-                dataArr:resArr,
-                dataSource:this._dataSource.cloneWithRows(resArr)
-            })
-        },(err)=>{err});
-
-
-
-
-    }
     //下拉框点击事件
     _dropdown_6_onSelect(index,value) {
         this._page = 1;
-        let params=new FormData();
-        params.carrie=this.state.carrie;//载体
-        params.nature=this.state.aspect;//相关
-        params.sort=this.state.sequence;//热度
-        Network.post('appwarning2/getList',params,(response)=>{
-            let resArr= response.rows.result;
-            console.log(resArr+'我是点击下拉框事件');
-            for (let i in resArr){
-                resArr[i].createTime = new Date(resArr[i].createTime).Format("yyyy/MM/dd hh:mm");
+        this.params.carrie=this.state.carrie;//载体
+        this.params.time=this.state.sequence;//时间
+        Network.post('appwarning2/getList',this.params,(response)=>{
+            if(!response.rows.result){
+                toastShort('没有相关数据');
+                let resArr= [];
+                this.setState({
+                    dataSource:this._dataSource.cloneWithRows(resArr)
+                });
+                return;
             }
+            let resArr= response.rows.result;
+            for (let i in resArr){
+                resArr[i].publishTime = new Date(resArr[i].publishTime).Format("yyyy/MM/dd hh:mm");
+            }
+            this._dataArr = resArr;
             this.setState({
                 dataSource:this._dataSource.cloneWithRows(resArr)
             })
-        },(err)=>{err});
+        },(err)=>{toastShort(err)});
     }
 
     render(){
@@ -263,6 +98,9 @@ export default class NewClassWaring extends Component{
             title: this.state.title,
             tintColor: '#FFF'
         };
+        const bar = {
+            style:'light-content',
+        };
         return (
             <View style={{flex:1,flexDirection:'column'}}>
                 <View>
@@ -270,103 +108,53 @@ export default class NewClassWaring extends Component{
                         title={titleConfig}
                         leftButton={leftButtonConfig}
                         tintColor={'#18242e'}
+                        statusBar={bar}
                     />
                 </View>
-                <View style={{width:width,height:40,flexDirection:'row'}}>
-                    <ModalDropdown options={this.state.downArr}
-                                   defaultValue='载体'
-                                   textStyle={{fontSize:px2dp(15),padding:px2dp(10),textAlign:'center'}}
-                                   style={styles.dropdown_1}
-                                   dropdownStyle={styles.dropdown_9}
-                                   onSelect={(idx, value) => {
-                                       this.state.carrie=value;
-                                       this._dropdown_6_onSelect(idx, value)
-                                   }}
-                    />
-                    <ModalDropdown
-                        options={['不限', '相关','舆情','正面','负面']}
-                        //options={this.state.dataArr}
-                        defaultValue='特征'
-                        textStyle={{fontSize:px2dp(15),padding:px2dp(10),textAlign:'center'}}
-                        style={styles.dropdown_1}
-                        dropdownStyle={styles.dropdown_9}
-                        onSelect={(idx, value) => {
-                            this.state.aspect = value;
-                            this._dropdown_6_onSelect(idx, value)
-                        }}
-                    />
-                    <ModalDropdown options={['热度','时间']}
-                                   defaultValue='排序'
-                                   textStyle={{fontSize:px2dp(15),padding:px2dp(10),textAlign:'center'}}
-                                   style={styles.dropdown_1}
-                                   dropdownStyle={styles.dropdown_9}
-                                   onSelect={(idx, value) => {
-                                       if(idx==0){
-                                           this.state.sequence = 'hot';
-                                       }else {
-                                           this.state.sequence = 'publishTime';
-                                       }
-                                       this._dropdown_6_onSelect(idx, value)
-                                   }}                    />
-                    <TouchableOpacity
-                        style={styles.dropdown_1}
-                        underlayColor="#F1F1F1"
-                        onPress={this.scaleModal}
-                    >
-                        <Text style={{fontSize:16}}>条件筛选</Text>
-                    </TouchableOpacity>
-                    <Animated.Modal
-                        visible={this.state.visible}
-                        style={[styles.modal, {
-                            transform: [
-                                {
-                                    scale: this.state.scale
-                                },
-                                {
-                                    translateX: this.state.x
-                                }
-                            ]
-                        }]}
-                    >
-                        <View style={{marginLeft:25,marginTop:20,width:width}}>
-                            <Text style={{color:'#666666',fontSize:12}}>时间</Text>
-                        </View>
-                        <View style={styles.buttonlayout}>
-                            {this._getButton(styles.buttonleft, this.state.isAllTime, 'isAllTime', '不限', )}
-                            {this._getButton(styles.buttonleft, this.state.isTaday, 'isTaday', '今天', )}
-                            {this._getButton(styles.buttonleft, this.state.isYesterday, 'isYesterday', '昨天', )}
-                            {this._getButton(styles.buttonleft, this.state.isWeek, 'isWeek', '本周', )}
-                            {this._getButton(styles.buttonleft, this.state.isMonth, 'isMonth', '近30天', )}
-                        </View>
-                        <View style={{marginLeft:25,marginTop:20}}>
-                            <Text style={{color:'#666666',fontSize:12}}>站点</Text>
-                        </View>
-                        <View style={styles.buttonlayout1}>
-                            {this._getButton1(styles.buttonleft, this.state.isAllSource, 'isAllSource', '全部', )}
-                            {this._getButton1(styles.buttonleft, this.state.isDomestic, 'isDomestic', '境内', )}
-                            {this._getButton1(styles.buttonleft, this.state.isForeign, 'isForeign', '境外', )}
-                        </View>
-                        <View style={{marginLeft:25,marginTop:20}}>
-                            <Text style={{color:'#666666',fontSize:12}}>来源</Text>
-                        </View>
-                        <View style={styles.buttonlayout1}>
-                            {this._getButton2(styles.buttonright, this.state.isAllSite, 'isAllSite', '全部站点', )}
-                            {this._getButton2(styles.buttonright, this.state.isFocus, 'isFocus', '关注站点', )}
-                        </View>
-
-                        <TouchableOpacity
-                            style={{backgroundColor:'#0ca6ee',width:px2dp(344),height:px2dp(30),alignSelf:'center',marginTop:50,
-                                justifyContent:'center'
-                            }}
-                            underlayColor="#aaa"
-                            onPress={this.hideModal}
-                        >
-                            <Text style={{fontSize:16,color:'#FFF',textAlign:'center',}}>确定</Text>
-                        </TouchableOpacity>
-                    </Animated.Modal>
+                <View style={{width:width,height:40,flexDirection:'row',borderBottomColor:'#ececec',
+                    borderBottomWidth:1}}>
+                    <View style={styles.dropdown_1}>
+                        <ModalDropdown options={['全部','综合','新闻','博客','论坛','微博','微信','QQ群','电子报','视频','手机wap']}
+                                       defaultValue='载体'
+                                       textStyle={{fontSize:px2dp(15),padding:px2dp(10),textAlign:'center'}}
+                                       //style={styles.dropdown_1}
+                                       dropdownStyle={styles.dropdown_9}
+                                       onSelect={(idx, value) => {
+                                           if (idx == 0) {
+                                               this.state.carrie='';
+                                           }else {
+                                               this.state.carrie=value;
+                                           }
+                                           this._dropdown_6_onSelect(idx, value)
+                                       }}
+                        />
+                        <Image source={require('../image/down.png')} style={{width:10,height:10}} />
+                    </View>
+                    <View style={styles.dropdown_1}>
+                        <ModalDropdown options={['不限','今日','昨日','近七天','近30天',]}
+                                       defaultValue='时间'
+                                       textStyle={{fontSize:px2dp(15),padding:px2dp(10),textAlign:'center'}}
+                                       //style={styles.dropdown_1}
+                                       dropdownStyle={styles.dropdown_9}
+                                       onSelect={(idx, value) => {
+                                           if(idx == 0){
+                                               this.state.sequence = 'all';
+                                           }else  if (idx == 1){
+                                               this.state.sequence = 'today';
+                                           }else  if (idx == 2) {
+                                               this.state.sequence = 'yesterday';
+                                           }else if  (idx == 3) {
+                                               this.state.sequence = 'week';
+                                           }else if  (idx == 4) {
+                                               this.state.sequence = 'months';
+                                           }
+                                           this._dropdown_6_onSelect(idx, value)
+                                       }}
+                        />
+                        <Image source={require('../image/down.png')} style={{width:10,height:10}} />
+                    </View>
                 </View>
-
-                <View style={{flex:1}}>{this._renderListView()}</View>
+                <View style={{flex:1,overflow:'hidden'}}>{this._renderListView()}</View>
             </View>
         );
 
@@ -380,6 +168,8 @@ export default class NewClassWaring extends Component{
                 renderRow={this._renderRow.bind(this)}
                 onRefresh={this._onListRefersh.bind(this)}
                 onLoadMore={this._onLoadMore.bind(this)}
+                //overflow: hidden
+                pusuToLoadMoreTitle="加载中..."
 
             />
         )
@@ -387,7 +177,7 @@ export default class NewClassWaring extends Component{
     }
     _pressRow(title,id){
         var _this = this;
-        const {navigator} = this.props;
+        const {navigator} =  _this.props;
         if (navigator) {
             navigator.push({
                 name:'ArticleDetails',
@@ -398,16 +188,16 @@ export default class NewClassWaring extends Component{
                 }
             })
         }
-    }
+    };
     //每行 cell 的内容渲染
     _renderRow(rowData) {
         let icon;
-        if(rowData.ispositive == 1){
+        if(rowData.ispositive && rowData.ispositive == 1){
              icon = this.icons['zhengmian'];
-        } else if(rowData.isnegative ==1){
+        } else if(rowData.isnegative && rowData.isnegative ==1){
              icon = this.icons['fumian'];
         } else {
-            if(rowData.isyuqing ==1 ){
+            if(rowData.isyuqing && rowData.isyuqing ==1 ){
                  icon = this.icons['yuqing'];
             } else {
                  icon = this.icons['xiangguan'];
@@ -426,7 +216,7 @@ export default class NewClassWaring extends Component{
                             <Text style={styles.cellText}>{rowData.author}</Text>
                         </View>
                         <View style={{marginBottom:px2dp(10)}}>
-                            <Text style={{marginBottom:px2dp(10),marginRight:15,fontSize:11, color:'#999999',}}>{rowData.createTime}</Text>
+                            <Text style={{marginBottom:px2dp(10),marginRight:15,fontSize:11, color:'#999999',}}>{rowData.publishTime}</Text>
                         </View>
                     </View>
 
@@ -436,19 +226,25 @@ export default class NewClassWaring extends Component{
     }
 
     /**
-     * 模拟刷新
+     * 刷新
      * @param end
      * @private
      */
     _onListRefersh(end){
         let timer =  setTimeout(()=>{
             clearTimeout(timer);
-            Network.post('appwarning2/getList',{},(response)=>{
+            this.params.pageNo = 1;
+            Network.post('appwarning2/getList',this.params,(response)=>{
+                if (response.rows.result == ''){
+                    toastShort('没有数据');
+                    return;
+                }
                 let resArr = response.rows.result;
                 for (let i in resArr){
-                    resArr[i].createTime = new Date(resArr[i].createTime).Format("yyyy/MM/dd hh:mm");
-                    console.log(resArr+'我是模拟刷新');
+                    resArr[i].publishTime = new Date(resArr[i].publishTime).Format("yyyy/MM/dd hh:mm");
                 }
+                this._dataArr = resArr;
+
                 this.setState({
                     dataArr:resArr,
                     dataSource:this._dataSource.cloneWithRows(resArr)
@@ -461,7 +257,7 @@ export default class NewClassWaring extends Component{
     }
 
     /**
-     * 模拟加载更多
+     * 加载更多
      * @param end
      * @private
      */
@@ -469,16 +265,17 @@ export default class NewClassWaring extends Component{
         let timer =  setTimeout(()=>{
             clearTimeout(timer);
             this._page++;
-            let params=new Object();
-            params.carrie=this.state.carrie;//载体
-            params.aspect=this.state.aspect;//相关
-            params.sequence=this.state.sequence;//热度
-            params.pageNo = this._page;
-            Network.post('appwarning2/getList',params,(response)=>{
+
+            this.params.pageNo = this._page;
+            Network.post('appwarning2/getList',this.params,(response)=>{
                 let resArr= response.rows.result;
-                console.log(resArr+'我是第一次进入预警');
+                if(!response.rows.result){
+                    toastShort('没有更多数据了');
+
+                    return;
+                }
                 for (let i in resArr){
-                    resArr[i].createTime = new Date(resArr[i].createTime).Format("yyyy/MM/dd hh:mm");
+                    resArr[i].publishTime = new Date(resArr[i].publishTime).Format("yyyy/MM/dd hh:mm");
                 }
                 this._dataArr = this._dataArr.concat(resArr);
                 this.setState({
@@ -486,31 +283,17 @@ export default class NewClassWaring extends Component{
                     dataSource:this._dataSource.cloneWithRows(this._dataArr)
                 })
             },(err)=>{err});
-           // end(this._page > 6);
-            end(this.state.dataArr != '' && this.state.dataArr.length  < 10);
-            console.log(params,'0000000000000000000000000')
+            end(this.state.dataArr.length  < 10);
         },2000)
 
     }
 
     componentDidMount() {
-        Network.post('apppanorama2',{},(response)=>{
-            this.setState({
-                downArr :response.data.natureList,
-                message:this.props.message,
-                title:this.props.title,
-            });
-            let timer = setTimeout(()=>{
-                clearTimeout(timer);
-            },500);//自动调用刷新 新增方法
-        },(err)=>{
-            toastShort(err)
-        });
-        Network.post('appwarning2/getList',{},(response)=>{
+        this.setState({title:this.props.title});
+        Network.post('appwarning2/getList',this.params,(response)=>{
             let resArr= response.rows.result;
-            console.log(resArr+'我是第一次进入预警');
             for (let i in resArr){
-                resArr[i].createTime = new Date(resArr[i].createTime).Format("yyyy/MM/dd hh:mm");
+                resArr[i].publishTime = new Date(resArr[i].publishTime).Format("yyyy/MM/dd hh:mm");
             }
             this._dataArr = this._dataArr.concat(resArr);
 
@@ -569,12 +352,14 @@ const styles=StyleSheet.create({
     },
     dropdown_1: {
         top: 0,
-        width:width/4,
-        height:px2dp(40),
-        backgroundColor:'#F1F1F1',
-        borderColor:'#333333',
+        width:width/2,
+        height:39,
+        backgroundColor:'#FFF',
+        //borderColor:'#333333',
         alignItems:'center',
-        justifyContent:'center'
+        justifyContent:'center',
+        flexDirection:'row',
+
     },
     dropdown_9: {
         flex: 1,
@@ -591,13 +376,24 @@ const styles=StyleSheet.create({
         backgroundColor:'#666666'
     },
     modal: {
-        top: 120,
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        backgroundColor: '#00000000',
+        //flex:1,
+        flexDirection:'column'
+    },
+    modal2: {
+        //flex:1,
+        top: 110,
         right: 0,
         bottom: 100,
         left: 0,
         backgroundColor: '#FFF',
         //flex:1,
         flexDirection:'column'
+
     },
     buttonlayout: {
         marginTop: 8,

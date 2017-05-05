@@ -22,10 +22,15 @@ import Px2dp from '../util/Px2dp';
 
 import {WXAppKey} from '../util/GlobalConst';
 import * as Wexin from 'react-native-wechat';
+var { NativeAppEventEmitter } = require('react-native');
 
-
+var subscription = NativeAppEventEmitter.addListener(
+    'ReceiveNotification',
+    (notification) => console.log(notification)
+);
 
 export default class TabBarView extends React.Component{
+
     constructor(props) {
         super(props);
 
@@ -34,10 +39,11 @@ export default class TabBarView extends React.Component{
         this.state = {
             selectedTab:'HomePage',
             badgeNumber: '2',
-            isBadge:true
+            isBadge:false
         };
     }
     //控制安卓物理返回键问题
+
     componentDidMount() {
         BackAndroid.addEventListener('hardwareBackPress', (() => {
             const navigator = this.refs.navigator;
@@ -73,6 +79,7 @@ export default class TabBarView extends React.Component{
         if (Platform.OS === 'android') {
             BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
         }
+        subscription.remove();
     }
     onBackAndroid = () => {
         const nav = this.props.navigator;
@@ -163,7 +170,7 @@ export default class TabBarView extends React.Component{
                     renderBadge={()=>this.renderBadge()}
                     renderIcon={() => <Image source={require("../image/wode-3@3x.png")} style={styles.iconStyle}/>}
                     renderSelectedIcon={() => <Image source={require("../image/wode-xuanzhong@2x.png")} style={styles.iconStyle}/>}
-                    onPress={() => this.setState({ selectedTab: 'MyPage',isBadge:false })}>
+                    onPress={() => this.setState({ selectedTab: 'MyPage' })} >
                     <MyPage {...this.props} />
                 </TabNavigator.Item>
             </TabNavigator>

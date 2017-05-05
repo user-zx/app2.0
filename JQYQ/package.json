@@ -3,10 +3,14 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "configureJPush": "node node_modules/jpush-react-native/JPushConfiguration.js",
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest"
   },
   "dependencies": {
+    "jcore-react-native": "^1.1.0",
+    "jpush-react-native": "^1.6.0",
+    "moment": "^2.18.1",
     "native-echarts": "^0.3.0",
     "react": "15.4.2",
     "react-native": "0.40.0",

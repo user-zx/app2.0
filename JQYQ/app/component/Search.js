@@ -9,7 +9,7 @@ import {
     Animated,
     Dimensions,
     Keyboard,
-    Image
+    Image,
 } from 'react-native';
 
 const { width } = Dimensions.get('window');
@@ -43,7 +43,7 @@ class Search extends Component {
         this.onDelete = this.onDelete.bind(this);
         this.focus = this.focus.bind(this);
         this.expandAnimation = this.expandAnimation.bind(this);
-        this.collapseAnimation = this.collapseAnimation.bind(this);
+       // this.collapseAnimation = this.collapseAnimation.bind(this);
 
         /**
          * local variables
@@ -61,7 +61,7 @@ class Search extends Component {
         await Keyboard.dismiss();
         this.props.onSearch && await this.props.onSearch(this.state.keyword);
         this.props.afterSearch && await this.props.afterSearch(this.state.keyword);
-    }
+    };
 
     /**
      * onChangeText
@@ -79,7 +79,7 @@ class Search extends Component {
             ).start(() => resolve());
         });
         this.props.onChangeText && await this.props.onChangeText(this.state.keyword);
-    }
+    };
 
     /**
      * onFocus
@@ -91,7 +91,7 @@ class Search extends Component {
         await this.expandAnimation();
         this.props.onFocus && await this.props.onFocus(this.state.keyword);
         this.props.afterFocus && await this.props.afterFocus();
-    }
+    };
 
     /**
      * focus
@@ -100,7 +100,7 @@ class Search extends Component {
     focus = async (text = '') => {
         await this.setState({ keyword: text });
         await this.refs.input_keyword._component.focus();
-    }
+    };
 
     /**
      * onDelete
@@ -120,19 +120,19 @@ class Search extends Component {
         await this.setState({ keyword: '' });
         this.props.onDelete && await this.props.onDelete();
         this.props.afterDelete && await this.props.afterDelete();
-    }
+    };
 
     /**
      * onCancel
      * async await
      */
     onCancel = async () => {
-        this.props.beforeCancel && await this.props.beforeCancel();
-        await this.setState({ keyword: '' });
-        await this.collapseAnimation();
+        //this.props.beforeCancel && await this.props.beforeCancel();
+       // await this.setState({ keyword: '' });
+        //await this.collapseAnimation();
         this.props.onCancel && await this.props.onCancel();
-        this.props.afterCancel && await this.props.afterCancel();
-    }
+        //this.props.afterCancel && await this.props.afterCancel();
+    };
 
     expandAnimation = () => {
         return new Promise((resolve, reject) => {
@@ -175,7 +175,7 @@ class Search extends Component {
             ]);
             resolve();
         });
-    }
+    };
 
     collapseAnimation = () => {
         return new Promise((resolve, reject) => {
@@ -219,7 +219,7 @@ class Search extends Component {
             ]);
             resolve();
         });
-    }
+    };
 
     render() {
         return (

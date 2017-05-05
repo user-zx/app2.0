@@ -61,6 +61,9 @@ export default class PublicsentPerview extends Component{
             id:'',
             title:'',
             time:'',
+            uid:'',
+            brieType:''
+
         };
         this.icons = {
             yuqing:require('../image/lable/yuqing@3x.png'),
@@ -75,10 +78,13 @@ export default class PublicsentPerview extends Component{
     };
 
     _handlePress(index) {
-        console.log(index)
-        let URL = 'http://114.55.179.202:8989/phone/html/articleReport.html?time='+this.state.time+'&id='+this.state.id+'&dataTime='+this.state.title
-        console.log(URL,'拼接后的 URL 是')
-        if (index ==1 ){
+        console.log(index);
+        //let URL = 'http://114.55.179.202:8989/phone/html/articleReport.html?time='+this.state.time+'&id='+this.state.id+'&dataTime='+this.state.title;
+        let URL1 = 'http://120.55.190.38:8002/briefing/getBriefingArticle?id='+this.state.id+'&uid='+this.state.uid+'&type=show&brieType='+this.state.brieType+'&time='+this.state.title;
+        //http://120.55.190.38:8002/briefing/getBriefingArticle?id=859423&uid=1283&type=show&brieType=0&time=today&downname=2017-04-17
+        console.log(URL1,'拼接后的 URL 是');
+
+        if (index==1 ){
             //分享给微信好友(连接)
             WeChat.isWXAppInstalled()
                 .then((isInstalled) => {
@@ -88,17 +94,17 @@ export default class PublicsentPerview extends Component{
                             description:this.state.title,
                             thumbImage: 'http://mta.zttit.com:8080/images/ZTT_1404756641470_image.jpg',
                             type: 'news',
-                            webpageUrl:URL
+                            webpageUrl:URL1
                         })
                             .catch((error) => {
-                                toastShort(error.message);
+                                toastShort('错误→',error.message);
                             });
                     } else {
                         toastShort('没有安装微信软件，请您安装微信之后再试');
                     }
                 });
 
-        }else if(index == 2){
+        }else if(index==2){
             //分享给微信朋友圈(连接)
             WeChat.isWXAppInstalled()
                 .then((isInstalled) => {
@@ -108,16 +114,18 @@ export default class PublicsentPerview extends Component{
                             description: this.state.title,
                             thumbImage: 'http://mta.zttit.com:8080/images/ZTT_1404756641470_image.jpg',
                             type: 'news',
-                            webpageUrl: URL
+                            webpageUrl: URL1
                         })
                             .catch((error) => {
-                                toastShort(error.message);
+                                toastShort('错误→',error.message);
                             });
                     } else {
                         toastShort('没有安装微信软件，请您安装微信之后再试');
                     }
                 });
 
+        }else {
+            return;
         }
 
 
@@ -134,7 +142,8 @@ export default class PublicsentPerview extends Component{
         const leftButtonConfig = {
             title: '←',
             handler: () => this.buttonGoBack(),
-            fontSize: 32
+            fontSize:32,
+            tintColor: '#FFF'
         };
         const titleConfig = {
             title: this.state.title+'舆情报告',
@@ -143,10 +152,14 @@ export default class PublicsentPerview extends Component{
         const RightButtonConfig = {
             title: '分享',
             handler: () => this.show(),
-            fontSize: 32
+            fontSize: 32,
+            tintColor: '#FFF'
+
         };
 
-
+        const bar = {
+            style:'light-content',
+        };
 
 
         return(
@@ -158,6 +171,7 @@ export default class PublicsentPerview extends Component{
                         leftButton={leftButtonConfig}
                         tintColor={'#18242e'}
                         rightButton={RightButtonConfig}
+                        statusBar={bar}
                     />
                 </View>
                 <ActionSheet
@@ -214,7 +228,7 @@ export default class PublicsentPerview extends Component{
                     </View>
                     <View>
                         <Echarts option={this.state.option1}  height={300} />
-                        <View style={{width:width,flexDirection:'column'}}>
+                        <View style={{width:width,flexDirection:'column',paddingBottom:20}}>
                             <View style={{flexDirection:'row',top:10,left:20,right:20}}>
                                 <View style={styles.tabHeader}>
                                     <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>载体</Text>
@@ -243,7 +257,7 @@ export default class PublicsentPerview extends Component{
                     </View>
                     <View>
                         <Echarts option={this.state.option2}  height={300} />
-                        <View style={{width:width,flexDirection:'column'}}>
+                        <View style={{width:width,flexDirection:'column',paddingBottom:20}}>
 
                             <View style={{flexDirection:'row',top:10,left:20,right:20}}>
                                 <View style={styles.tabHeader}>
@@ -272,23 +286,23 @@ export default class PublicsentPerview extends Component{
                     </View>
                     <View>
                         <Echarts option={this.state.option3}  height={300} />
-                        <View style={{width:width,flexDirection:'column'}}>
+                        <View style={{width:width,flexDirection:'column',paddingBottom:20}}>
 
                             <View style={{flexDirection:'row',top:10,left:20,right:20}}>
-                                <View style={styles.tabHeader}>
+                                <View style={styles.tabHeader1}>
                                     <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>排名</Text>
                                 </View>
-                                <View style={styles.tabHeader}>
+                                <View style={styles.tabHeader1}>
                                     <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>媒体</Text>
                                 </View>
 
-                                <View style={styles.tabHeader}>
+                                <View style={styles.tabHeader1}>
                                     <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>相关</Text>
                                 </View>
-                                <View style={styles.tabHeader}>
+                                <View style={styles.tabHeader1}>
                                     <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>正面</Text>
                                 </View>
-                                <View style={styles.tabHeader}>
+                                <View style={styles.tabHeader1}>
                                     <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>负面</Text>
                                 </View>
 
@@ -298,11 +312,11 @@ export default class PublicsentPerview extends Component{
                                 this.state.jo3.map((item,i)=> {
                                     return (
                                         <View key={i} style={styles.tabStyle} >
-                                            <Text style={styles.tabText}>{i+1}</Text>
-                                            <Text style={styles.tabText}>{item.name}</Text>
-                                            <Text style={styles.tabText}>{item.content.相关文章}</Text>
-                                            <Text style={styles.tabText}>{item.content.负面文章}</Text>
-                                            <Text style={styles.tabText}>{item.content.正面文章}</Text>
+                                            <Text style={styles.tabText1}>{i+1}</Text>
+                                            <Text style={styles.tabText1}>{item.name}</Text>
+                                            <Text style={styles.tabText1}>{item.content.相关文章}</Text>
+                                            <Text style={styles.tabText1}>{item.content.负面文章}</Text>
+                                            <Text style={styles.tabText1}>{item.content.正面文章}</Text>
                                         </View>
                                     )
                                 })
@@ -315,39 +329,42 @@ export default class PublicsentPerview extends Component{
                     </View>
                     <View>
                         <Echarts option={this.state.option4}  height={300} />
-                        <View style={{flexDirection:'row',top:10,left:20,right:20}}>
-                            <View style={styles.tabHeader}>
-                                <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>排名</Text>
-                            </View>
-                            <View style={styles.tabHeader}>
-                                <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>媒体</Text>
-                            </View>
+                        <View style={{width:width,flexDirection:'column',paddingBottom:20}}>
 
-                            <View style={styles.tabHeader}>
-                                <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>相关</Text>
-                            </View>
-                            <View style={styles.tabHeader}>
-                                <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>负面</Text>
-                            </View>
-                            <View style={styles.tabHeader}>
-                                <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>正面</Text>
-                            </View>
+                            <View style={{flexDirection:'row',top:10,left:20,right:20}}>
+                                <View style={styles.tabHeader1}>
+                                    <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>排名</Text>
+                                </View>
+                                <View style={styles.tabHeader1}>
+                                    <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>媒体</Text>
+                                </View>
 
+                                <View style={styles.tabHeader1}>
+                                    <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>相关</Text>
+                                </View>
+                                <View style={styles.tabHeader1}>
+                                    <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>负面</Text>
+                                </View>
+                                <View style={styles.tabHeader1}>
+                                    <Text style={{padding:5,color:'#FFF',fontSize:11,textAlign:'center'}}>正面</Text>
+                                </View>
+
+                            </View>
+                            {
+                                this.state.jo4.map((item,i)=> {
+                                    return (
+                                        <View key={i} style={styles.tabStyle} >
+                                            <Text style={styles.tabText1}>{i+1}</Text>
+                                            <Text style={styles.tabText1}>{item.name}</Text>
+                                            <Text style={styles.tabText1}>{item.content.相关文章}</Text>
+                                            <Text style={styles.tabText1}>{item.content.负面文章}</Text>
+                                            <Text style={styles.tabText1}>{item.content.正面文章}</Text>
+                                        </View>
+                                    )
+                                })
+                            }
+                             </View>
                         </View>
-                        {
-                            this.state.jo4.map((item,i)=> {
-                                return (
-                                    <View key={i} style={styles.tabStyle} >
-                                        <Text style={styles.tabText}>{i+1}</Text>
-                                        <Text style={styles.tabText}>{item.name}</Text>
-                                        <Text style={styles.tabText}>{item.content.相关文章}</Text>
-                                        <Text style={styles.tabText}>{item.content.负面文章}</Text>
-                                        <Text style={styles.tabText}>{item.content.正面文章}</Text>
-                                    </View>
-                                )
-                            })
-                        }
-                    </View>
                     <View style={styles.lableHeader}>
                         <Image source={require('../image/evolution/remenwenzhang@3x.png')} style={styles.headerImage}/>
                         <Text>推荐阅读</Text>
@@ -392,24 +409,38 @@ export default class PublicsentPerview extends Component{
         )
     }
     componentDidMount() {
+        if (this.props.time === 'today'){
+            this.setState({brieType:0})
+        }else if(this.props.time === 'week'){
+            this.setState({brieType:1})
+        }else {
+            this.setState({brieType:2})
+        }
+
         this.setState({
             title:this.props.title,
             id:this.props.id,
             time:this.props.time,
         });
-        // 1 导读
+        Network.post('app2/profile',{},(response)=>{
+            this.setState({
+                uid:response.data.user.id,
+            })
+        },(err)=>{toastShort('错误:',err)});
+        // 1 导读app2/profile
+
         let params = new Object();
         params.id = this.props.id;
         Network.post('appbriefing2/getBriefingList',params,(res)=>{
             let resArr = res.data.result;
-            for (let i in resArr){
-                resArr[i].createTime = new Date(resArr[i].createTime).Format("yyyy/MM/dd hh:mm");
-                console.log(resArr+'我是模拟刷新');
+            if (resArr){
+                for (let i in resArr){
+                    resArr[i].createTime = new Date(resArr[i].createTime).Format("yyyy/MM/dd hh:mm");
+                }
+                this.setState({
+                    rowData:resArr,
+                });
             }
-            this.setState({
-                rowData:resArr,
-            });
-            console.log(res.data.result,'134134134134134')
         },(err)=>{err});
         //第二部分
         params.time = 'today';
@@ -446,8 +477,6 @@ export default class PublicsentPerview extends Component{
                         rowData2:res.data
                     })
                 },(err)=>{err});
-
-
 
     }
 
@@ -497,10 +526,8 @@ const styles = StyleSheet.create({
     },
     cellImageView:{
         flexDirection:'row',
-
     },
     cellImage:{
-
     },
     tabStyle:{
         flexDirection:'row',
@@ -509,7 +536,7 @@ const styles = StyleSheet.create({
         right:20
     },
     tabText:{
-        backgroundColor:'blue',
+        backgroundColor:'rgb(116,140,210)',
         borderWidth:1,
         borderColor:'#FFF',
         width:(width-40)/3,
@@ -519,7 +546,7 @@ const styles = StyleSheet.create({
         textAlign:'center',
     },
     tabTextRight:{
-        backgroundColor:'blue',
+        backgroundColor:'rgb(116,140,210)',
         borderWidth:1,
         borderColor:'#FFF',
         width:(width-40)/3*2,
@@ -529,9 +556,32 @@ const styles = StyleSheet.create({
         textAlign:'center',
     },
     tabHeader:{
-        backgroundColor:'red',
+        backgroundColor:'rgb(111,190,203)',
         borderWidth:1,
         borderColor:'#FFF',
         width:(width-40)/3,
+    },
+    tabHeader1:{
+        backgroundColor:'rgb(111,190,203)',
+        borderWidth:1,
+        borderColor:'#FFF',
+        width:(width-40)/5,
+    },
+    tabText1:{
+        backgroundColor:'rgb(116,140,210)',
+        borderWidth:1,
+        borderColor:'#FFF',
+        width:(width-40)/5,
+        //padding:(5.0),
+        color:'#FFF',
+        fontSize:11,
+        textAlign:'center',
+    },
+
+    tabHeaderright:{
+        backgroundColor:'rgb(111,190,203)',
+        borderWidth:1,
+        borderColor:'#FFF',
+        width:(width-40)/3*2,
     },
 });

@@ -53,6 +53,9 @@ export default class Affair extends Component{
             },
             numberOfLines:0
         };
+        const bar = {
+            style:'light-content',
+        };
         return(
             <View style={{flex:1,flexDirection:'column'}}>
                 <View>
@@ -61,23 +64,24 @@ export default class Affair extends Component{
                         leftButton={liftButtonConfig}
                         tintColor={'#18242e'}
                         numberOfLines={1}
-
+                        statusBar={bar}
                     />
                 </View>
                 <View style={{flex:1,}}>
                     <ScrollableTabView
                         tabBarPosition='top'
                         renderTabBar={() => <DefaultTabBar/>}
-                        tabBarUnderlineColor='#0ca6ee'
+                        tabBarUnderlineColor='#F00'
                         tabBarBackgroundColor='#18242e'
                         tabBarActiveTextColor='#0ca6ee'
-                        tabBarInactiveTextColor='#99ffff'
+                        tabBarInactiveTextColor='#a3a7ab'
                         tabBarTextStyle={{fontSize: 15}}
+                        tabBarUnderlineStyle={{backgroundColor:'#0ca6ee'}}
                     >
                         <POArticles tabLabel='文章' {...this.props}/>
                         <POChatrs tabLabel='图表' {...this.props}/>
-                        <POEvolution tabLabel='专报' {...this.props}/>
-                        <POSpecial tabLabel='导控' {...this.props}/>
+                        <POEvolution tabLabel='报告' {...this.props}/>
+                        {/*<POSpecial tabLabel='导控' {...this.props}/>*/}
                     </ScrollableTabView>
                 </View>
             </View>

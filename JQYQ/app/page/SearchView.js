@@ -3,7 +3,8 @@
  */
 import React,{Component} from 'react';
 import {
-    Text,StyleSheet,
+    Text,
+    StyleSheet,
     View,
     ListView,
     Image,
@@ -12,6 +13,7 @@ import {
     Animated,
     ScrollView,
     AsyncStorage,
+    TextInput,
 } from 'react-native';
 import Search from '../component/Search';
 import Modal from 'react-native-root-modal';
@@ -20,22 +22,26 @@ import Network from '../util/Network'
 import ArticleDetails from './ArticleDetails';
 import '../util/dateFormat';
 import px2dp from '../util/Px2dp';
+import BGGlobal from '../util/BGGlobal'
+import {toastShort} from '../component/Toast';
 
 const {width,height}=Dimensions.get('window');
 
-export default class AnnouncementAT extends Component{
-    _searchARR=[];
+export default class SearchView extends Component{
+    _searchARR= BGGlobal.searchString?BGGlobal.searchString.split(','):[];
     _dataArr = [];
+    _dataSource = new ListView.DataSource({rowHasChanged:(row1,row2)=>row1 !== row2});
+    _page=1;
     constructor(props){
         super(props);
-        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
-            dataSource: ds.cloneWithRows(['row 1', 'row 2']),
+            dataSource:this._dataSource.cloneWithRows(this._dataArr),
             searchArr:[],
             open: false,
             visible: false,
             scale: new Animated.Value(1),
             x: new Animated.Value(0),
+            dataArr:[],
         };
         this.icons = {
             yuqing:require('../image/lable/yuqing@3x.png'),
@@ -43,23 +49,21 @@ export default class AnnouncementAT extends Component{
             fumian:require('../image/lable/fumian@3x.png'),
             xiangguan:require('../image/lable/xiangguan@3x.png'),
         }
-
     }
 
     removeAll(){
         this._searchARR = [];
+        BGGlobal.searchString = '';
         this.setState({
             searchArr:this._searchARR
-        })
+        });
     }
-
      removeOne(index){
-         alert('删除这个',index)
          this._searchARR = this._searchARR.concat();
          this._searchARR.splice(index,1);
          this.setState({
              searchArr:this._searchARR
-         })
+         });
      }
     buttonGoBack(){
         const {navigator} = this.props;
@@ -75,56 +79,11 @@ export default class AnnouncementAT extends Component{
                     id:id,
                     title:title,
                 }
-            })
+            });
         }
     }
-    //每行 cell 的内容渲染
-    _renderRow(rowData) {
-        if (this._dataArr && this._dataArr.length > 0) {
-            let icon;
-            if (rowData.ispositive == 1) {
-                icon = this.icons['zhengmian'];
-            } else if (rowData.isnegative == 1) {
-                icon = this.icons['fumian'];
-            } else {
-                if (rowData.isyuqing == 1) {
-                    icon = this.icons['yuqing'];
-                } else {
-                    icon = this.icons['xiangguan'];
-                }
-            }
-            return (
-                <TouchableOpacity onPress={() => this._pressRow(rowData.title, rowData.id)}>
-                    <View style={styles.cell}>
-                        <View style={{width: width, height: px2dp(70)}}>
-                            <Text style={styles.cellTitle}>{rowData.title}</Text>
-                        </View>
-                        <View style={{flexDirection: 'row', width: width, justifyContent: 'space-between'}}>
-                            <View style={{flexDirection: 'row'}}>
-                                <Image source={icon}
-                                       style={{marginLeft: px2dp(15), marginBottom: px2dp(15), marginTop: px2dp(5)}}/>
-                                <Text style={styles.cellText}>{rowData.siteName}</Text>
-                                <Text style={styles.cellText}>{rowData.author}</Text>
-                            </View>
-                            <View style={{marginBottom: px2dp(10)}}>
-                                <Text style={{
-                                    marginBottom: px2dp(10),
-                                    marginRight: 15,
-                                    fontSize: 11,
-                                    color: '#999999',
-                                }}>{rowData.createTime}</Text>
-                            </View>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-            )
-        }else {
-            return (
-                <Text>加载中...</Text>
-            )
-        }
-    }
-//显示模态
+
+    //显示模态
     slideModal = () => {
         this.state.x.setValue(-320);
         this.state.scale.setValue(1);
@@ -187,7 +146,24 @@ export default class AnnouncementAT extends Component{
                      tintColorSearch="#242f39"
                      tintColorDelete="#242f39"
                     />
+                    {/*<View style={{width:width,height:64,backgroundColor:'#242f39',flexDirection:'row'}}>*/}
+                        {/*<View style={{height:30,*/}
+                            {/*width:width*4/5,*/}
+                            {/*marginLeft:10,*/}
+                            {/*backgroundColor:'#FFF',*/}
+                            {/*marginBottom:10,*/}
+                            {/*marginTop:10,*/}
+                            {/*flexDirection:'row',*/}
+                           {/*// borderRadius:12*/}
+                        {/*}}>*/}
+                            {/*<Image source={require('../image/seacrh/search@3x.png')} style={{width:20,height:20,marginTop:5,marginLeft:6}} />*/}
+                            {/*<TextInput style={{width:width*4/5,height:30 }} />*/}
 
+                        {/*</View>*/}
+                        {/*<Text style={{height:30,width:width*1/5,marginLeft:10,marginTop:20,fontSize:14,color:'#FFF',backgroundColor:'#FFF'}}*/}
+                              {/*onPress={this.onCancel}*/}
+                        {/*>取消</Text>*/}
+                    {/*</View>*/}
                     <Animated.Modal
                         visible={this.state.visible}
                         style={[styles.modal, {
@@ -216,16 +192,17 @@ export default class AnnouncementAT extends Component{
                                     this._searchARR.map((item,index)=>{
                                         return(
                                             <View key = {index} style={styles.searchTitleView}>
-                                                <View style={{flexDirection:'row'}}>
+                                                <TouchableOpacity style={{flexDirection:'row'}} onPress={
+                                                    ()=> this.onSearch(item)
+                                                }>
                                                     <Image source={require('../image/seacrh/history@3x.png')} style={{marginLeft:20}}/>
                                                     <Text style={{marginLeft:5,textAlign:'center',color:'#666666'}}>{item}</Text>
-                                                </View>
+                                                </TouchableOpacity>
                                                 <TouchableOpacity onPress={
                                                     ()=> this.removeOne(index)
                                                 }>
                                                     <Image  source={require('../image/seacrh/delate@3x.png')}
                                                             style={{marginRight:15}}
-
                                                     />
                                                 </TouchableOpacity>
                                             </View>
@@ -233,34 +210,76 @@ export default class AnnouncementAT extends Component{
                                     })
                                 }
                     </Animated.Modal>
-                <View style={{flex:1}}>
-                    {this._renderListView()}
-                </View>
-
+                    <View style={{flex:1}}>
+                        <ListView
+                            enableEmptySections = {true}
+                            dataSource={this.state.dataSource}
+                            renderRow={this._renderRow.bind(this)}
+                        />
+                    </View>
                 </View>
         )
     }
-    _renderListView(){
-        return(
-            <ListView
-                dataSource={this.state.dataSource}
-                renderRow={this._renderRow}
-            />
-        )
+
+    _renderRow(rowData){
+            var icon;
+            if (rowData.ispositive == 1) {
+                icon = this.icons['zhengmian'];
+            } else if (rowData.isnegative == 1) {
+                icon = this.icons['fumian'];
+            } else {
+                if (rowData.isyuqing == 1) {
+                    icon = this.icons['yuqing'];
+                } else {
+                    icon = this.icons['xiangguan'];
+                }
+            }
+            return (
+                <TouchableOpacity onPress={() => this._pressRow(rowData.title, rowData.id)}>
+                    <View style={styles.cell}>
+                        <View style={{width: width, height: px2dp(70)}}>
+                            <Text style={styles.cellTitle}>{rowData.title}</Text>
+                        </View>
+                        <View style={{flexDirection: 'row', width: width, justifyContent: 'space-between'}}>
+                            <View style={{flexDirection: 'row'}}>
+                                <Image source={icon}
+                                       style={{marginLeft: px2dp(15), marginBottom: px2dp(15), marginTop: px2dp(5)}}/>
+                                <Text style={styles.cellText}>{rowData.siteName}</Text>
+                                <Text style={styles.cellText}>{rowData.author}</Text>
+                            </View>
+                            <View style={{marginBottom: px2dp(10)}}>
+                                <Text style={{
+                                    marginBottom: px2dp(10),
+                                    marginRight: 15,
+                                    fontSize: 11,
+                                    color: '#999999',
+                                }}>{rowData.publishTime}</Text>
+                            </View>
+                        </View>
+                    </View>
+                </TouchableOpacity>
+            )
 
     }
     //点击搜索
     onSearch = (text) => {
+        if (text == ''){
+            toastShort('搜索内容不能为空');
+            return;
+        }
         return new Promise((resolve, reject) => {
-            console.log('onSearch', text);
-           // this._searchARR = this._searchARR.concat(text);
             //在数组第0个位置添加刚刚输入的内容
+            // let a = this._searchARR.length;
+            // for(var i=0;i<a;i++){
+            //     if (this._searchARR[i] = text){
+            //         return
+            //     }
+            // }
             this._searchARR.unshift(text);
-            //数组储存到本地
-            
-
-
-
+            //每个搜索词用,分开
+            let searchStr = this._searchARR.join(',');
+            //储存到本地
+            BGGlobal.searchString = searchStr;
             //模态消失
             this.hideModal();
             //更新state 属性
@@ -273,19 +292,25 @@ export default class AnnouncementAT extends Component{
         });
     };
     _SearchAction = (text) =>{
+       // console.log('执行了 SearchAction 方法')
         let params = new  Object();
         params.all = text;
-        console.log(text,'search;;;;;;;;;;;;;;;;;');
+        params.pageSize = 50;
         Network.post('apppanorama2/getList',params,(response)=>{
             let resArr= response.rows;
-            for (let i in resArr){
-                resArr[i].createTime = new Date(resArr[i].createTime).Format("yyyy/MM/dd hh:mm");
+            if(response.rows==''||!response.rows){
+                toastShort('没有搜索到相关数据');
+                return;
             }
-            console.log(response,'ppppppppppppppprrrr');
-            //this._dataArr = this._dataArr.concat(resArr);
-            this._dataArr = resArr;
+            // else {
+            //     toastShort(resArr.length,'条数据');
+            // }
+            for (let i in resArr){
+                resArr[i].publishTime = new Date(resArr[i].publishTime).Format("yyyy/MM/dd hh:mm");
+            }
             this.setState({
-                dataSource: ds.cloneWithRows(resArr),
+                dataArr:resArr,
+                dataSource:this._dataSource.cloneWithRows(resArr)
             })
         },(err)=>{err});
     };
@@ -293,15 +318,12 @@ export default class AnnouncementAT extends Component{
     //文字变化
     onChangeText = (text) => {
         return new Promise((resolve, reject) => {
-            console.log('onChangeText', text);
-            console.log('onChangeText', this._searchARR);
             resolve();
         });
     };
     //点击取消
     onCancel = () => {
         return new Promise((resolve, reject) => {
-            console.log('onCancel');
             this.hideModal();
             this.buttonGoBack();
             resolve();
@@ -310,13 +332,14 @@ export default class AnnouncementAT extends Component{
     //获取焦点时
     onFocus = (text) => {
         return new Promise((resolve, reject) => {
-            console.log('onFocus', text);
             this.scaleModal();
+            console.log('点击搜索');
             resolve();
         });
     };
     componentDidMount(){
         this.scaleModal();
+        this.onFocus();
     }
 
 

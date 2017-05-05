@@ -2,6 +2,8 @@
  * Created by jiahailiang on 2017/2/8.
  */
 import {ServerBaseURL} from './GlobalConst';
+import {toastShort} from '../component/Toast';
+
 module.exports = {
     /**
      * 基于fetch的get方法
@@ -57,10 +59,12 @@ module.exports = {
                     successCallback(response);
                 }else{
                     failCallback(response.message);
+                    //toastShort('网络异常');
                 }
             })
             .catch(function(err){
-                failCallback(String(err));
+                //failCallback(String(err));
+                //toastShort(err);
             });
     },
     postSecond(url, params, successCallback, failCallback){
@@ -84,6 +88,7 @@ module.exports = {
             })
             .catch(function(err){
                 failCallback(String(err));
+
             });
     },
     postURL(url, params, successCallback, failCallback){

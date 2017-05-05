@@ -12,36 +12,120 @@ import {
     TextInput,
     Platform,
     Animated,
+    BackAndroid,
+    StatusBar,
+    AsyncStorage,
 }from'react-native';
 var WINDOW_WIDTH = Dimensions.get('window').width;
 var WINDOW_HEIGHT = Dimensions.get('window').height;
 
-import BGGlobal from '../util/BGGlobal';
 import Network from '../util/Network';
 import px2dp from '../util/Px2dp';
 import TabbarView from './TabbarView';
 import {toastShort} from '../component/Toast';
-import RegisterView from './RegisterView'
+import RegisterView from './RegisterView';
+
+import Storage from 'react-native-storage';
+var storage = new Storage({
+    // 最大容量，默认值1000条数据循环存储
+    size: 1000,
+
+    // 存储引擎：对于RN使用AsyncStorage，对于web使用window.localStorage
+    // 如果不指定则数据只会保存在内存中，重启后即丢失
+    storageBackend: AsyncStorage,
+
+    // 数据过期时间，默认一整天（1000 * 3600 * 24 毫秒），设为null则永不过期
+    defaultExpires: null,
+
+    // 读写时在内存中缓存数据。默认启用。
+    enableCache: true,
+
+    // 如果storage中没有相应数据，或数据已过期，
+    // 则会调用相应的sync方法，无缝返回最新数据。
+    // sync方法的具体说明会在后文提到
+    // 你可以在构造函数这里就写好sync的方法
+    // 或是写到另一个文件里，这里require引入
+    // 或是在任何时候，直接对storage.sync进行赋值修改
+    sync: {}
+});
+//储存
+export function save(key, value) {
+    storage.save({
+        key: key,
+        rawData: value,
+        expires: null
+    });
+}
+
+//取
+export function load(key, callBack) {
+    storage.load({
+        key: key,
+        autoSync: false,
+        syncInBackground: true,
+    })
+        .then(ret => {
+            ret.status = 200;
+            callBack(ret);
+        })
+        .catch(err => {
+            switch (err.name) {
+                case "NotFoundError":
+                default:
+                    callBack({status: 404});
+                    break;
+            }
+        })
+}
+//删除
+export function remove(key) {
+    storage.remove({
+        key: key
+    });
+}
+
+
 export default class LoginView extends Component{
+    params = new Object();
     constructor (props) {
         super (props);
 
         this.state = {
-            userName:'jxyqgj',
-            password:'123456',
+            username:'',
+            password:'',
             userToken:'',
             mobileInputOnFocus: true,
             translateX:new Animated.Value(0),
             iconsRem:true,
+            isTouched:true,
+            isLog:false,
         };
-        this.icons = {
-            'remanber' : require('../image/remanber@3x.png'),
-            'clearRermanber' :require('../image/fuxuankuang@3x.png')
-        }
+
     }
+    componentDidMount() {
+        var _this=this;
+        load('userInfo',(response)=>{
+            this.setState({username: response.user});
+            if (response.status === 200) {
+                _this.params.username = response.user;
+                _this.params.password = response.pwd;
+                Network.post('app2/login',_this.params,()=>{
+                    _this.JumpAction(TabbarView);
+                },()=>{
+                    _this._shakeAndClearPassCode();
+                    toastShort('用户名或密码错误');
+                    _this.state.isTouched = true;
+                });
+            } else {
+                //toastShort('登录过期');
+                return;
+            }
+        });
+    }
+
     JumpAction (title) {
         var _this = this;
-        const {navigator} = this.props;
+        const {navigator} = _this.props;
         if (navigator) {
             navigator.push({
                 name: "title",
@@ -63,40 +147,18 @@ export default class LoginView extends Component{
             //进行其他操作
         );
     }
-    rememberAccount(){
-        this.setState ({
-            iconsRem: !this.state.iconsRem
-        });
-        if (this.state.iconsRem){
-            BGGlobal.clearUserInfo;
-            console.log(BGGlobal.userInfo,BGGlobal.password,'用户信息清除')
-
-        }else {
-            BGGlobal.userInfo = this.state.userName;
-            BGGlobal.password = this.state.password;
-            console.log(BGGlobal.userInfo,BGGlobal.password,'储存用户信息')
-        }
-    }
-    clearUserInfo(){
-        this.state.iconsRem = !this.state.iconsRem;
-        BGGlobal.clearUserInfo;
-
-    }
-
-
     render(){
         var animationStyle = {
             transform:[
                 {translateX:this.state.translateX}
             ],
         };
-
-        let icon = this.icons['remanber'];
-        if (this.state.iconsRem){
-            icon = this.icons['clearRermanber']
-        }
         return(
-            <View style={styles.container}>
+            <View style={styles.container} keyboardDismissMode="on-drag" keyboardShouldPersistTaps={false} >
+                <StatusBar
+                    backgroundColor="blue"
+                    barStyle="light-content"
+                />
                 <Animated.View style={animationStyle}>
                 <Image source={require('../image/login22@3x.jpg')} style={styles.backgroundImage}>
                     <View style={styles.lingInView}>
@@ -106,15 +168,17 @@ export default class LoginView extends Component{
                             <TextInput
                                 style={styles.inPutStyle}
                                 autoFocus={this.state.mobileInputOnFocus}
+                                clearButtonMode="while-editing"
                                 onChangeText={(text)=>{
+                                    //save('userInfo',{user:text});
                                     this.setState({
-                                        userName:text,
+                                        username:text,
                                     });
                                 }}
-                                value={this.state.userName}
                                 placeholder={'请输入用户名'}
                                 autoCorrect={false}
                                 autoCapitalize="none"
+                                defaultValue={this.params.username}
                             >
                             </TextInput>
                         </View>
@@ -125,27 +189,24 @@ export default class LoginView extends Component{
                             <TextInput
                                 style={styles.inPutStyle}
                                 //ref = {'1'}
-                                autoFocus={this.state.mobileInputOnFocus}
+                                //autoFocus={this.state.mobileInputOnFocus}
+                                clearButtonMode="while-editing"
+
                                 onChangeText={(text)=>{
+                                    //('userInfo',{pwd:text});
                                     this.setState({
                                         password:text,
                                     });
                                 }}
-                                value={this.state.password}
+                                //value={this.state.password}
                                 placeholder={'请输入密码'}
                                 secureTextEntry={true}
+                                defaultValue={this.params.password}
                             >
                             </TextInput>
                         </View>
                     </View>
-                        <View style={styles.remanberView}>
-                            <Image source={icon}  style={{width:15,height:15}}/>
-                            <Text style={styles.remanberText} onPress = {()=>{
 
-                                this.rememberAccount();
-
-                            }}>记住账号</Text>
-                        </View>
                     <TouchableOpacity
                         onPress={this._logInAction.bind(this)}
                     >
@@ -163,59 +224,29 @@ export default class LoginView extends Component{
         )
     }
 
-
     _logInAction(){
         var _this=this;
-        if (this.state.userName === ''){
-            toastShort('用户名不能为空');
+        if (_this.state.userName === '' || _this.state.password === ''){
+            toastShort('用户名或密码不能为空');
+            return
         }
-        if (this.state.password === ''){
-            toastShort('密码不能为空')
+        if (!_this.state.isTouched){
+            return
+        }else {
+            _this.state.isTouched = false;
         }
-        //来源
-        var source = 0;
-        if(Platform.OS == 'ios') {
-            source = 0;
-        }
-        else {
-            source = 1;
-        }
-        //登录
-        /*const params=new Object();
-            params.username=this.state.userName;
-            params.password=this.state.password;
-            params.source=source;
-        fetch("http://172.168.30.84:8080/POMP/app2/login",
-        // fetch("http://172.168.30.84:8080/POMP/app2/getColumnAndTags",
-            {
-                method: 'POST',
-                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json'},
-                body: JSON.stringify(params)
-            })
-            .then(function(res){
-            console.log(res);
-                if (res.status === 0){
-                    _this.JumpAction(TabbarView);
-                }
-
-        });*/
-        Network.post('app2/login',{
-            username:this.state.userName,
-            password:this.state.password,
-        },(response)=>{
-            if (this.state.iconsRem){
-                BGGlobal.userInfo = this.state.userName;
-                BGGlobal.password = this.state.password;
-                BGGlobal.isLogin = true;
-                console.log(BGGlobal.userInfo,BGGlobal.password,'储存用户信息')
-            }else {
-                BGGlobal.clearUserInfo;
-                console.log(BGGlobal.userInfo,BGGlobal.password,'用户信息清除')
-            }
-            console.log("****************-----------------*************");
+        _this.params.username = this.state.username;
+        _this.params.password = this.state.password;
+        Network.post('app2/login',_this.params,()=>{
+            save("userInfo",{
+                'user':_this.params.username,
+                'pwd':_this.params.password,
+            });
             _this.JumpAction(TabbarView);
-        },(err)=>{
-            _this._shakeAndClearPassCode()
+        },()=>{
+            _this._shakeAndClearPassCode();
+            toastShort('用户名或密码错误');
+            _this.state.isTouched = true;
         });
     }
 
@@ -234,13 +265,12 @@ const styles =  StyleSheet.create({
         width:px2dp(257),
         height:50,
         fontSize:12,
-        //textAlign:'center',
     },
     loginButton:{
         width:px2dp(297),
-        height:px2dp(40),
+        height:40,
         backgroundColor:'#0ca6ee',
-        marginTop:5,
+        marginTop:25,
         alignItems:'center',
         justifyContent:'center',
         borderWidth:1,
@@ -252,7 +282,8 @@ const styles =  StyleSheet.create({
     },
     lingInView:{
         width:px2dp(297),
-        height:px2dp(100),
+        //height:px2dp(100),
+        height:100,
         marginTop:px2dp(180),
         flexDirection:'column',
         borderRadius:5,
@@ -285,7 +316,7 @@ const styles =  StyleSheet.create({
     registerText:{
         fontSize:12,
         color:'#0a608d',
-        marginTop:250
+        marginTop:200
     },
     registerView:{
         marginTop:px2dp(150),

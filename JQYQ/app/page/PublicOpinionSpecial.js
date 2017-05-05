@@ -27,24 +27,21 @@ export default class PublicOpinionSpecial extends Component {
 
     constructor(props) {
         super(props);
-
         //this._initData = this._initData.bind(this);
         //this._initData();
-
-
-
         this.state = {
             text:'',
             time:'',
             isCanDown:'',
             progress: 0,
-            id:''
+            id:'',
             //下载
             // isLoaedFile: false,
             // contentLength: 0,
             // data: data,
             // downloadUrl: url,
             // filePath: filePath,
+            upData:''
         }
     }
     /*_initData() {
@@ -74,10 +71,6 @@ export default class PublicOpinionSpecial extends Component {
             downColor = '#FFF';
             downTextColor = 'orange'
         }
-
-
-
-
         return (
             <View style={{flex: 1, flexDirection: 'column',alignItems:'center',width:width,height:height}}>
                 <Image source={require('../image/daokong@3x.png')} style={{marginTop:50}} onPress={this._download.bind(this)} />
@@ -141,7 +134,7 @@ export default class PublicOpinionSpecial extends Component {
 
     _download(){
         if (this.state.isCanDown !=='') {
-            let dirs = RNFetchBlob.fs.dirs
+            let dirs = RNFetchBlob.fs.dirs;
             RNFetchBlob
                 .config({
                     path: dirs.DocumentDir + '/test2.doc'
@@ -150,13 +143,14 @@ export default class PublicOpinionSpecial extends Component {
                     //some headers ..
                 })
                 .then((res) => {
-                    console.log('文件保存到---> ', res.path());
+                    //console.log('文件保存到---> ', res.path());
                     toastShort('文件下载成功')
                 })
         }
 
     }
-    componentWillMount() {
+    componentDidMount() {
+        console.log('飒飒','导控内容');
         let params = new  Object();
         params.eventId = BGGlobal.propsID;
         Network.post('appguide2/getGuide',params,(res)=>{
@@ -166,6 +160,7 @@ export default class PublicOpinionSpecial extends Component {
                 isCanDown:res.data.result,
                 id:res.data.id
             });
+            console.log(res.data,'导控内容')
         },(err)=>{err})
     }
 }

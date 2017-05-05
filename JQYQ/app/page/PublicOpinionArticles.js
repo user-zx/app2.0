@@ -26,12 +26,12 @@ import BGGlobal from '../util/BGGlobal';
 
 import Modal from 'react-native-root-modal';
 
-export default class NewClass extends Component{
-    _page=0;
+export default class PublicOpinionArticles extends Component{
+    _page=1;
     _dataSource = new ListView.DataSource({rowHasChanged:(row1,row2)=>row1 !== row2});
     _dataArr=[];
     eventId = BGGlobal.propsID;//事件 ID
-
+    params = new Object();
     constructor(props) {
         super(props);
         this.state = {
@@ -41,13 +41,18 @@ export default class NewClass extends Component{
             downArr:[],//下拉框数组
             carrie:'',//载体
             dataArr:[],//列表数组
-            // nature:'',//
             value:'',
-            aspect:'',
-            sequence:'',
+            nature:'',
+            time:'',
             articleList:[],
             textId:'',//详情 id
             sort:'',
+            nextTime:'',
+            isCarrie:false,
+            isNature:false,
+            isSort:false,
+            isTime:false,
+
 
         };
         this.icons = {
@@ -55,82 +60,127 @@ export default class NewClass extends Component{
             zhengmian:require('../image/lable/zhengmian@3x.png'),
             fumian:require('../image/lable/fumian@3x.png'),
             xiangguan:require('../image/lable/xiangguan@3x.png'),
+            down:require('../image/down.png'),
+            up:require('../image/up.png'),
         }
     }
 
 //下拉框点击事件
     _dropdown_6_onSelect(index,value) {
-        let params=new FormData();
-        params.carrie=this.state.carrie;//载体
-        params.time=this.state.aspect;//时间
-        params.nature=this.state.sequence;//特征
-        params.sort = this.state.sort; //排序
+        this.params.eventId = BGGlobal.propsID;
+        this.params.carrie=this.state.carrie;//载体
+        this.params.time=this.state.time;//时间
+        this.params.nature=this.state.nature;//特征
+        this.params.sort = this.state.sort; //排序
+        //this.params.pageSize = 10;
 
-        Network.post('appevent2/getList',params,(response)=>{
+        Network.post('appevent2/getList',this.params,(response)=>{
             let resArr= response.rows.result;
-            console.log(resArr+'我是点击下拉框事件'+params.carrie,params.aspect,params.sequence);
+            if(!response.rows.result || response.rows.result ==''){
+                toastShort('没有相关数据');
+                return;
+            }
+            //console.log(resArr,'筛选点击的测试');
+            toastShort('筛选成功');
             for (let i in resArr){
-                resArr[i].createTime = new Date(resArr[i].createTime).Format("yyyy/MM/dd hh:mm");
+                resArr[i].publishTime = new Date(resArr[i].publishTime).Format("yyyy/MM/dd hh:mm");
             }
             this.setState({
                 dataArr:resArr,
                 dataSource:this._dataSource.cloneWithRows(resArr)
             })
-        },(err)=>{err});
+        },(err)=>{toastShort('网络错误',err)});
     }
 
     render(){
-
+        let icon;
+        icon = this.state.isCarrie ? this.icons.up : this.icons.down;
         return (
             <View style={{flex:1,flexDirection:'column'}}>
-                <View style={{width:width,height:40,flexDirection:'row'}}>
-                    <ModalDropdown options={this.state.downArr}
-                                   defaultValue='载体'
-                                   textStyle={{fontSize:px2dp(15),padding:px2dp(10),textAlign:'center'}}
-                                   style={styles.dropdown_1}
-                                   dropdownStyle={styles.dropdown_9}
-                                   onSelect={(idx, value) => {
-                                       this.state.carrie=value;
-                                       this._dropdown_6_onSelect(idx, value)
-                                   }}
-                    />
-                    <ModalDropdown options={['不限','今日','昨日','近七天','近30天',]}
-                                   defaultValue='时间'
-                                   textStyle={{fontSize:px2dp(15),padding:px2dp(10),textAlign:'center'}}
-                                   style={styles.dropdown_1}
-                                   dropdownStyle={styles.dropdown_9}
-                                   onSelect={(idx, value) => {
-                                       if(idx == 0){
-                                           this.state.sequence = 'today';
-                                       }else  if (idx == 1){
-                                           this.state.sequence = 'yesterday';
-                                       }else  if (idx == 2) {
-                                           this.state.sequence = 'week';
-                                       }else if  (idx == 3) {
-                                           this.state.sequence = 'month';
-                                       }
-                                       this._dropdown_6_onSelect(idx, value)
-                                   }}
-                    />
+                <View style={{width:width,height:40,flexDirection:'row',borderBottomColor:'#ececec',
+                    borderBottomWidth:1}}>
+                    <View style={styles.dropdown_1}>
+                        <ModalDropdown options={['全部','综合','新闻','博客','论坛','微博','微信','QQ群','电子报','视频','手机wap']}
+                                       defaultValue='载体'
+                                       textStyle={{fontSize:px2dp(15),padding:px2dp(10),textAlign:'center'}}
+                                       //style={styles.dropdown_1}
+                                       dropdownStyle={styles.dropdown_9}
+                                       onSelect={(idx, value) => {
+                                           if (idx == 0) {
+                                               this.state.carrie='';
+                                           }else {
+                                               this.state.carrie=value;
+                                           }
+                                           this._dropdown_6_onSelect(idx, value)
+                                       }}
+                        />
+                        <Image source={icon} style={styles.typeimage} />
+                    </View>
+                    <View style={styles.dropdown_1}>
+
+                        <ModalDropdown options={['不限','今日','昨日','近七天','近30天',]}
+                                       defaultValue='时间'
+                                       textStyle={{fontSize:px2dp(15),padding:px2dp(10),textAlign:'center'}}
+                                      // style={styles.dropdown_1}
+                                       dropdownStyle={styles.dropdown_9}
+                                       onSelect={(idx, value) => {
+                                           if(idx == 0){
+                                               this.state.time = '';
+                                           }else if(idx == 1){
+                                               this.state.time = 'today';
+                                           }else  if (idx == 2){
+                                               this.state.time = 'yesterday';
+                                           }else  if (idx == 3) {
+                                               this.state.time = 'week';
+                                           }else if  (idx == 4) {
+                                               this.state.time = 'month';
+                                           }
+                                           this._dropdown_6_onSelect(idx, value)
+                                       }}
+                        />
+                        <Image source={icon} style={styles.typeimage} />
+                    </View>
+                    <View style={styles.dropdown_1}>
                     <ModalDropdown
-                        options={['不限', '相关','舆情','正面','负面']}
+                        options={['舆情','相关','正面','负面']}
                         //options={this.state.dataArr}
                         defaultValue='特征'
                         textStyle={{fontSize:px2dp(15),padding:px2dp(10),textAlign:'center'}}
-                        style={styles.dropdown_1}
+                        //style={styles.dropdown_1}
                         dropdownStyle={styles.dropdown_9}
                         onSelect={(idx, value) => {
-                            this.state.aspect = value;
+                            //this.state.aspect = value;
+                            if(idx == 0){
+                                this.state.nature = '舆情';
+                            }else  if (idx == 1){
+                                this.state.nature = '相关';
+                            }else  if (idx == 2) {
+                                this.state.nature = '正面';
+                            }else if  (idx == 3) {
+                                this.state.nature = '负面';
+                            }
                             this._dropdown_6_onSelect(idx, value)
                         }}
                     />
-                        <ModalDropdown options={['全部', '热度降序','热度升序','阅读量降序','转发量降序','评论量降序']}
+                        <Image source={icon} style={styles.typeimage} />
+                </View>
+                    <View style={styles.dropdown_1}>
+                        <ModalDropdown options={['热度降序','时间降序',]}
                                        defaultValue='排序'
                                        textStyle={{fontSize:px2dp(15),padding:px2dp(10),textAlign:'center'}}
-                                       style={styles.dropdown_1}
-                                       dropdownStyle={styles.dropdown_9}
-                                       onSelect={(idx, value) => this._dropdown_6_onSelect(idx, value)}
+                                       //style={styles.dropdown_1}
+                                       dropdownStyle={styles.dropdown_10}
+                                       onSelect={(idx, value) => {
+                                           if (idx == 0){
+                                               this.state.sort = 'publishTime';
+                                           } else  if  (idx ==1){
+                                               this.state.sort = 'hot';
+                                           }
+                                           //调用点击事件
+                                           this._dropdown_6_onSelect(idx, value)}}
                         />
+                        <Image source={icon} style={styles.typeimage} />
+                    </View>
                 </View>
 
                 <View style={{flex:1}}>{this._renderListView()}</View>
@@ -145,12 +195,8 @@ export default class NewClass extends Component{
                 renderRow={this._renderRow.bind(this)}
                 onRefresh={this._onListRefersh.bind(this)}
                 onLoadMore={this._onLoadMore.bind(this)}
-                isShowLoadMore={false}
-                renderFooter={()=>{
-                    return(<View style={{backgroundColor:'#F2F2F2',height:px2dp(10)}}>
-                        <Text style={{textAlign:'center'}}>加载更多</Text>
-                    </View>)
-                }}
+                //isShowLoadMore={false}
+                pusuToLoadMoreTitle="加载中~~~"
 
             />
         )
@@ -158,7 +204,7 @@ export default class NewClass extends Component{
     }
     _pressRow(title,id){
         var _this = this;
-        const {navigator} = this.props;
+        const {navigator} = _this.props;
         if (navigator) {
             navigator.push({
                 name:'ArticleDetails',
@@ -166,12 +212,6 @@ export default class NewClass extends Component{
                 params:{
                     id:id,
                     title:title,
-                    //添加回调方法
-                    getResult:function (meMessage) {
-                        _this.setState({
-                            resultMessage:meMessage,
-                        })
-                    }
                 }
             })
         }
@@ -182,7 +222,6 @@ export default class NewClass extends Component{
         if(rowData.ispositive == 1){
             icon = this.icons['zhengmian'];
         } else if(rowData.isnegative ==1){
-            //alert(rowData.isnegative);
             icon = this.icons['fumian'];
         } else {
             if(rowData.isyuqing ==1 ){
@@ -205,7 +244,7 @@ export default class NewClass extends Component{
                             <Text style={styles.cellText}>{rowData.author}</Text>
                         </View>
                         <View style={{marginBottom:px2dp(10)}}>
-                            <Text style={{marginBottom:px2dp(10),marginRight:15,fontSize:11, color:'#999999',}}>{rowData.createTime}</Text>
+                            <Text style={{marginBottom:px2dp(10),marginRight:15,fontSize:11, color:'#999999',}}>{rowData.publishTime}</Text>
                         </View>
                     </View>
 
@@ -222,21 +261,27 @@ export default class NewClass extends Component{
     _onListRefersh(end){
         let timer =  setTimeout(()=>{
             clearTimeout(timer);
-            let params=new Object();
-            params.eventId = this.eventId;
-            Network.post('appevent2/getList',params,(responce)=>{
+            this.params.eventId = BGGlobal.propsID;
+            this.params.pageNo = 1;//第几页
+            Network.post('appevent2/getList',this.params,(responce)=>{
                 let resArr = responce.rows.result;
+                if(!response.rows.result){
+                    toastShort('没有相关数据');
+                    return;
+                }
+                toastShort('刷新成功');
+               //
+                // console.log(resArr);
                 for (let i in resArr){
-                    resArr[i].createTime = new Date(resArr[i].createTime).Format("yyyy/MM/dd hh:mm");
-                    console.log(resArr+'我是模拟刷新');
+                    resArr[i].publishTime = new Date(resArr[i].publishTime).Format("yyyy/MM/dd hh:mm");
                 }
                 this.setState({
                     dataArr:resArr,
                     dataSource:this._dataSource.cloneWithRows(resArr)
                 })
-            },(err)=>{err});//加载的状态
-
-            end();//刷新成功后需要调用end结束刷新
+            },(err)=>{toastShort('刷新失败',err)});//加载的状态
+            let isNoMore = this.state.dataArr.length < 10; //是否已无更多数据
+            end(isNoMore);//加载成功后需要调用end结束刷新
         },1500)
 
     }
@@ -250,54 +295,48 @@ export default class NewClass extends Component{
         let timer =  setTimeout(()=>{
             clearTimeout(timer);
             this._page++;
-            let params=new Object();
-            params.carrie=this.state.carrie;//载体
-            params.aspect=this.state.aspect;//相关
-            params.sequence=this.state.sequence;//热度
-            params.pageNo = this._page;
-            params.eventId = this.eventId;
-
-            Network.post('appevent2/getList',params,(response)=>{
+            this.params.eventId = BGGlobal.propsID;
+            this.params.pageNo = this._page;//第几页
+            this.params.nextTime = this.state.nextTime;
+            //toastShort(this.);
+            Network.post('appevent2/getList',this.params,(response)=>{
                 let resArr= response.rows.result;
-                console.log(resArr+'我是加载更多');
-                for (let i in resArr){
-                    resArr[i].createTime = new Date(resArr[i].createTime).Format("yyyy/MM/dd hh:mm");
+                if(!response.rows.result){
+                    toastShort('没有更多数据');
+                    return;
                 }
+                for (let i in resArr){
+                    resArr[i].publishTime = new Date(resArr[i].publishTime).Format("yyyy/MM/dd hh:mm");
+                }
+                this._dataArr = this._dataArr.concat(resArr);
                 this.setState({
                     dataArr:resArr,
-                    dataSource:this._dataSource.cloneWithRows(resArr)
+                    nextTime:response.rows.nextTime ,
+                    dataSource:this._dataSource.cloneWithRows(this._dataArr)
                 })
             },(err)=>{err});
-            end(this._page > 4);//加载成功后需要调用end结束刷新 假设加载4页后数据全部加载完毕
-
+            let isNoMore = this.state.dataArr.length < 10; //是否已无更多数据
+            end(isNoMore);//加载成功后需要调用end结束刷新
         },2000)
 
     }
 
     componentDidMount() {
-        //加载下拉框内容
-        Network.post('apppanorama2',{},(response)=>{
-            this.setState({
-                downArr :response.data.natureList,
-            });
-            let timer = setTimeout(()=>{
-                clearTimeout(timer);
-            },500);//自动调用刷新 新增方法
-        },(err)=>{
-            toastShort(err)
-        });
-        let params=new Object();
-        params.eventId = this.eventId;
-        params.pageSize = 100;
-        Network.post('appevent2/getList',params,(response)=>{
+        this.params.eventId = BGGlobal.propsID;
+        Network.post('appevent2/getList',this.params,(response)=>{
             let resArr= response.rows.result;
-            console.log(response+'事件文章');
-            for (let i in resArr){
-                resArr[i].createTime = new Date(resArr[i].createTime).Format("yyyy/MM/dd hh:mm");
-                this._dataArr = resArr;
+            if(!response.rows.result){
+                toastShort('没有相关数据');
+                return;
             }
+            for (let i in resArr){
+                resArr[i].publishTime = new Date(resArr[i].publishTime).Format("yyyy/MM/dd hh:mm");
+            }
+            //在原有的数组上加上新的数组
+            this._dataArr = this._dataArr.concat(resArr);
             this.setState({
                 dataArr:resArr,
+                nextTime:response.rows.nextTime ,
                 dataSource:this._dataSource.cloneWithRows(resArr)
             })
         },(err)=>{err});
@@ -351,14 +390,19 @@ const styles=StyleSheet.create({
     cellImage:{
 
     },
+    typeimage:{
+        width:10,
+        height:10,
+    },
     dropdown_1: {
         top: 0,
         width:width/4,
-        height:px2dp(40),
-        backgroundColor:'#F1F1F1',
+        height:39,
+        backgroundColor:'#FFF',
         borderColor:'#333333',
         alignItems:'center',
-        justifyContent:'center'
+        justifyContent:'center',
+        flexDirection:'row',
     },
     dropdown_9: {
         flex: 1,
@@ -367,6 +411,14 @@ const styles=StyleSheet.create({
         width:px2dp(80),
         backgroundColor:'#FFF'
     },
+    dropdown_10: {
+        flex: 1,
+        //left: px2dp(10),
+        height:px2dp(70),
+        width:px2dp(80),
+        backgroundColor:'#FFF'
+    },
+
     dropdown_8: {
         flex: 1,
         //left: px2dp(10),

@@ -11,19 +11,19 @@ import {
     ScrollView,
 } from 'react-native';
 
-const {width,height}=Dimensions.get('window')
+const {width,height}=Dimensions.get('window');
 
 import Echarts from 'native-echarts';
 import Network from '../util/Network'
 import BGGlobal from '../util/BGGlobal';
 import px2dp from '../util/Px2dp'
+import '../util/dateFormat';
 
 export default class PublicOpinionEvolution extends Component{
 
     constructor(props) {
         super(props);
         var data = [];
-
         for (var i = 0; i <= 360; i++) {
             var t = i / 180 * Math.PI;
             var r = Math.sin(2 * t) * Math.cos(2 * t);
@@ -107,7 +107,6 @@ export default class PublicOpinionEvolution extends Component{
                             if(item.ispositive == 1){
                                 icon = this.icons['zhengmian'];
                             } else if(item.isnegative ==1){
-                                //alert(rowData.isnegative);
                                 icon = this.icons['fumian'];
                             } else {
                                 if(item.isyuqing ==1 ){
@@ -153,33 +152,30 @@ export default class PublicOpinionEvolution extends Component{
                 option4:res.data.siteChartJson,//图4
                 siteSummary:res.data.siteSummary,//第四部分简介
             });
-            console.log(res,'134134134134134')
-        },(err)=>{err})
+        },(err)=>{err});
         Network.post('appeventreport2/getEventTrend',params,(res2)=>{
             this.setState({
                 option1:res2.data.option,
                 trendStr:res2.data.trendStr,
         })
-        },(err)=>{err})
+        },(err)=>{err});
         Network.post('appeventreport2/getPeople',params,(res3)=>{
             this.setState({
                 option5:res3.data.option,
                 peopleSummary:res3.data.peopleSummary,
             })
-        },(err)=>{err})
+        },(err)=>{err});
         Network.post('appeventreport2/getAticle',params,(res4)=>{
+            let resArr = res4.data.result;
+            for (let i in resArr){
+                resArr[i].createTime = new Date(resArr[i].createTime).Format("yyyy/MM/dd hh:mm");
+            }
             this.setState({
-                rowData : res4.data.result,
+                rowData : resArr,
             });
-            console.log(res4.data.result,'热门文章')
-        },(err)=>{err})
+        },(err)=>{err});
 
     }
-    componentWillMount() {
-
-    }
-
-
 }
 const styles = StyleSheet.create({
    lableHeader:{

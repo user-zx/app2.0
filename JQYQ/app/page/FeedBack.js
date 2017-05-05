@@ -78,6 +78,9 @@ export default class FeedBack extends Component{
             title:'意见反馈',
             tintColor: '#FFF'
         };
+        const bar = {
+            style:'light-content',
+        };
         return(
             <View style={{ flex:1 ,flexDirection:'column' , backgroundColor:'#FFF',alignItems:'center'}}>
                 <View style={{width:width}}>
@@ -85,6 +88,7 @@ export default class FeedBack extends Component{
                         title={titleConfig}
                         tintColor={'#18242e'}
                         leftButton={leftButtonConfig}
+                        statusBar={bar}
                     />
                 </View>
                 <View style={styles.buttonlayout1}>

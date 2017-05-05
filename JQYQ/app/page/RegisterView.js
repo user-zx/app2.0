@@ -8,6 +8,8 @@ import {
     Image,
     StyleSheet,
     TouchableHighlight,
+    Animated,
+
 } from 'react-native';
 
 import Picker from 'react-native-picker';
@@ -16,7 +18,8 @@ import px2dp from '../util/Px2dp'
 import NavigationBar from 'react-native-navbar';
 import {NavGoBack} from '../component/NavGoBack';
 import RegisterViewSecond from './RegisterViewSecond'
-
+import {toastLong} from '../component/Toast';
+import Modal from 'react-native-root-modal';
 
 
 
@@ -34,7 +37,12 @@ export default class RegisterView extends Component {
             userName:'',      //用户名
             phoneNumber:'',   //手机号
             compony:'',       //公司名
-            enableLoginButton:true
+            enableLoginButton:true,
+
+            open: false,
+            visible: false,
+            scale: new Animated.Value(1),
+            x: new Animated.Value(0),
 
         }
     }
@@ -46,6 +54,34 @@ export default class RegisterView extends Component {
 
 
     _jumpAction(){
+
+
+        if (this.state.userName === ''){
+            toastLong('用户名不能为空');
+            return;
+        }
+        if (this.state.phoneNumber === ''){
+            toastLong('手机号码不能为空');
+            return;
+        }
+
+        if (!/^1[0-9]{10}$/.test(this.state.phoneNumber)) {
+            toastLong('手机号码格式不正确');
+            return;
+        }
+        if (this.state.compony === ''){
+            toastLong('公司名不能为空');
+            return;
+        }
+        if (this.state.compony.length < 3){
+            toastLong('公司名不正确');
+            return;
+        }
+        if (this.state.cityArr.length < 1){
+            toastLong('地址不能为空');
+            return;
+        }
+
         const {navigator} = this.props;
         if (navigator) {
             navigator.push({
@@ -80,9 +116,8 @@ export default class RegisterView extends Component {
         return data;
     }
 
-
-
     _showAreaPicker() {
+        this.scaleModal();
         let _this = this;
         Picker.init({
             pickerTitleText: '选择城市',
@@ -91,43 +126,73 @@ export default class RegisterView extends Component {
             pickerData: this._createAreaData(),
             selectedValue: ['北京', '北京', '东城区'],
             onPickerConfirm: pickedValue => {
-                console.log('area------->', pickedValue);
+                //console.log('area------->', pickedValue);
+                this.hideModal();
+
                 _this.setState({
                     cityArr:pickedValue,
                 });
-                //this._panduan();
-                console.log('++++++>>>>',this.state.city)
 
             },
             onPickerCancel: pickedValue => {
-                console.log('area', pickedValue);
+                //console.log('area', pickedValue);
+                this.hideModal();
+
             },
             onPickerSelect: pickedValue => {
                 //Picker.select(['山东', '青岛', '黄岛区'])
-                console.log('area========>', pickedValue);
+                //console.log('area========>', pickedValue);
             }
         });
         Picker.show();
     }
+    //显示模态
+    slideModal = () => {
+        this.state.x.setValue(-320);
+        this.state.scale.setValue(1);
+        Animated.spring(this.state.x, {
+            toValue: 0
+        }).start();
+        this.setState({
+            visible: true
+        });
+        this.slide = true;
+    };
+//设置模态
+    scaleModal = () => {
+        this.state.x.setValue(0);
+        this.state.scale.setValue(0);
+        Animated.spring(this.state.scale, {
+            toValue: 1
+        }).start();
+        this.setState({
+            visible: true
+        });
+        this.slide = false;
+    };
 
-    /*_panduan(){
-            if (this.state.compony!==null &&
-                this.state.cityArr!==null &&
-                this.state.phoneNumber!==null &&
-                this.state.userName!==null){
+//隐藏模态窗口
+    hideModal = () => {
+        if (this.slide) {
+            Animated.timing(this.state.x, {
+                toValue: -320
+            }).start(() => {
                 this.setState({
-                    enableLoginButton:true
-                })
-            }
-            if (this.state.compony == '' ||
-                this.state.cityArr == '' ||
-                this.state.phoneNumber == '' ||
-                this.state.userName == '') {
+                    visible: false
+                });
+            });
+        } else {
+            Animated.timing(this.state.scale, {
+                toValue: 0
+            }).start(() => {
                 this.setState({
-                    enableLoginButton:false
-                })
-            }
-    }*/
+                    visible: false
+                });
+            });
+        }
+        //this.onSelect();
+    };
+
 
     render() {
         const leftButtonConfig = {
@@ -139,6 +204,9 @@ export default class RegisterView extends Component {
         const titleConfig = {
             title: '基本信息',
             tintColor: '#FFF'
+        };
+        const bar = {
+            style:'light-content',
         };
         var nextButton = (
             <TouchableHighlight
@@ -171,6 +239,7 @@ export default class RegisterView extends Component {
                         title={titleConfig}
                         leftButton={leftButtonConfig}
                         tintColor={'#18242e'}
+                        statusBar={bar}
                     />
                 </View>
                 <View style={[styles.inputView,{marginTop:px2dp(35)}]}>
@@ -227,7 +296,24 @@ export default class RegisterView extends Component {
                         //onEndEditing={()=>this._panduan()}
 
                     />
-                    <TouchableOpacity onPress={this._showAreaPicker.bind(this)} style={{alignSelf:'center',marginRight:px2dp(15)}}>
+                    <Animated.Modal
+                        visible={this.state.visible}
+                        style={[styles.modal, {
+                            transform: [
+                                {
+                                    scale: this.state.scale
+                                },
+                                {
+                                    translateX: this.state.x
+                                }
+                            ]
+                        }]}
+                        onRequestClose = {this.hideModa}
+
+                    >
+
+                    </Animated.Modal>
+                    <TouchableOpacity onPress={this._showAreaPicker.bind(this)} style={{alignSelf:'center',padding:20}}>
                      <Image source={require('../image/risgiter/xiala@3x.png')} style={{alignSelf:'center'}} ></Image>
                      </TouchableOpacity>
                 </View>
@@ -270,7 +356,7 @@ const styles = StyleSheet.create({
     },
     cityText:{
         height: px2dp(35),
-        width:px2dp(220),
+        width:px2dp(200),
         marginLeft:px2dp(15),
         marginRight:px2dp(5),
         fontSize:16
@@ -287,5 +373,16 @@ const styles = StyleSheet.create({
         height:px2dp(35),
         flexDirection:'row',
         backgroundColor:'#FFF',
+    },
+    modal: {
+        //flex:1,
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        backgroundColor: '#00000000',
+        //flex:1,
+        flexDirection:'column',
+
     },
 });

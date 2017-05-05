@@ -245,7 +245,7 @@ export default class ANN extends Component{
     //点击搜索
     onSearch = (text) => {
         return new Promise((resolve, reject) => {
-            console.log('onSearch', text);
+            //console.log('onSearch', text);
             // this._searchARR = this._searchARR.concat(text);
             this._searchARR.unshift(text);
             this.hideModal();
@@ -275,15 +275,15 @@ export default class ANN extends Component{
     //文字变化
     onChangeText = (text) => {
         return new Promise((resolve, reject) => {
-            console.log('onChangeText', text);
-            console.log('onChangeText', this._searchARR);
+            //console.log('onChangeText', text);
+            //console.log('onChangeText', this._searchARR);
             resolve();
         });
     };
     //点击取消
     onCancel = () => {
         return new Promise((resolve, reject) => {
-            console.log('onCancel');
+            //console.log('onCancel');
             this.hideModal();
             this.buttonGoBack();
             resolve();
@@ -292,7 +292,7 @@ export default class ANN extends Component{
     //获取焦点时
     onFocus = (text) => {
         return new Promise((resolve, reject) => {
-            console.log('onFocus', text);
+            //console.log('onFocus', text);
             this.scaleModal();
             resolve();
         });

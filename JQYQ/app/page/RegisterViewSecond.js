@@ -10,6 +10,7 @@ import {
     Image,
     Dimensions,
     TextInput,
+    ScrollView,
 } from 'react-native';
 
 import NavigationBar from 'react-native-navbar';
@@ -41,6 +42,10 @@ export default class RegisterViewSecond extends Component{
             cityArr:this.props.cityArr,
             compony:this.props.compony
         });
+        if  (this.props.userName == '' || this.props.phoneNumber == '' || this.props.cityArr == ''|| this.props.compony == ''){
+            toastLong('您填写的个人信息不完整,这可能会影响您的注册')
+        }
+
     };
     buttonGoBack(){
         const {navigator} = this.props;
@@ -55,9 +60,9 @@ export default class RegisterViewSecond extends Component{
         params.compony = this.state.compony;
         params.need = this.state.commitText;
         Network.post(app2/register,params,(response)=>{
-            alert(response.result);
+            //alert(response.result);
         },(err)=>{
-            alert(err);
+            //alert(err);
         })
     }
 
@@ -72,57 +77,74 @@ export default class RegisterViewSecond extends Component{
             title: '监测需求',
             tintColor: '#FFF'
         };
-
+        const bar = {
+            style:'light-content',
+        };
 
         return(
-            <View style={styles.backgView}>
+            <View style={styles.backgView} keyboardDismissMode="on-drag" keyboardShouldPersistTaps={false} >
                 <View style={{width:width }}>
                     <NavigationBar
                         title={titleConfig}
                         leftButton={leftButtonConfig}
                         tintColor={'#18242e'}
+                        statusBar={bar}
                     />
                 </View>
-                <View style={styles.wrightView}>
-                    <Image source={require('../image/risgiter/tianxie@3x.png')} style={{alignSelf:'center'}}></Image>
-                    <Text style={{alignSelf:'center',marginLeft:5}}>请填写您的监测需求</Text>
-                </View>
-                <View style={styles.xuqiuView}>
-                    <TextInput
-                        placeholder={'请尽量以单位相关词作为需求描述,如业务关键词,属地关键词,领导关键词'}
-                        style={styles.demandInput}
-                        multiline={true}
-                        //ref='experience'
-                        onChangeText={(text) => {
-                            this.setState({
-                                commitText:text
-                            })
-                        }}
-                    >
-
-                    </TextInput>
-                </View>
-                <TouchableOpacity onPress={() => {
-                    let params=new Object();
-                    params.name=this.state.userName;
-                    params.phone=this.state.phoneNumber;
-                    params.city = this.state.cityArr[1];
-                    params.company = this.state.compony;
-                    params.need = this.state.commitText;
-
-                    Network.post('app2/register',params,(response)=>{
-                        //alert(response.result);
-                        toastLong('您的申请已经提交,工作人员会以最快的速度为您开通账号')
-                    },(err)=>{
-                        alert(err);
-                        toastLong('填写有错误',err)
-                    })
-                }}>
-                    <View style={styles.commitButton}>
-                        <Text style={{color:'#FFF'}}>提交申请</Text>
+                <ScrollView>
+                    <View style={styles.wrightView}>
+                        <Image source={require('../image/risgiter/tianxie@3x.png')} style={{alignSelf:'center'}}></Image>
+                        <Text style={{alignSelf:'center',marginLeft:5}}>请填写您的监测需求</Text>
                     </View>
-                </TouchableOpacity>
+                    <View style={styles.xuqiuView}>
+                        <TextInput
+                            placeholder={'请尽量以单位相关词作为需求描述,如业务关键词,属地关键词,领导关键词'}
+                            style={styles.demandInput}
+                            multiline={true}
+                            //ref='experience'
+                            onChangeText={(text) => {
+                                this.setState({
+                                    commitText:text
+                                })
+                            }}
+                            value={this.state.commitText}
+                        >
 
+                        </TextInput>
+                    </View>
+                    <TouchableOpacity onPress={() => {
+                        let params=new Object();
+                        params.name=this.state.userName;
+                        params.phone=this.state.phoneNumber;
+                        params.city = this.state.cityArr[1];
+                        params.company = this.state.compony;
+
+                        params.need = this.state.commitText;
+                        if (params.need == ''){
+                            toastLong('需求内容不能为空');
+                            return
+                        }
+                        if(params.phone ==''){
+                            toastLong('手机号码不能为空');
+                            return
+
+                        }
+                        if(params.company ==''){
+                            toastLong('单位名称不能为空');
+                            return
+                        }
+
+                        Network.post('app2/register',params,(response)=>{
+                            toastLong('您的申请已经提交,工作人员会以最快的速度为您开通账号')
+                        },(err)=>{
+                            toastLong('填写有错误')
+                        })
+                    }}>
+                        <View style={styles.commitButton}>
+                            <Text style={{color:'#FFF'}}>提交申请</Text>
+                        </View>
+                    </TouchableOpacity>
+                </ScrollView>
             </View>
         )
     }
