@@ -1,5 +1,6 @@
 rootProject.name = 'JQYQ'
-include ':jpush-react-native'
+//include ':jpush-react-native'
+include ':app', ':jpush-react-native'
 project(':jpush-react-native').projectDir = new File(rootProject.projectDir, '../node_modules/jpush-react-native/android')
 include ':react-native-fetch-blob'
 project(':react-native-fetch-blob').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-fetch-blob/android')
@@ -13,4 +14,4 @@ include ':react-native-vector-icons'
 project(':react-native-vector-icons').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-vector-icons/android')
 //include ':RCTWeChat'
 //project(':RCTWeChat').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-wechat/android')
-include ':app'
+//include ':app'

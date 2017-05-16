@@ -52,8 +52,6 @@ export default class PublicOpinionArticles extends Component{
             isNature:false,
             isSort:false,
             isTime:false,
-
-
         };
         this.icons = {
             yuqing:require('../image/lable/yuqing@3x.png'),
@@ -264,12 +262,13 @@ export default class PublicOpinionArticles extends Component{
             this.params.eventId = BGGlobal.propsID;
             this.params.pageNo = 1;//第几页
             Network.post('appevent2/getList',this.params,(responce)=>{
+                console.log(this.params,'事件文章刷新');
                 let resArr = responce.rows.result;
                 if(!response.rows.result){
                     toastShort('没有相关数据');
                     return;
                 }
-                toastShort('刷新成功');
+                //toastShort('刷新成功');
                //
                 // console.log(resArr);
                 for (let i in resArr){

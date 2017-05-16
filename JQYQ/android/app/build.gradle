@@ -95,6 +95,13 @@ android {
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+        manifestPlaceholders = [
+
+                JPUSH_APPKEY: "ed2248c593916c2f415ff6cf", //在此替换你的APPKey
+
+                APP_CHANNEL: "developer-default"    //应用渠道号，默认就好
+
+        ]
     }
     splits {
         abi {

@@ -160,7 +160,7 @@ export default class LoginView extends Component{
             (notification) => {
                 //console.log("收到了消息------>"+notification.badge);
                 JPush.setBadge(0,(value)=>{console.log(value,'角标2')});
-                    _this.JumpAction(NewClassWaring);
+                    //_this.JumpAction(NewClassWaring);
             }
 
         );
