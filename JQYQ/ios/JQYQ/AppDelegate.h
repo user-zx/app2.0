@@ -12,5 +12,7 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
++ (BOOL)setBadge:(int)value;  //value 取值范围：[0,99999]
++ (void)resetBadge;  //相当于  [setBadge:0]，清空角标
 
 @end

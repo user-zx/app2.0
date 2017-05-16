@@ -19,13 +19,22 @@ import {
 const {width,height}=Dimensions.get('window');
 import {NavGoBack} from '../component/NavGoBack';
 import NavigationBar from 'react-native-navbar';
-import ArticleDetails from './ArticleDetails';
 import px2dp from '../util/Px2dp';
 import {toastShort} from '../component/Toast';
 import Network from '../util/Network';
 import '../util/dateFormat';
-import SwipeitemView from '../component/Swipes'
+import SwipeitemView from '../component/Swipes';
+import ArticleDetailstow from './ArticleDetailstow';
+import Swipeout from 'react-native-swipeout';
 
+var swipeoutBtns = [
+    {
+        text: '删除',
+        backgroundColor:'red',
+        onPress:()=>{alert('000')}
+
+    }
+];
 export default class SelfStart extends Component{
     _page=1;
     _dataSource = new ListView.DataSource({rowHasChanged:(row1,row2)=>row1 !== row2});
@@ -41,7 +50,7 @@ export default class SelfStart extends Component{
             id:'',//图片
             dataArr:[],//列表数组
             value:'',
-            scrollEnable: true,
+            //scrollEnable: true,
             hasIdOpen: false,
             nextTime:'',
             isMore:'',
@@ -52,15 +61,14 @@ export default class SelfStart extends Component{
         const {navigator} = this.props;
         return NavGoBack(navigator);
     };
-    _rightButtons(id) {
+    _rightButtons(id,rowID) {
         return [
                 {
-                id: 1,
                 text: '取消收藏',
                 width: 80,
-                bgColor: 'red',
+                backgroundColor:'red',
                 underlayColor: '#ffffff',
-                onPress: ()=>this._delegateAT(id),
+                onPress: ()=>this._delegateAT(id,rowID),
             }
         ]
     }
@@ -72,23 +80,10 @@ export default class SelfStart extends Component{
         this._dataArr.splice(rowId,1);
         this.setState({
             dataSource:this._dataSource.cloneWithRows(this._dataArr),
+
         });
         Network.post('apparticle2/saveFavorites',params,(res)=>{
-            //console.log('取消收藏成功');
-            let resArr= res.rows.result;
-            if(response.rows.result =''||!response.rows.result){
-                toastShort('没有收藏的文章');
-                return;
-            }
-            if(resArr){
-                for (let i in resArr){
-                    resArr[i].publishTime = new Date(resArr[i].publishTime).Format("yyyy/MM/dd hh:mm");
-                }
-                this.setState({
-                    // dataSource:this._dataSource.cloneWithRows(resArr),
-                    id:resArr.id
-                });
-            }
+            console.log(id,rowId,res,'取消收藏成功');
 
         },(err)=>{err});
         let timer = setTimeout(()=>{
@@ -139,7 +134,6 @@ export default class SelfStart extends Component{
                 onLoadMore={this._onLoadMore.bind(this)}
                 enableEmptySections = {true}
                 pusuToLoadMoreTitle="加载中..."
-
             />
         )
 
@@ -148,8 +142,8 @@ export default class SelfStart extends Component{
         const {navigator} = this.props;
         if (navigator) {
             navigator.push({
-                name:'ArticleDetails',
-                component:ArticleDetails,
+                name:'ArticleDetailstow',
+                component:ArticleDetailstow,
                 params:{
                     id:id,
                     title:title,
@@ -158,24 +152,47 @@ export default class SelfStart extends Component{
         }
     }
     //每行 cell 的内容渲染
-    _renderRow(rowData, a, b,rowId) {
-        let rightBtn = this._rightButtons(rowData.id,rowId);
-        let id = '' + a + b;
+    // _renderRow(rowData, a, b,rowId) {
+    //     let rightBtn = this._rightButtons(rowData.id,rowId);
+    //     let id = '' + a + b;
+    //     return (
+    //         <SwipeitemView
+    //             root={this}
+    //             ref={(row)=>this._dataRow[id] = row}
+    //             id={id}
+    //             data={rowData}
+    //             rightBtn={rightBtn}>
+    //                 <TouchableOpacity onPress={() => this._pressRow(rowData.title,rowData.id)}>
+    //                     <View style={styles.cell}>
+    //                         <Text style={styles.cellTitle}>{rowData.title}</Text>
+    //                         <Text style={styles.cellText}>{rowData.publishTime}</Text>
+    //                     </View>
+    //                 </TouchableOpacity>
+    //             </SwipeitemView>
+    //     )
+    // }
+    _renderRow(rowData, sectionID,rowID) {
+
         return (
-            <SwipeitemView
-                root={this}
-                ref={(row)=>this._dataRow[id] = row}
-                id={id}
-                data={rowData}
-                rightBtn={rightBtn}>
+            <Swipeout
+                //left={rowData.left}
+                right={this._rightButtons(rowData.id,rowID)}
+                rowID={rowID}
+                //sectionID={sectionID}
+                autoClose={true}
+               // backgroundColor={'red'}
+                //close={!rowData.active}
+                //onOpen={(sectionID, rowID) => console.log('---open: sectionID:' + sectionID + 'rowid:' + rowID) }
+                //onClose={() => this._delegateAT(rowData.id,rowID) }
+               // scroll={event => console.log('scroll event') }
+            >
                     <TouchableOpacity onPress={() => this._pressRow(rowData.title,rowData.id)}>
                         <View style={styles.cell}>
                             <Text style={styles.cellTitle}>{rowData.title}</Text>
                             <Text style={styles.cellText}>{rowData.publishTime}</Text>
                         </View>
                     </TouchableOpacity>
-                </SwipeitemView>
-        )
+            </Swipeout>        )
     }
 
     _onListRefersh(end){
@@ -188,7 +205,7 @@ export default class SelfStart extends Component{
                     return;
                 }
                     for (let i in resArr){
-                        resArr[i].publishTime = new Date(resArr[i].publishTime).Format("yyyy/MM/dd hh:mm");
+                        resArr[i].publishTime = resArr[i].publishTime.replace(".000Z", "").replace("T"," ");
                     }
 
                     this.setState({
@@ -220,9 +237,8 @@ export default class SelfStart extends Component{
                         return;
                     }
                 //console.log(response.rows.result,'00000000');
-
                 for (let i in resArr){
-                        resArr[i].publishTime = new Date(resArr[i].publishTime).Format("yyyy/MM/dd hh:mm");
+                        resArr[i].publishTime = resArr[i].publishTime.replace(".000Z", "").replace("T"," ");
                     }
                     this._dataArr = this._dataArr.concat(resArr);
                     //this.state.isMore = resArr.length;
@@ -234,7 +250,8 @@ export default class SelfStart extends Component{
                     })
 
             },(err)=>{err});
-            end(this.state.isMore< 10);//加载成功后需要调用end结束刷新 假设加载4页后数据全部加载完毕
+
+            end();//加载成功后需要调用end结束刷新
 
         },1000)
 
@@ -247,9 +264,9 @@ export default class SelfStart extends Component{
                 toastShort('没有收藏的文章');
                 return;
             }
-            console.log(response,'hahhahahhah');
+            //console.log(response,'hahhahahhah');
                 for (let i in resArr){
-                    resArr[i].publishTime = new Date(resArr[i].publishTime).Format("yyyy/MM/dd hh:mm");
+                    resArr[i].publishTime = resArr[i].publishTime.replace(".000Z", "").replace("T"," ");
                 }
                 this._dataArr = this._dataArr.concat(resArr);
                 this.setState({

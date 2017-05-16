@@ -26,12 +26,12 @@ import {toastShort} from '../component/Toast';
 import Network from '../util/Network';
 import '../util/dateFormat';
 import Modal from 'react-native-root-modal';
-import AnnouncementAT from './SearchView'
+import SearchView from './SearchView'
 
 export default class PanoramicMonitorPage extends Component{
     _page=1;
     _dataSource = new ListView.DataSource({rowHasChanged:(row1,row2)=>row1 !== row2});
-    _dataArr=[]
+    _dataArr=[];
     params = new Object();
     constructor(props) {
         super(props);
@@ -45,20 +45,10 @@ export default class PanoramicMonitorPage extends Component{
             visible: false,
             scale: new Animated.Value(1),
             x: new Animated.Value(0),
-            isAllTime: true,//时间
-            isTaday: false,
-            isYesterday: false,
-            isWeek: false,
-            isMonth: false,
-            isDomestic:false,
-            isForeign:false,
-            isAllSource:true,
-            isAllSite:true,
-            isFocus:false,
             downArr:[],//下拉框数组
             carrie:'',//载体
             dataArr:[],//列表数组
-            // nature:'',//
+            time:'',//
             value:'',
             aspect:'',
             sequence:'',
@@ -72,168 +62,19 @@ export default class PanoramicMonitorPage extends Component{
             xiangguan:require('../image/lable/xiangguan@3x.png'),
         }
     }
-    // 更新"全部/未处理/已处理"按钮的状态
-    _updateBtnSelectedState(currentPressed, array) {
-        if (currentPressed === null || currentPressed === 'undefined' || array === null || array === 'undefined') {
-            return;
-        }
 
-        let newState = {...this.state};
-
-        for (let type of array) {
-            if (currentPressed == type) {
-                newState[type] ? {} : newState[type] = !newState[type];
-                this.setState(newState);
-            } else {
-                newState[type] ? newState[type] = !newState[type] : {};
-                this.setState(newState);
-            }
-        }
-    }
-
-    // 返回设置的button
-    _getButton(style, selectedSate, stateType, buttonTitle, count) {
-        let BTN_SELECTED_STATE_ARRAY = ['isAllTime', 'isTaday', 'isYesterday','isWeek','isMonth',];
-        return(
-            <View style={[style, selectedSate ? {borderColor:'#32a7f5',borderWidth:1,borderRadius:10} : {}]}>
-                <Text
-                    style={[styles.button, selectedSate ? {color: '#32a7f5'} : {}]}
-                    onPress={ () => {this._updateBtnSelectedState(stateType, BTN_SELECTED_STATE_ARRAY)}}>
-                    {buttonTitle}{count}
-                </Text>
-            </View>
-        );
-    }
-
-    _getButton1(style, selectedSate, stateType, buttonTitle, count) {
-        let BTN_SELECTED_STATE_ARRAY1 = ['isAllSource', 'isDomestic', 'isForeign'];
-        return(
-            <View style={[style, selectedSate ? {borderColor:'#32a7f5',borderWidth:1,borderRadius:10,} : {}]}>
-                <Text
-                    style={[styles.button, selectedSate ? {color: '#32a7f5'} : {}]}
-                    onPress={ () => {this._updateBtnSelectedState(stateType, BTN_SELECTED_STATE_ARRAY1)}}>
-                    {buttonTitle}{count}
-                </Text>
-            </View>
-        );
-    }
-
-    _getButton2(style, selectedSate, stateType, buttonTitle, count) {
-        let BTN_SELECTED_STATE_ARRAY2 = ['isAllSite', 'isFocus'];
-        return(
-            <View style={[style, selectedSate ? {borderColor:'#32a7f5',borderWidth:1,borderRadius:10} : {}]}>
-                <Text
-                    style={[styles.button, selectedSate ? {color: '#32a7f5'} : {}]}
-                    onPress={ () => {this._updateBtnSelectedState(stateType, BTN_SELECTED_STATE_ARRAY2)}}>
-                    {buttonTitle}{count}
-                </Text>
-            </View>
-        );
-    }
     buttonGoBack(){
         const {navigator} = this.props;
         return NavGoBack(navigator);
     };
-    onSelect(){
-        if (this.state.isAllTime){
-            this.params.time = 'all'
-        }
-        if (this.state.isTaday){
-            this.params.time = 'today'
-        }
-        if (this.state.isYesterday){
-            this.params.time = 'yesterday'
-        }
-        if (this.state.isWeek){
-            this.params.time = 'week'
-        }
-        if (this.state.isMonth){
-            this.params.time = 'months'
-        }
-        if (this.state.isAllSource){
-            this.params.country = '全部'
-        }
-        if (this.state.isDomestic){
-            this.params.country = '境内'
-        }
-        if (this.state.isForeign){
-            this.params.country = '境外'
-        }
-        if (this.state.isAllSite){
-            this.params.publishSite = '全部'
-        }
-        if(this.state.isFocus){
-            this.params.publishSite = '关注'
-        }
-        Network.post('apppanorama2/getList',this.params,(response)=>{
-            let resArr= response.rows;
-            if(!response.rows){
-                toastShort('没有相关数据');
-                return;
-            }
-            for (let i in resArr){
-                resArr[i].publishTime = new Date(resArr[i].publishTime).Format("yyyy/MM/dd hh:mm");
-            }
-            this._dataArr = resArr;
-            this.setState({
-                dataArr:resArr,
-                dataSource:this._dataSource.cloneWithRows(resArr)
-            })
-        },(err)=>{err});
 
-    }
-//显示模态
-    slideModal = () => {
-        this.state.x.setValue(-320);
-        this.state.scale.setValue(1);
-        Animated.spring(this.state.x, {
-            toValue: 0
-        }).start();
-        this.setState({
-            visible: true
-        });
-        this.slide = true;
-    };
-//设置模态
-    scaleModal = () => {
-        this.state.x.setValue(0);
-        this.state.scale.setValue(0);
-        Animated.spring(this.state.scale, {
-            toValue: 1
-        }).start();
-        this.setState({
-            visible: true
-        });
-        this.slide = false;
-    };
 
-//隐藏模态窗口
-    hideModal = () => {
-        if (this.slide) {
-            Animated.timing(this.state.x, {
-                toValue: -320
-            }).start(() => {
-                this.setState({
-                    visible: false
-                });
-            });
-        } else {
-            Animated.timing(this.state.scale, {
-                toValue: 0
-            }).start(() => {
-                this.setState({
-                    visible: false
-                });
-            });
-        }
-        this.onSelect();
-
-    };
 //下拉框点击事件
     _dropdown_6_onSelect(index,value) {
         this.params.carrie=this.state.carrie;//载体
         this.params.nature=this.state.aspect;//相关
         this.params.sort=this.state.sequence;//热度
+        this.params.time = this.state.time;  //时间
         Network.post('apppanorama2/getList',this.params,(response)=>{
             let resArr= response.rows;
             if(!response.rows){
@@ -241,7 +82,7 @@ export default class PanoramicMonitorPage extends Component{
                 return;
             }
             for (let i in resArr){
-                resArr[i].publishTime = new Date(resArr[i].publishTime).Format("yyyy/MM/dd hh:mm");
+                resArr[i].publishTime = resArr[i].publishTime.replace(".000Z", "").replace("T"," ");
             }
             this._dataArr = resArr;
             this.setState({
@@ -253,11 +94,11 @@ export default class PanoramicMonitorPage extends Component{
     }
     _pressRow1(){
         var _this = this;
-        const {navigator} = this.props;
+        const {navigator} = _this.props;
         if (navigator) {
             navigator.push({
-                name:'AnnouncementAT',
-                component:AnnouncementAT,
+                name:'SearchView',
+                component:SearchView,
             })
         }
     }
@@ -291,7 +132,6 @@ export default class PanoramicMonitorPage extends Component{
                         <ModalDropdown options={['全部','综合','新闻','博客','论坛','微博','微信','QQ群','电子报','视频','手机wap']}
                                        defaultValue='载体'
                                        textStyle={{fontSize:px2dp(15),padding:px2dp(10),textAlign:'center'}}
-                                       //style={styles.dropdown_1}
                                        dropdownStyle={styles.dropdown_9}
                                        onSelect={(idx, value) => {
                                            if (idx == 0) {
@@ -306,24 +146,20 @@ export default class PanoramicMonitorPage extends Component{
                     </View>
                     <View style={styles.dropdown_1}>
                         <ModalDropdown
-                            options={['不限', '相关','舆情','正面','负面']}
+                            options={['相关','舆情','正面','负面']}
                             defaultValue='特征'
                             textStyle={{fontSize:px2dp(15),padding:px2dp(10),textAlign:'center'}}
-                            //style={styles.dropdown_1}
                             dropdownStyle={styles.dropdown_9}
                             onSelect={(idx, value) => {
                                 if  (idx == 0){
-                                    this.state.aspect = '不限';
-                                }else if(idx==1){
                                     this.state.aspect = '相关';
-                                }else if(idx == 2) {
+                                }else if(idx==1){
                                     this.state.aspect = '舆情';
-                                }else if (idx ==3){
+                                }else if(idx == 2) {
                                     this.state.aspect = '正面';
-                                }else if(idx == 4) {
+                                }else if (idx ==3){
                                     this.state.aspect = '负面';
                                 }
-
                                 this._dropdown_6_onSelect(idx, value)
                             }}
                         />
@@ -334,7 +170,6 @@ export default class PanoramicMonitorPage extends Component{
                         <ModalDropdown options={['热度降序','时间降序']}
                                        defaultValue='排序'
                                        textStyle={{fontSize:px2dp(15),padding:px2dp(10),textAlign:'center'}}
-                                       //style={styles.dropdown_1}
                                        dropdownStyle={styles.dropdown_9}
                                        onSelect={(idx, value) => {
                                            if(idx==0){
@@ -347,70 +182,34 @@ export default class PanoramicMonitorPage extends Component{
                         />
                         <Image source={require('../image/down.png')} style={{width:10,height:10}} />
                     </View>
-                    <TouchableOpacity
-                        style={styles.dropdown_1}
-                        underlayColor="#FFF"
-                        onPress={this.scaleModal}
-                    >
-                        <Text style={{fontSize:16}}>条件筛选</Text>
+                    <View style={styles.dropdown_1}>
+
+                        <ModalDropdown options={['不限','今日','昨日','本周','近30天']}
+                                       defaultValue='时间'
+                                       textStyle={{fontSize:px2dp(15),padding:px2dp(9),textAlign:'center'}}
+                                       dropdownStyle={styles.dropdown_9}
+                                       onSelect={(idx, value) => {
+                                           if(idx==0){
+                                               this.state.time = 'all';
+                                           }else if(idx == 1) {
+                                               this.state.time = 'today';
+                                           }else if(idx == 2) {
+                                               this.state.time = 'yesterday';
+                                           }else if(idx == 3) {
+                                               this.state.time = 'week';
+                                           }else if(idx == 4) {
+                                               this.state.time = 'month';
+                                           }
+                                           this._dropdown_6_onSelect(idx, value)
+                                       }}
+                        />
                         <Image source={require('../image/down.png')} style={{width:10,height:10}} />
-                    </TouchableOpacity>
-                    <Animated.Modal
-                        visible={this.state.visible}
-                        style={[styles.modal, {
-                            transform: [
-                                {
-                                    scale: this.state.scale
-                                },
-                                {
-                                    translateX: this.state.x
-                                }
-                            ]
-                        }]}
-                        onRequestClose = {this.hideModa}
+                    </View>
 
-                    >
-                        <View style={styles.modal2} >
-                            <View style={{marginLeft:25,marginTop:20,width:width}}>
-                                <Text style={{color:'#666666',fontSize:12}}>时间</Text>
-                            </View>
-                            <View style={styles.buttonlayout}>
-                                {this._getButton(styles.buttonleft, this.state.isAllTime, 'isAllTime', '不限', )}
-                                {this._getButton(styles.buttonleft, this.state.isTaday, 'isTaday', '今天', )}
-                                {this._getButton(styles.buttonleft, this.state.isYesterday, 'isYesterday', '昨天', )}
-                                {this._getButton(styles.buttonleft, this.state.isWeek, 'isWeek', '本周', )}
-                                {this._getButton(styles.buttonleft, this.state.isMonth, 'isMonth', '近30天', )}
-                            </View>
-                            <View style={{marginLeft:25,marginTop:20}}>
-                                <Text style={{color:'#666666',fontSize:12}}>站点</Text>
-                            </View>
-                            <View style={styles.buttonlayout1}>
-                                {this._getButton1(styles.buttonleft, this.state.isAllSource, 'isAllSource', '全部', )}
-                                {this._getButton1(styles.buttonleft, this.state.isDomestic, 'isDomestic', '境内', )}
-                                {this._getButton1(styles.buttonleft, this.state.isForeign, 'isForeign', '境外', )}
-                            </View>
-                            <View style={{marginLeft:25,marginTop:20}}>
-                                <Text style={{color:'#666666',fontSize:12}}>来源</Text>
-                            </View>
-                            <View style={styles.buttonlayout1}>
-                                {this._getButton2(styles.buttonright, this.state.isAllSite, 'isAllSite', '全部站点', )}
-                                {this._getButton2(styles.buttonright, this.state.isFocus, 'isFocus', '关注站点', )}
-                            </View>
 
-                            <TouchableOpacity
-                                style={{backgroundColor:'#0ca6ee',width:px2dp(344),height:px2dp(30),alignSelf:'center',marginTop:50,
-                                    justifyContent:'center'
-                                }}
-                                underlayColor="#aaa"
-                                onPress={this.hideModal}
-                            >
-                                <Text style={{fontSize:16,color:'#FFF',textAlign:'center',}}>确定</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </Animated.Modal>
                 </View>
 
-                <View style={{flex:1}}>{this._renderListView()}</View>
+                <View style={{flex:1}} >{this._renderListView()}</View>
             </View>
         );
 
@@ -426,8 +225,6 @@ export default class PanoramicMonitorPage extends Component{
                 onLoadMore={this._onLoadMore.bind(this)}
                 enableEmptySections = {true}
                 pusuToLoadMoreTitle="加载中..."
-
-
             />
         )
 
@@ -496,7 +293,7 @@ export default class PanoramicMonitorPage extends Component{
             Network.post('apppanorama2/getList',this.params,(response)=>{
                 let resArr = response.rows;
                 for (let i in resArr){
-                    resArr[i].publishTime = new Date(resArr[i].publishTime).Format("yyyy/MM/dd hh:mm");
+                    resArr[i].publishTime = resArr[i].publishTime.replace(".000Z", "").replace("T"," ");
                 }
                 this._dataArr = resArr;
                 this.setState({
@@ -526,8 +323,12 @@ export default class PanoramicMonitorPage extends Component{
         this.params.tagId = this.props.id;
         Network.post('apppanorama2/getList',this.params,(response)=>{
             let resArr= response.rows;
+            if (!response.rows) {
+                toastShort('没有更多数据了');
+                return;
+            }
             for (let i in resArr){
-                resArr[i].publishTime = new Date(resArr[i].publishTime).Format("yyyy/MM/dd hh:mm");
+                resArr[i].publishTime = resArr[i].publishTime.replace(".000Z", "").replace("T"," ");
             }
             this._dataArr = this._dataArr.concat(resArr);
             this.setState({
@@ -545,7 +346,7 @@ export default class PanoramicMonitorPage extends Component{
         Network.post('apppanorama2/getList',this.params,(response)=>{
             let resArr= response.rows;
             for (let i in resArr){
-                resArr[i].publishTime = new Date(resArr[i].publishTime).Format("yyyy/MM/dd hh:mm");
+                resArr[i].publishTime = resArr[i].publishTime.replace(".000Z", "").replace("T"," ");
             }
             this._dataArr = this._dataArr.concat(resArr);
             this.setState({
@@ -572,15 +373,12 @@ const styles=StyleSheet.create({
     cell:{
         height:px2dp(100),
         backgroundColor:'#FFF',
-        //alignItems:'center',
-        //justifyContent:'center',
         borderBottomColor:'#ececec',
         borderBottomWidth:1
     },
     cellTitle:{
         paddingTop:px2dp(17),
         paddingLeft:px2dp(15),
-        //numberOfLines:1,
         paddingRight:px2dp(15),
         paddingBottom:px2dp(15),
         fontSize:15,
@@ -608,7 +406,6 @@ const styles=StyleSheet.create({
         width:width/4,
         height:39,
         backgroundColor:'#FFF',
-        //borderColor:'#333333',
         alignItems:'center',
         justifyContent:'center',
         flexDirection:'row',

@@ -9,14 +9,20 @@ import {
     Navigator,
     BackAndroid,
     Platform,
+    NativeModules,
+    DeviceEventEmitter
 } from 'react-native';
 //import GuideView from './GuideView'//引导页根据需要添加
 import LoginView from '../page/LoginView';
-import BGGlobal from '../util/BGGlobal';
+import NewClassWaring from '../page/NewClassWaring'
 
-//var defaultName = BGGlobal.isLogin ? 'LoginView' : 'TabbarView';
-//var defaultComponent = BGGlobal.isLogin ? LoginView : TabbarView;
 
+var { NativeAppEventEmitter } = require('react-native');
+
+var subscription = NativeAppEventEmitter.addListener(
+    'ReceiveNotification',
+    (notification) => console.log(notification)
+);
 export default class navigator extends Component {
     constructor(props) {
         var MySceneConfigs = Navigator.SceneConfigs.PushFromRight;
@@ -43,19 +49,22 @@ export default class navigator extends Component {
                     return false
                 }
 
-                return
+                return;
             } else if(routes.length > 1) {
                 navigator.pop();
                 return true
             }
 
         }).bind(this));
-    }
 
+
+    }
     componentWillUnmount() {
         if (Platform.OS === 'android') {
             BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
         }
+        subscription.remove();
+
     }
     onBackAndroid = () => {
         const nav = this.props.navigator;

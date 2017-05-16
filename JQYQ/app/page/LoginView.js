@@ -24,8 +24,20 @@ import px2dp from '../util/Px2dp';
 import TabbarView from './TabbarView';
 import {toastShort} from '../component/Toast';
 import RegisterView from './RegisterView';
-
+import JPush from '../component/JPush'
+import NewClassWaring from './NewClassWaring'
 import Storage from 'react-native-storage';
+
+
+
+var { NativeAppEventEmitter } = require('react-native');
+
+var subscription = NativeAppEventEmitter.addListener(
+    'ReceiveNotification',
+    (notification) => console.log(notification)
+);
+
+
 var storage = new Storage({
     // 最大容量，默认值1000条数据循环存储
     size: 1000,
@@ -99,16 +111,24 @@ export default class LoginView extends Component{
             iconsRem:true,
             isTouched:true,
             isLog:false,
+            registrationId:'',
         };
 
     }
     componentDidMount() {
         var _this=this;
+
+        JPush.getRegistrationID((id)=>{
+            this.state.registrationId = id;
+            console.log(id,'极光返回的注册值是这个')
+        });
+        //自动登录调用代码
         load('userInfo',(response)=>{
             this.setState({username: response.user});
             if (response.status === 200) {
                 _this.params.username = response.user;
                 _this.params.password = response.pwd;
+                _this.params.registrationId = response.rid;
                 Network.post('app2/login',_this.params,()=>{
                     _this.JumpAction(TabbarView);
                 },()=>{
@@ -121,7 +141,43 @@ export default class LoginView extends Component{
                 return;
             }
         });
+
+
+        //极光推送
+        subscription = NativeAppEventEmitter.addListener(
+            'OpenNotification',
+            (notification) => {
+                //console.log(notification,'看看是什么消息啊');
+                //JPush.setBadge(0,(value)=>{console.log(value,'角标2')});
+                JPush.setBadge(0,(value)=>{console.log(value,'角标2')});
+                _this.JumpAction(NewClassWaring);
+            }
+
+        );
+
+        NativeAppEventEmitter.addListener(
+            'ReceiveNotification',
+            (notification) => {
+                //console.log("收到了消息------>"+notification.badge);
+                JPush.setBadge(0,(value)=>{console.log(value,'角标2')});
+                    _this.JumpAction(NewClassWaring);
+            }
+
+        );
+
+
+       // JPush.setBadge(0,()=>(console.log('YES,YES,YES')))
+
+
     }
+
+    componentWillUnmount() {
+
+        subscription.remove();
+
+    }
+
+
 
     JumpAction (title) {
         var _this = this;
@@ -130,6 +186,11 @@ export default class LoginView extends Component{
             navigator.push({
                 name: "title",
                 component: title,
+                // params:{
+                //     message:carrie,
+                //     title:'预警',
+                //
+                // }
             });
         }
     }
@@ -237,10 +298,12 @@ export default class LoginView extends Component{
         }
         _this.params.username = this.state.username;
         _this.params.password = this.state.password;
+        _this.params.registrationId = _this.state.registrationId;
         Network.post('app2/login',_this.params,()=>{
             save("userInfo",{
                 'user':_this.params.username,
                 'pwd':_this.params.password,
+                'rid':_this.params.registrationId
             });
             _this.JumpAction(TabbarView);
         },()=>{

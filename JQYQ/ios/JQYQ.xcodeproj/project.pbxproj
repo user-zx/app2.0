@@ -524,6 +524,7 @@
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
+				A02799F01EC573B600446580 /* New Group */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
@@ -639,6 +640,13 @@
 			);
 			name = Image;
 			path = JQYQ/Image;
+			sourceTree = "<group>";
+		};
+		A02799F01EC573B600446580 /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "New Group";
 			sourceTree = "<group>";
 		};
 		A02F873B1E65944C009ED0E4 /* Products */ = {

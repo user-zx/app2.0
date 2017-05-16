@@ -13,7 +13,6 @@ import {
     TouchableOpacity,
     Dimensions,
     ScrollView,
-
 } from 'react-native';
 import Echarts from 'native-echarts';
 import Network from '../util/Network'
@@ -48,8 +47,6 @@ export default class ChartSecond extends Component {
         console.log(err,'图表请求报错',params.id)
         })
     }
-
-
 
 
     render() {

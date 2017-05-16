@@ -192,11 +192,11 @@ export default class Swipes extends Component {
 
     _onPress = (item, rowId) => event => {
         item.onPress(event, rowId)
-    }
+    };
 
     moving(k, v) {
         let type = this.props.animationType;
-        let duration = this.props.duration
+        let duration = this.props.duration;
         if(type === 'timing'){
             Animated.timing(k, {
                 toValue: v,
@@ -249,7 +249,7 @@ export default class Swipes extends Component {
         /* 接入原生下拉 */
         root.setState({
             scrollEnable: true
-        })
+        });
 
         /* 接入第三方下拉 */
         /* 指定到像相应的scrollView对象 */
@@ -264,7 +264,7 @@ export default class Swipes extends Component {
         /* 接入原生下拉 */
         root.setState({
             scrollEnable: false
-        })
+        });
 
         /* 接入第三方下拉 */
         /* 指定到像相应的scrollView对象 */
@@ -275,7 +275,7 @@ export default class Swipes extends Component {
 
     render() {
         let _width = _width || this._getBtnBoxWidth();
-        const rowId = this.props.id
+        const rowId = this.props.id;
         return (
             <View onLayout={(e)=>{this.setState({height:e.nativeEvent.layout.height})}}>
                 <View ref='view' style={[styles.containerBox, {backgroundColor:this.props.boxbgColor}]}>
@@ -322,7 +322,7 @@ Swipes.defaultProps = {
     rowbgColor: '#ffffff',
     animationType: 'timing',
     duration: 150,
-}
+};
 
 let styles = StyleSheet.create({
     containerBox: {
@@ -352,4 +352,4 @@ let styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     }
-})
+});

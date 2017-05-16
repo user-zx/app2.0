@@ -1,4 +1,7 @@
 /**
+ * Created by jiahailiang on 2017/5/12.
+ */
+/**
  * Created by jiahailiang on 2017/1/19.
  */
 import React, {Component} from 'react';
@@ -19,13 +22,13 @@ import {ServerBaseURL} from '../util/GlobalConst'
 import *as WeChat from 'react-native-wechat'
 import {ActionSheetCustom as ActionSheet} from 'react-native-actionsheet';
 import {toastShort} from '../component/Toast';
-const buttons = ['取消', '微信好友', '朋友圈','添加到收藏'];
+const buttons = ['取消', '微信好友', '朋友圈'];
 const CANCEL_INDEX = 0;
 const DESTRUCTIVE_INDEX = 1;
 const {width,height}=Dimensions.get('window');
 
 var ScreenWidth = Dimensions.get('window').width;
-export default class ArticleDetails extends Component {
+export default class ArticleDetailstow extends Component {
 
     constructor (props) {
         super (props);
@@ -88,17 +91,6 @@ export default class ArticleDetails extends Component {
                     }
                 });
 
-        } else if(index === 3) {
-            let params = new Object();
-            params.id = this.state.id;
-            console.log(params);
-            //这里接口只要传过去参数 ID 就 OK, 不管返回什么都是已经添加到收藏, POST 的方法里面判断的不对,所以会执行 errCallBack
-            Network.post('apparticle2/saveFavorites',params,(res)=>{
-                console.log('添加成功',res);
-                if(res.status === 0){
-                    toastShort('添加收藏成功');
-                }
-            },(err)=>{toastShort('添加收藏失败',err);});
         }
     }
 
@@ -167,7 +159,7 @@ export default class ArticleDetails extends Component {
                         tintColor={'#18242e'}
                         numberOfLines={1}
                         statusBar={bar}
-                />
+                    />
                 </View>
                 <ActionSheet
                     ref={(o) => this.ActionSheet = o}

@@ -37,7 +37,9 @@ export default class ChartThird extends Component {
     componentDidMount() {
         let params = new Object();
         params.id = BGGlobal.propsID;
+        console.log(params,'文章属性');
         Network.post('appevent2/articleChart',params,(res)=>{
+            //console.log(res,'文章属性');
             this.setState({
                 option:res.data.option,
                 jo:res.data.jo

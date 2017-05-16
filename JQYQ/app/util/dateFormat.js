@@ -28,6 +28,7 @@ Date.prototype.Format=function(fmt) {
         "s+" : this.getSeconds(), //秒
         "q+" : Math.floor((this.getMonth()+3)/3), //季度
         "S" : this.getMilliseconds() //毫秒
+
     };
     var week = { "0" : "/u65e5", "1" : "/u4e00", "2" : "/u4e8c", "3" : "/u4e09", "4" : "/u56db", "5" : "/u4e94", "6" : "/u516d" };
     if(/(y+)/.test(fmt)){
@@ -43,3 +44,24 @@ Date.prototype.Format=function(fmt) {
     }
     return fmt;
 };
+//操作时间
+// var nowTime = new Date();
+//
+//     export default class newTime{
+//     static operationTime(item){
+//     var itemDate,itemmTime;
+//
+//     itemDate = item.callRecordValues[0].createdTime.split(" ")[0];
+//     itemmTime = item.callRecordValues[0].createdTime.split(" ")[1];
+//
+//     var year = itemDate.split("-")[0];
+//     var mon = itemDate.split("-")[1];
+//     var day = itemDate.split("-")[2];
+//     var time = new Date(year,mon-1,day);
+//
+//     if(time.toLocaleDateString() == nowTime.toLocaleDateString()){
+//         item.operationTime = "今天 " + itemmTime.split(":")[0] + ":" + itemmTime.split(":")[1];
+//     }else {
+//         item.operationTime = mon + "月" + day + "日 " + itemmTime.split(":")[0] + ":" + itemmTime.split(":")[1];
+//     }
+// }}

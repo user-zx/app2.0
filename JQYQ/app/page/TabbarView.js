@@ -52,7 +52,6 @@ export default class TabBarView extends React.Component{
             }
             const routes = navigator.getCurrentRoutes();
             if(routes.length === 1) {
-
                 if(this.nextTimeExit) {
                     return false
                 } else {
@@ -63,17 +62,13 @@ export default class TabBarView extends React.Component{
                     }).bind(this), 2000);
                     return false
                 }
-
                 return
             } else if(routes.length > 1) {
                 navigator.pop();
                 return true
             }
-
         }).bind(this));
-
-
-}
+    }
 
     componentWillUnmount() {
         if (Platform.OS === 'android') {
@@ -89,12 +84,6 @@ export default class TabBarView extends React.Component{
             return true;
         }
         return false;
-        // if (navigator && navigator.getCurrentRoutes().length > 1) {
-        //     navigator.pop();
-        //     return true;
-        // }
-        // return false;
-
     };
     /*tabbar 属性
      renderIcon: PropTypes.func,       加载Tab图标
@@ -134,6 +123,9 @@ export default class TabBarView extends React.Component{
                     selected={this.state.selectedTab === 'HomePage'}
                     selectedTitleStyle={styles.selectedTextStyle}
                     titleStyle={styles.textStyle}
+                    badgeText={this.state.badgeNumber}
+                    //在这里设置壳 badge 的方法,
+                    renderBadge={()=>this.renderBadge()}
                     tabStyle={styles.tabStyle}
                     renderIcon={() => <Image source={require("../image/shouye@2x.png")} style={styles.iconStyle}/>}
                     renderSelectedIcon={() => <Image source={require("../image/shouyexuanzhong@3x.png")} style={styles.iconStyle}/>}
@@ -165,9 +157,6 @@ export default class TabBarView extends React.Component{
                     selected={this.state.selectedTab === 'MyPage'}
                     selectedTitleStyle={styles.selectedTextStyle}
                     titleStyle={styles.textStyle}
-                    badgeText={this.state.badgeNumber}
-                    //在这里设置壳 badge 的方法,
-                    renderBadge={()=>this.renderBadge()}
                     renderIcon={() => <Image source={require("../image/wode-3@3x.png")} style={styles.iconStyle}/>}
                     renderSelectedIcon={() => <Image source={require("../image/wode-xuanzhong@2x.png")} style={styles.iconStyle}/>}
                     onPress={() => this.setState({ selectedTab: 'MyPage' })} >
@@ -179,8 +168,6 @@ export default class TabBarView extends React.Component{
 }
 const styles = StyleSheet.create({
     iconStyle:{
-        //width:Px2dp(26),
-        //height:Px2dp(32),
         // width:26,
         // height:26,
     },
@@ -196,7 +183,6 @@ const styles = StyleSheet.create({
     },
     tabStyle:{
         width:Px2dp(26),
-        //height:Px2dp(26),
     },
     badgeView:{
         width:20,
@@ -209,7 +195,6 @@ const styles = StyleSheet.create({
         alignItems:'center',
         justifyContent:'center',
         borderRadius:8,
-
     },
     badgeText:{
         color:'#fff',

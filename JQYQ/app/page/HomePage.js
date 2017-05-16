@@ -24,6 +24,8 @@ import {toastLong} from '../component/Toast';
 import NewClassWaring from './NewClassWaring';
 import NewClassPage from './NewClassPage';
 
+
+
 const {width,height}=Dimensions.get('window');
 
 export default class HomePage extends Component{
@@ -109,6 +111,7 @@ export default class HomePage extends Component{
                 columnNameArr:responseArr.data
             });
        },(err)=>{toastLong(err)});
+
     }
 
 

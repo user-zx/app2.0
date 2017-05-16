@@ -77,13 +77,13 @@ export default class PublicOpinionArticles extends Component{
         Network.post('appevent2/getList',this.params,(response)=>{
             let resArr= response.rows.result;
             if(!response.rows.result || response.rows.result ==''){
-                toastShort('没有相关数据');
+                //toastShort('没有相关数据');
                 return;
             }
             //console.log(resArr,'筛选点击的测试');
-            toastShort('筛选成功');
+            // toastShort('筛选成功');
             for (let i in resArr){
-                resArr[i].publishTime = new Date(resArr[i].publishTime).Format("yyyy/MM/dd hh:mm");
+                resArr[i].publishTime = resArr[i].publishTime.replace(".000Z", "").replace("T"," ");
             }
             this.setState({
                 dataArr:resArr,
@@ -273,7 +273,7 @@ export default class PublicOpinionArticles extends Component{
                //
                 // console.log(resArr);
                 for (let i in resArr){
-                    resArr[i].publishTime = new Date(resArr[i].publishTime).Format("yyyy/MM/dd hh:mm");
+                    resArr[i].publishTime = resArr[i].publishTime.replace(".000Z", "").replace("T"," ");
                 }
                 this.setState({
                     dataArr:resArr,
@@ -306,7 +306,7 @@ export default class PublicOpinionArticles extends Component{
                     return;
                 }
                 for (let i in resArr){
-                    resArr[i].publishTime = new Date(resArr[i].publishTime).Format("yyyy/MM/dd hh:mm");
+                    resArr[i].publishTime = resArr[i].publishTime.replace(".000Z", "").replace("T"," ");
                 }
                 this._dataArr = this._dataArr.concat(resArr);
                 this.setState({
@@ -330,7 +330,7 @@ export default class PublicOpinionArticles extends Component{
                 return;
             }
             for (let i in resArr){
-                resArr[i].publishTime = new Date(resArr[i].publishTime).Format("yyyy/MM/dd hh:mm");
+                resArr[i].publishTime = resArr[i].publishTime.replace(".000Z", "").replace("T"," ");
             }
             //在原有的数组上加上新的数组
             this._dataArr = this._dataArr.concat(resArr);

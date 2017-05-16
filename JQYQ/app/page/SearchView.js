@@ -146,24 +146,6 @@ export default class SearchView extends Component{
                      tintColorSearch="#242f39"
                      tintColorDelete="#242f39"
                     />
-                    {/*<View style={{width:width,height:64,backgroundColor:'#242f39',flexDirection:'row'}}>*/}
-                        {/*<View style={{height:30,*/}
-                            {/*width:width*4/5,*/}
-                            {/*marginLeft:10,*/}
-                            {/*backgroundColor:'#FFF',*/}
-                            {/*marginBottom:10,*/}
-                            {/*marginTop:10,*/}
-                            {/*flexDirection:'row',*/}
-                           {/*// borderRadius:12*/}
-                        {/*}}>*/}
-                            {/*<Image source={require('../image/seacrh/search@3x.png')} style={{width:20,height:20,marginTop:5,marginLeft:6}} />*/}
-                            {/*<TextInput style={{width:width*4/5,height:30 }} />*/}
-
-                        {/*</View>*/}
-                        {/*<Text style={{height:30,width:width*1/5,marginLeft:10,marginTop:20,fontSize:14,color:'#FFF',backgroundColor:'#FFF'}}*/}
-                              {/*onPress={this.onCancel}*/}
-                        {/*>取消</Text>*/}
-                    {/*</View>*/}
                     <Animated.Modal
                         visible={this.state.visible}
                         style={[styles.modal, {
@@ -355,24 +337,14 @@ const styles = StyleSheet.create({
         borderBottomColor:'#666666'
     },
     modal: {
-        // top: 108,
-        // right: 0,
-        // bottom: 100,
-        // left: 0,
         backgroundColor: '#FFF',
-        //flex:1,
         flexDirection:'column',
-        // borderBottomWidth:1,
-        // borderBottomColor:'#666666',
         width:width,
-        //height:400,
         marginTop:64
     },
     cell:{
         height:px2dp(100),
         backgroundColor:'#FFF',
-        //alignItems:'center',
-        //justifyContent:'center',
         borderBottomColor:'#ececec',
         borderBottomWidth:1
     },
@@ -384,8 +356,6 @@ const styles = StyleSheet.create({
         paddingBottom:px2dp(15),
         fontSize:15,
         color:'#333333',
-
-
     },
     cellText:{
         fontSize:11,
@@ -393,10 +363,8 @@ const styles = StyleSheet.create({
         marginLeft:px2dp(10),
         marginBottom:px2dp(10),
         marginTop:px2dp(5)
-
     },
     cellImageView:{
         flexDirection:'row',
-
     },
 });
