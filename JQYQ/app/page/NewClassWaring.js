@@ -19,12 +19,12 @@ import {
 } from 'react-native-swRefresh'
 const {width,height}=Dimensions.get('window');
 import {NavGoBack} from '../component/NavGoBack';
-import NavigationBar from 'react-native-navbar';
 import ArticleDetails from './ArticleDetails';
 import px2dp from '../util/Px2dp';
 import ModalDropdown from 'react-native-modal-dropdown';
 import {toastShort} from '../component/Toast';
 import Network from '../util/Network';
+import Header from '../component/Header'
 
 export default class NewClassWaring extends Component {
     _page = 1;
@@ -89,27 +89,13 @@ export default class NewClassWaring extends Component {
     }
 
     render() {
-        const leftButtonConfig = {
-            title: '←',
-            handler: () => this.buttonGoBack(),
-            fontSize: 32,
-            tintColor: '#FFF'
-        };
-        const titleConfig = {
-            title: '预警',
-            tintColor: '#FFF'
-        };
-        const bar = {
-            style: 'light-content',
-        };
+
         return (
             <View style={{flex: 1, flexDirection: 'column'}}>
                 <View>
-                    <NavigationBar
-                        title={titleConfig}
-                        leftButton={leftButtonConfig}
-                        tintColor={'#18242e'}
-                        statusBar={bar}
+                    <Header {...this.props}
+                            title='预警'
+                            headercolor={'#18242e'}
                     />
                 </View>
                 <View style={{
@@ -120,7 +106,6 @@ export default class NewClassWaring extends Component {
                         <ModalDropdown options={['全部', '综合', '新闻', '博客', '论坛', '微博', '微信', 'QQ群', '电子报', '视频', '手机wap']}
                                        defaultValue='载体'
                                        textStyle={{fontSize: px2dp(15), padding: px2dp(10), textAlign: 'center'}}
-                            //style={styles.dropdown_1}
                                        dropdownStyle={styles.dropdown_9}
                                        onSelect={(idx, value) => {
                                            if (idx == 0) {
@@ -431,27 +416,13 @@ const styles=StyleSheet.create({
         padding:3
     },
     button: {
-        //height: px2dp(20),
         textAlign: 'center',
-        //textAlignVertical: 'center',
-        // marginLeft:5,
-        // marginRight:5,
-        //width:50,
         fontSize:12,
-        //padding:1,
-        //alignSelf: 'center',
+
         color:'#666666'
-
-
     },
     buttondivideline: {
-        // width: 1,
-        // height: 30,
-        // backgroundColor: '#f4f4f4',
-        // flexDirection: 'column',
-        // marginLeft:5,
-        // marginRight:5,
-        // borderRadius: 8,
+
     },
 
 

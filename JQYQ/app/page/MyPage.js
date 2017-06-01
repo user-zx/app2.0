@@ -22,6 +22,7 @@ import px2dp from '../util/Px2dp';
 import Navigator from  '../component/Navigator'
 import Network from '../util/Network';
 import {remove} from './LoginView'
+import Header from '../component/Header'
 
 var {width,height} = Dimensions.get('window');
 
@@ -92,10 +93,11 @@ export default class MyPage extends React.Component {
         return (
             <View style={{backgroundColor:'#f4f4f4',flex:1,flexDirection:'column'}}>
                 <View>
-                    <NavigationBar
-                        title={titleConfig}
-                        tintColor={'#18242e'}
-                        statusBar={bar}
+                    <Header {...this.props}
+                            title='我的'
+                            headercolor={'#18242e'}
+                            lefticon={null}
+                            leftAction={()=>{}}
                     />
                 </View>
                 <View style={{flexDirection:'column',alignItems:'flex-start'}}>

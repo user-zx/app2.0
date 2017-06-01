@@ -71,15 +71,13 @@ export default class PublicOpinionArticles extends Component{
         this.params.nature=this.state.nature;//特征
         this.params.sort = this.state.sort; //排序
         //this.params.pageSize = 10;
-
+        console.log(this.params,'筛选点击的测试');
         Network.post('appevent2/getList',this.params,(response)=>{
+            console.log(response,'筛选点击的测试');
             let resArr= response.rows.result;
             if(!response.rows.result || response.rows.result ==''){
-                //toastShort('没有相关数据');
                 return;
             }
-            //console.log(resArr,'筛选点击的测试');
-            // toastShort('筛选成功');
             for (let i in resArr){
                 resArr[i].publishTime = resArr[i].publishTime.replace(".000Z", "").replace("T"," ");
             }
@@ -138,32 +136,32 @@ export default class PublicOpinionArticles extends Component{
                         />
                         <Image source={icon} style={styles.typeimage} />
                     </View>
+                    {/*<View style={styles.dropdown_1}>*/}
+                    {/*<ModalDropdown*/}
+                        {/*options={['舆情','相关','正面','负面']}*/}
+                        {/*//options={this.state.dataArr}*/}
+                        {/*defaultValue='特征'*/}
+                        {/*textStyle={{fontSize:px2dp(15),padding:px2dp(10),textAlign:'center'}}*/}
+                        {/*//style={styles.dropdown_1}*/}
+                        {/*dropdownStyle={styles.dropdown_9}*/}
+                        {/*onSelect={(idx, value) => {*/}
+                            {/*//this.state.aspect = value;*/}
+                            {/*if(idx == 0){*/}
+                                {/*this.state.nature = '舆情';*/}
+                            {/*}else  if (idx == 1){*/}
+                                {/*this.state.nature = '相关';*/}
+                            {/*}else  if (idx == 2) {*/}
+                                {/*this.state.nature = '正面';*/}
+                            {/*}else if  (idx == 3) {*/}
+                                {/*this.state.nature = '负面';*/}
+                            {/*}*/}
+                            {/*this._dropdown_6_onSelect(idx, value)*/}
+                        {/*}}*/}
+                    {/*/>*/}
+                        {/*<Image source={icon} style={styles.typeimage} />*/}
+                {/*</View>*/}
                     <View style={styles.dropdown_1}>
-                    <ModalDropdown
-                        options={['舆情','相关','正面','负面']}
-                        //options={this.state.dataArr}
-                        defaultValue='特征'
-                        textStyle={{fontSize:px2dp(15),padding:px2dp(10),textAlign:'center'}}
-                        //style={styles.dropdown_1}
-                        dropdownStyle={styles.dropdown_9}
-                        onSelect={(idx, value) => {
-                            //this.state.aspect = value;
-                            if(idx == 0){
-                                this.state.nature = '舆情';
-                            }else  if (idx == 1){
-                                this.state.nature = '相关';
-                            }else  if (idx == 2) {
-                                this.state.nature = '正面';
-                            }else if  (idx == 3) {
-                                this.state.nature = '负面';
-                            }
-                            this._dropdown_6_onSelect(idx, value)
-                        }}
-                    />
-                        <Image source={icon} style={styles.typeimage} />
-                </View>
-                    <View style={styles.dropdown_1}>
-                        <ModalDropdown options={['热度降序','时间降序',]}
+                        <ModalDropdown options={['热度降序','时间降序']}
                                        defaultValue='排序'
                                        textStyle={{fontSize:px2dp(15),padding:px2dp(10),textAlign:'center'}}
                                        //style={styles.dropdown_1}
@@ -217,7 +215,7 @@ export default class PublicOpinionArticles extends Component{
     //每行 cell 的内容渲染
     _renderRow(rowData) {
         let icon;
-        if(rowData.ispositive == 1){
+        if(rowData.ispositive ==1){
             icon = this.icons['zhengmian'];
         } else if(rowData.isnegative ==1){
             icon = this.icons['fumian'];
@@ -269,7 +267,7 @@ export default class PublicOpinionArticles extends Component{
                     return;
                 }
                 //toastShort('刷新成功');
-               //
+
                 // console.log(resArr);
                 for (let i in resArr){
                     resArr[i].publishTime = resArr[i].publishTime.replace(".000Z", "").replace("T"," ");
@@ -395,7 +393,7 @@ const styles=StyleSheet.create({
     },
     dropdown_1: {
         top: 0,
-        width:width/4,
+        width:width/3,
         height:39,
         backgroundColor:'#FFF',
         borderColor:'#333333',

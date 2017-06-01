@@ -10,14 +10,13 @@ import {
     Dimensions,
     ScrollView,
 } from 'react-native';
+import Header from '../component/Header'
 
 const {width,height}=Dimensions.get('window');
 
 import Echarts from 'native-echarts';
 import Network from '../util/Network'
-import BGGlobal from '../util/BGGlobal';
 import px2dp from '../util/Px2dp'
-import NavigationBar from 'react-native-navbar';
 import {NavGoBack} from '../component/NavGoBack';
 import *as WeChat from 'react-native-wechat'
 import {ActionSheetCustom as ActionSheet} from 'react-native-actionsheet';
@@ -30,9 +29,7 @@ export default class PublicsentPerview extends Component{
 
     constructor(props) {
         super(props);
-        //WeChat.registerApp('wxb467fdb6e1d079f8');
         this.buttonGoBack = this.buttonGoBack.bind(this);
-
         var data = [];
 
         for (var i = 0; i <= 360; i++) {
@@ -79,9 +76,7 @@ export default class PublicsentPerview extends Component{
 
     _handlePress(index) {
         console.log(index);
-        //let URL = 'http://114.55.179.202:8989/phone/html/articleReport.html?time='+this.state.time+'&id='+this.state.id+'&dataTime='+this.state.title;
-        let URL1 = 'http://120.55.190.38:8002/briefing/getBriefingArticle?id='+this.state.id+'&uid='+this.state.uid+'&type=show&brieType='+this.state.brieType+'&time='+this.state.title;
-        //http://120.55.190.38:8002/briefing/getBriefingArticle?id=859423&uid=1283&type=show&brieType=0&time=today&downname=2017-04-17
+        let URL1 = 'http://guanjia.junquan.com.cn/briefing/getBriefingArticle?id='+this.state.id+'&uid='+this.state.uid+'&type=show&brieType='+this.state.brieType+'&time='+this.state.title;
         console.log(URL1,'拼接后的 URL 是');
 
         if (index==1 ){
@@ -128,9 +123,6 @@ export default class PublicsentPerview extends Component{
             return;
         }
 
-
-
-
     }
 
     show() {
@@ -139,39 +131,14 @@ export default class PublicsentPerview extends Component{
 
 
     render(){
-        const leftButtonConfig = {
-            title: '←',
-            handler: () => this.buttonGoBack(),
-            fontSize:32,
-            tintColor: '#FFF'
-        };
-        const titleConfig = {
-            title: this.state.title+'舆情报告',
-            tintColor: '#FFF'
-        };
-        const RightButtonConfig = {
-            title: '分享',
-            handler: () => this.show(),
-            fontSize: 32,
-            tintColor: '#FFF'
-
-        };
-
-        const bar = {
-            style:'light-content',
-        };
-
-
         return(
-
             <View style={{flex:1}}>
                 <View>
-                    <NavigationBar
-                        title={titleConfig}
-                        leftButton={leftButtonConfig}
-                        tintColor={'#18242e'}
-                        rightButton={RightButtonConfig}
-                        statusBar={bar}
+                    <Header {...this.props}
+                            title={this.state.title+'舆情报告'}
+                            headercolor={'#18242e'}
+                            rightAction={() => this.show()}
+                            rightmenu='分享'
                     />
                 </View>
                 <ActionSheet
@@ -486,10 +453,8 @@ const styles = StyleSheet.create({
     lableHeader:{
         backgroundColor:'#F2F2F2',
         flexDirection:'row',
-        //justifyContent:'center',
         alignItems:'center',
         width:width,
-        //height:50
     },
     headerImage:{
         marginRight:5,
@@ -500,15 +465,12 @@ const styles = StyleSheet.create({
     cell:{
         height:px2dp(100),
         backgroundColor:'#FFF',
-        //alignItems:'center',
-        //justifyContent:'center',
         borderBottomColor:'#ececec',
         borderBottomWidth:1
     },
     cellTitle:{
         paddingTop:px2dp(17),
         paddingLeft:px2dp(15),
-        //numberOfLines:1,
         paddingRight:px2dp(15),
         paddingBottom:px2dp(15),
         fontSize:15,
@@ -540,7 +502,6 @@ const styles = StyleSheet.create({
         borderWidth:1,
         borderColor:'#FFF',
         width:(width-40)/3,
-        //padding:(5.0),
         color:'#FFF',
         fontSize:11,
         textAlign:'center',
@@ -550,7 +511,6 @@ const styles = StyleSheet.create({
         borderWidth:1,
         borderColor:'#FFF',
         width:(width-40)/3*2,
-        //padding:(5.0),
         color:'#FFF',
         fontSize:11,
         textAlign:'center',
@@ -572,7 +532,6 @@ const styles = StyleSheet.create({
         borderWidth:1,
         borderColor:'#FFF',
         width:(width-40)/5,
-        //padding:(5.0),
         color:'#FFF',
         fontSize:11,
         textAlign:'center',

@@ -129,6 +129,7 @@ export default class LoginView extends Component{
                 _this.params.username = response.user;
                 _this.params.password = response.pwd;
                 _this.params.registrationId = response.rid;
+                //console.log(_this.params);
                 Network.post('app2/login',_this.params,()=>{
                     _this.JumpAction(TabbarView);
                 },()=>{

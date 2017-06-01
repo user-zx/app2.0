@@ -1,138 +1,151 @@
-/**
- * Created by jiahailiang on 2017/1/20.
- */
-import React,{Component} from 'react';
+import React, { Component, PropTypes } from 'react';
 import {
     StyleSheet,
     Text,
     View,
     Image,
-    TouchableHighlight,
+    TouchableOpacity,
     Animated,
 } from 'react-native';
+import imgArrowUp from '../image/up.png';
+import imgArrowDown from '../image/down.png';
 
+class Panel extends Component {
+    constructor(props) {
+        super(props);
 
-            class Panel extends Component{
-            constructor(props){
-                super(props);
+        this.state = {
+            is_visible: false,
+            expanded: false,
+            animation: new Animated.Value(),
+        };
 
-                this.icons = {
-                    'up'    : require('../image/up.png'),
-                    'down'  : require('../image/down.png')
-                };
+        this.setMaxHeight = this.setMaxHeight.bind(this);
+        this.setMinHeight = this.setMinHeight.bind(this);
+        this.toggle = this.toggle.bind(this);
+    }
 
-                this.state = {
-                    title       : props.title,
-                    expanded    : true,
-                    animation   : new Animated.Value(),
-                    title2      : props.title2,
-                };
-            }
+    componentDidMount() {
+        setTimeout(() => {
+            this.setState({ is_visible: true });
+        }, 100);
+    }
 
-            toggle(){
-                let initialValue    = this.state.expanded? this.state.maxHeight + this.state.minHeight : this.state.minHeight,
-                    finalValue      = this.state.expanded? this.state.minHeight : this.state.maxHeight + this.state.minHeight;
+    toggle() {
+        const { expanded, maxHeight, minHeight, animation } = this.state;
+        const { onPress } = this.props;
 
-                this.setState({
-                    expanded : !this.state.expanded
-                });
+        const initialValue = expanded ? maxHeight + minHeight : minHeight;
+        const finalValue = expanded ? minHeight : maxHeight + minHeight;
 
-                this.state.animation.setValue(initialValue);
-                Animated.spring(
-                    this.state.animation,
-                    {
-                        toValue: finalValue
-                    }
-                ).start();
-            }
+        this.setState({ expanded : !expanded });
 
-            _setMaxHeight(event){
-                this.setState({
-                    maxHeight   : event.nativeEvent.layout.height
-                });
-            }
+        animation.setValue(initialValue);
 
-            _setMinHeight(event){
-                this.setState({
-                    minHeight   : event.nativeEvent.layout.height
-                });
-            }
+        Animated.spring(animation, { toValue: finalValue }).start();
 
-            render(){
-                let icon = this.icons['down'];
+        if (onPress) onPress();
+    }
 
-                if(this.state.expanded){
-                    icon = this.icons['up'];
-                }
+    setMaxHeight(event) {
+        const maxHeight = event.nativeEvent.layout.height;
+        this.setState({ maxHeight });
+    }
 
-                return (
-                    <Animated.View
-                        style={[styles.container,{height: this.state.animation}]}>
-                        <View style={styles.titleContainer} onLayout={this._setMinHeight.bind(this)}>
-                            <Text style={styles.title}>{this.state.title}</Text>
-                            <Text style={styles.title}>{this.state.title2}</Text>
-                            <TouchableHighlight
-                                onPress={this.props.onPress}
-                            >
-                                <Text style={styles.title}> {this.state.title2}</Text>
+    setMinHeight(event) {
+        const minHeight = event.nativeEvent.layout.height;
+        this.state.animation.setValue(minHeight);
+        this.setState({ minHeight });
+    }
 
-                            </TouchableHighlight>
+    renderHeader() {
+        const { header } = this.props;
+        const { expanded } = this.state;
+        const icon = expanded ? imgArrowUp : imgArrowDown;
 
-                            <TouchableHighlight
-                                style={styles.button}
-                                onPress={this.toggle.bind(this)}
-                                underlayColor="#f1f1f1" >
-                                <Image
-                                    style={styles.buttonImage}
-                                    source={icon} >
-                                </Image>
-                            </TouchableHighlight>
-                        </View>
-
-                        <View style={styles.body} onLayout={this._setMaxHeight.bind(this)}>
-                            {this.props.children}
-                        </View>
-
-                    </Animated.View>
-                );
-            }
+        if (typeof header === 'function') {
+            return header();
+        } else if (typeof header === 'string') {
+            return (
+                <View style={styles.button}>
+                    <Text style={styles.title}>{header}</Text>
+                    <Image style={styles.buttonImage} source={icon}/>
+                </View>
+            );
+        } else {
+            return (
+                <View style={styles.button}>
+                    <Text style={styles.title}>
+                        [Must be String, or Function that {'\n'}
+                        render React Element]
+                    </Text>
+                    <Image style={styles.buttonImage} source={icon}/>
+                </View>
+            );
         }
+    }
 
-        var styles = StyleSheet.create({
-            container   : {
-                backgroundColor: '#fff',
-                margin:10,
-                overflow:'hidden'
-            },
-            titleContainer : {
-                flexDirection: 'row',
-                backgroundColor:'#666666',
+    render() {
+        const { children, style } = this.props;
+        const { expanded, animation } = this.state;
 
-            },
-            title       : {
-                flex    : 1,
-                padding : 10,
-                color   :'#333333',
-                //fontWeight:'bold',
-                fontSize:15,
-            },
-            button      : {
-                //width:16,
-                //height:16,
-                //top:0,
-                //left:60,
-                marginTop:0,
-                marginLeft:60
-            },
-            buttonImage : {
-                //width   : 16,
-               // height  : 16,
-            },
-            body        : {
-                padding     : 10,
-                paddingTop  : 0,
-                backgroundColor:'red'
-            }
-        });
+        return (
+            <Animated.View style={[
+                styles.container, style, {
+                    overflow: 'hidden',
+                    height: animation
+                }
+            ]}>
+                <TouchableOpacity
+                    ref={ref => this._header = ref}
+                    activeOpacity={1}
+                    onPress={this.toggle}
+                    onLayout={this.setMinHeight}
+                >
+                    {this.renderHeader()}
+                </TouchableOpacity>
+                { this.state.is_visible &&
+                <View onLayout={this.setMaxHeight}>
+                    {children}
+                </View>
+                }
+            </Animated.View>
+        );
+    }
+}
 
-        export default Panel;
+const styles = StyleSheet.create({
+    container: {
+        backgroundColor: '#fff',
+    },
+    title: {
+        flex: 1,
+        padding: 10,
+        color: '#2a2f43',
+        fontWeight: 'bold',
+    },
+    button: {
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+    },
+    buttonImage: {
+        width: 30,
+        height: 25,
+    },
+});
+
+Panel.propTypes = {
+    header: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.func,
+    ]),
+    style: PropTypes.oneOfType([
+        PropTypes.object,
+        PropTypes.number,
+    ]),
+    onPress: PropTypes.func,
+    children: PropTypes.element.isRequired,
+};
+
+export default Panel;

@@ -11,12 +11,12 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import ScrollableTabView,{DefaultTabBar} from 'react-native-scrollable-tab-view';
-import NavigationBar from 'react-native-navbar';
 import {NavGoBack} from '../component/NavGoBack';
 import POArticles from './PublicOpinionArticles';
 import POChatrs from './PublicOpinionCharts';
 import POEvolution from './PublicOpinionEvolution';
-import POSpecial from './PublicOpinionSpecial';
+import Header from '../component/Header'
+
 export default class Affair extends Component{
     constructor(props){
         super(props);
@@ -59,12 +59,9 @@ export default class Affair extends Component{
         return(
             <View style={{flex:1,flexDirection:'column'}}>
                 <View>
-                    <NavigationBar
-                        title={titleConfig}
-                        leftButton={liftButtonConfig}
-                        tintColor={'#18242e'}
-                        numberOfLines={1}
-                        statusBar={bar}
+                    <Header {...this.props}
+                            title={this.state.title}
+                            headercolor={'#18242e'}
                     />
                 </View>
                 <View style={{flex:1,}}>

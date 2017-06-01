@@ -38,11 +38,9 @@
                                                       UIRemoteNotificationTypeAlert)
                                           categories:nil];
   }
-  
   [JPUSHService setupWithOption:launchOptions appKey:@"ed2248c593916c2f415ff6cf"
                         channel:nil apsForProduction:nil];
   NSURL *jsCodeLocation;
-
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"JQYQ"
@@ -74,7 +72,6 @@
 //功能：极光推送
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
   NSLog(@"My token就是 is: %@", deviceToken);
-
 [JPUSHService registerDeviceToken:deviceToken];
 }
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
@@ -104,8 +101,6 @@ completionHandler();// 系统要求执行这个方法
 }
 - (void)applicationWillEnterForeground:(UIApplication *)application{
 [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0]; //清除角标
-  
-  
 }
 
 

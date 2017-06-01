@@ -22,6 +22,8 @@ import {ServerBaseURL} from '../util/GlobalConst'
 import *as WeChat from 'react-native-wechat'
 import {ActionSheetCustom as ActionSheet} from 'react-native-actionsheet';
 import {toastShort} from '../component/Toast';
+import Header from '../component/Header'
+
 const buttons = ['取消', '微信好友', '朋友圈'];
 const CANCEL_INDEX = 0;
 const DESTRUCTIVE_INDEX = 1;
@@ -65,7 +67,7 @@ export default class ArticleDetailstow extends Component {
 
 
     _handlePress(index) {
-        let URL = 'http://114.55.179.202:8989/apparticle2/share?id='+this.state.id;
+        let URL = 'http://guanjia.junquan.com.cn/apparticle2/share?id='+this.state.id;
         //console.log(index);
         if (index ==1 ){
             //分享给微信好友(连接)
@@ -81,7 +83,7 @@ export default class ArticleDetailstow extends Component {
                             description: this.state.title,
                             thumbImage: 'http://mta.zttit.com:8080/images/ZTT_1404756641470_image.jpg',
                             type: 'news',
-                            webpageUrl: 'http://114.55.179.202:8989/apparticle2/share?id='+this.state.id
+                            webpageUrl: 'http://guanjia.junquan.com.cn/apparticle2/share?id='+this.state.id
                         })
                             .catch((error) => {
                                 toastShort(error.message);
@@ -103,7 +105,7 @@ export default class ArticleDetailstow extends Component {
                         description:this.state.title,
                         thumbImage: 'http://mta.zttit.com:8080/images/ZTT_1404756641470_image.jpg',
                         type: 'news',
-                        webpageUrl: 'http://114.55.179.202:8989/apparticle2/share?id='+this.state.id
+                        webpageUrl: 'http://guanjia.junquan.com.cn/apparticle2/share?id='+this.state.id
                     })
                         .catch((error) => {
                             toastShort(error.message);
@@ -120,45 +122,16 @@ export default class ArticleDetailstow extends Component {
     }
 
     render () {
-        const leftButtonConfig = {
-            title: '←',
-            handler: () => this.buttonGoBack(),
-            fontSize:32,
-            tintColor: '#FFF'
-        };
-        const titleConfig = {
-            title:this.state.title,
-            tintColor:'#FFF',
-            style:{
-                marginLeft:60,
-                marginRight:60,
-            },
-            numberOfLines:0
 
-        };
-        const startButton = {
-            title:'···',
-            handler: () => this.show(),
-            tintColor:'#FFF',
-            fontSize:34,
-        };
-        const styles1 = {
-            numberOfLines:1
-        };
-        const bar = {
-            style:'light-content',
-        };
         return(
 
             <View style={ADstyles.bigViewStyles}>
                 <View>
-                    <NavigationBar
-                        title={titleConfig}
-                        leftButton={leftButtonConfig}
-                        rightButton={startButton}
-                        tintColor={'#18242e'}
-                        numberOfLines={1}
-                        statusBar={bar}
+                    <Header {...this.props}
+                            title={this.state.title}
+                            headercolor={'#18242e'}
+                            rightAction={() => this.show()}
+                            rightmenu='分享'
                     />
                 </View>
                 <ActionSheet

@@ -18,7 +18,6 @@ import {
 } from 'react-native-swRefresh'
 const {width,height}=Dimensions.get('window');
 import {NavGoBack} from '../component/NavGoBack';
-import NavigationBar from 'react-native-navbar';
 import ArticleDetails from './ArticleDetails';
 import px2dp from '../util/Px2dp';
 import ModalDropdown from 'react-native-modal-dropdown';
@@ -27,6 +26,7 @@ import Network from '../util/Network';
 import '../util/dateFormat';
 import Modal from 'react-native-root-modal';
 import SearchView from './SearchView'
+import Header from '../component/Header'
 
 export default class PanoramicMonitorPage extends Component{
     _page=1;
@@ -103,27 +103,16 @@ export default class PanoramicMonitorPage extends Component{
         }
     }
     render(){
-        const rightButtonConfig = {
-            title: '🔍',
-            handler: () => {this._pressRow1()},
-            fontSize: 34,
-            tintColor:'#FFF'
-        };
-        const titleConfig = {
-            title: '全景监测',
-            tintColor: '#FFF'
-        };
-        const bar = {
-            style:'light-content',
-        };
         return (
             <View style={{flex:1,flexDirection:'column'}}>
                 <View>
-                    <NavigationBar
-                        title={titleConfig}
-                        rightButton={rightButtonConfig}
-                        tintColor={'#18242e'}
-                        statusBar={bar}
+                    <Header {...this.props}
+                            title='全景监测'
+                            headercolor={'#18242e'}
+                            lefticon={null}
+                            leftAction={()=>{}}
+                            righticon={require('../image/seacrh/search.png')}
+                            rightAction={() => {this._pressRow1()}}
                     />
                 </View>
                 <View style={{width:width,height:40,flexDirection:'row',borderBottomColor:'#ececec',
@@ -293,6 +282,7 @@ export default class PanoramicMonitorPage extends Component{
             Network.post('apppanorama2/getList',this.params,(response)=>{
                 let resArr = response.rows;
                 for (let i in resArr){
+                    //绝了....
                     resArr[i].publishTime = resArr[i].publishTime.replace(".000Z", "").replace("T"," ");
                 }
                 this._dataArr = resArr;
@@ -437,22 +427,17 @@ const styles=StyleSheet.create({
     },
 
     modal2: {
-        //flex:1,
         top: 110,
         right: 0,
         bottom: 100,
         left: 0,
         backgroundColor: '#FFF',
-        //flex:1,
         flexDirection:'column'
-
     },
     buttonlayout: {
         marginTop: 8,
-        //alignSelf: 'center',
         flexDirection: 'row',
         alignItems: 'center',
-        //justifyContent:'space-around',
         width:width,
         height:30,
         marginLeft:15,
@@ -460,10 +445,8 @@ const styles=StyleSheet.create({
 
     buttonlayout1: {
         marginTop: 8,
-        //alignSelf: 'center',
         flexDirection: 'row',
         alignItems: 'center',
-        //justifyContent:'space-around',
         width:width,
         height:30,
         marginLeft:15
@@ -487,27 +470,12 @@ const styles=StyleSheet.create({
         padding:3
     },
     button: {
-        //height: px2dp(20),
         textAlign: 'center',
-        //textAlignVertical: 'center',
-        // marginLeft:5,
-        // marginRight:5,
-        //width:50,
         fontSize:12,
-        //padding:1,
-        //alignSelf: 'center',
         color:'#666666'
-
-
     },
     buttondivideline: {
-        // width: 1,
-        // height: 30,
-        // backgroundColor: '#f4f4f4',
-        // flexDirection: 'column',
-        // marginLeft:5,
-        // marginRight:5,
-        // borderRadius: 8,
+
     },
 
 

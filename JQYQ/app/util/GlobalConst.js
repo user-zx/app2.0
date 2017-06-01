@@ -4,8 +4,8 @@
 'use strict';
 
 // 服务器地址
-export const ServerBaseURL = 'http://114.55.179.202:8989/';
-//export const ServerBaseURL = 'http://192.168.1.107:8080/POMP/';
+//export const ServerBaseURL = 'http://114.55.179.202:8989/';
+export const ServerBaseURL = 'http://guanjia.junquan.com.cn/';
 
 //微信分享的appkey
 export const WXAppKey = 'wxb467fdb6e1d079f8';

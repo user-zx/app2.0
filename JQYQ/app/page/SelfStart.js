@@ -11,6 +11,7 @@ import {
     Dimensions,
     TouchableOpacity,
     Animated,
+    NavigatorIOS,
 } from 'react-native';
 
 import {
@@ -26,7 +27,7 @@ import '../util/dateFormat';
 import SwipeitemView from '../component/Swipes';
 import ArticleDetailstow from './ArticleDetailstow';
 import Swipeout from 'react-native-swipeout';
-
+import Header from '../component/Header'
 var swipeoutBtns = [
     {
         text: '删除',
@@ -73,7 +74,6 @@ export default class SelfStart extends Component{
         ]
     }
     _delegateAT(id,rowId){
-        //console.log('取消收藏');
         let params = new Object();
         params.id = id;
         this._dataArr = this._dataArr.concat();
@@ -96,7 +96,7 @@ export default class SelfStart extends Component{
             title: '←',
             handler: () => this.buttonGoBack(),
             fontSize:32,
-            tintColor: '#FFF'
+            tintColor: '#FFF',
         };
         const titleConfig = {
             title: '我的收藏',
@@ -108,11 +108,13 @@ export default class SelfStart extends Component{
         return (
             <View style={{flex:1,flexDirection:'column'}}>
                 <View>
-                    <NavigationBar
-                        title={titleConfig}
-                        leftButton={leftButtonConfig}
-                        tintColor={'#18242e'}
-                        statusBar={bar}
+
+                    <Header {...this.props}
+                            title='我的收藏'
+                            //righticon={require('../image/yuqing@2x.png')}
+                            //renderCustomView={this._renderCustomView}
+                            //lefticon={require('../image/zuo.png')}
+                            headercolor={'#18242e'}
                     />
                 </View>
 
@@ -259,23 +261,23 @@ export default class SelfStart extends Component{
 
     componentDidMount() {
         Network.post('app2favorites/getList',{},(response)=>{
-            let resArr= response.rows.result;
-            if(response.rows.result =''||!response.rows.result){
-                toastShort('没有收藏的文章');
-                return;
-            }
-            //console.log(response,'hahhahahhah');
-                for (let i in resArr){
-                    resArr[i].publishTime = resArr[i].publishTime.replace(".000Z", "").replace("T"," ");
-                }
-                this._dataArr = this._dataArr.concat(resArr);
-                this.setState({
-                    dataSource:this._dataSource.cloneWithRows(this._dataArr),
-                    id:resArr.id,
-                    nextTime:response.rows.nextTime,
-                    isMore:resArr.length,
-                })
-        },(err)=>{err});
+            // let resArr= response.rows.result;
+            // if(response.rows.result =''||!response.rows.result){
+            //     toastShort('没有收藏的文章');
+            //     return;
+            // }
+            console.log(response,'hahhahahhah');
+                // for (let i in resArr){
+                //     resArr[i].publishTime = resArr[i].publishTime.replace(".000Z", "").replace("T"," ");
+                // }
+                // this._dataArr = this._dataArr.concat(resArr);
+                // this.setState({
+                //     dataSource:this._dataSource.cloneWithRows(this._dataArr),
+                //     id:resArr.id,
+                //     nextTime:response.rows.nextTime,
+                //     isMore:resArr.length,
+                // })
+        },(err)=>{console.log(err)});
 
     }
     componentWillUnmount() {

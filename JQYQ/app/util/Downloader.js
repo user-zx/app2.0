@@ -23,13 +23,10 @@ export default class Downloader {
 
         var request = this.request || new XMLHttpRequest();
         request.onreadystatechange = () => {
-            //console.log(request.readyState);
             if(request.readyState === request.HEADERS_RECEIVED) {
                 this.contentLength = parseInt(request.getResponseHeader('Content-Length'), 10);
-                //console.log(this.contentLength);
             }
             else if(request.readyState === request.LOADING) {
-                //console.log(request.response);
                 progressCallback(request.responseText.length/this.contentLength);
             }
             else if(request.readyState === request.DONE) {
@@ -37,10 +34,7 @@ export default class Downloader {
                     this.canceled = false;
                     return;
                 }
-                //console.log(request);
-               // console.log("finish");
                 if(request.status === 200) {
-                    //console.log("successCallback");
                     successCallback(request.responseText);
                 }
                 else if(request.status !== 0) {

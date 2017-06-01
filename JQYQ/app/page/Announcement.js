@@ -19,7 +19,9 @@ const {width,height}=Dimensions.get('window');
 import NavigationBar from 'react-native-navbar';
 import px2dp from '../util/Px2dp';
 import {NavGoBack} from '../component/NavGoBack';
-import Network from '../util/Network'
+import Network from '../util/Network';
+import Header from '../component/Header'
+
 export default class Announcement extends Component{
     _page=1;
     _dataSource = new ListView.DataSource({rowHasChanged:(row1,row2)=>row1 !== row2});
@@ -58,11 +60,14 @@ export default class Announcement extends Component{
         return (
             <View style={{flex:1,flexDirection:'column'}}>
                 <View>
-                    <NavigationBar
-                        title={titleConfig}
-                        tintColor={'#18242e'}
-                        leftButton={leftButtonConfig}
-                        statusBar={bar}
+                    <Header {...this.props}
+                            title='公告'
+                        //righticon={require('../image/yuqing@2x.png')}
+                        //renderCustomView={this._renderCustomView}
+                        //lefticon={require('../image/zuo.png')}
+                            headercolor={'#18242e'}
+                            //rightAction={() => this.show()}
+                            //rightmenu='分享'
                     />
                 </View>
                 <View style={{flex:1}}>{this._renderListView()}</View>

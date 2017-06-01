@@ -18,6 +18,7 @@ import {NavGoBack} from '../component/NavGoBack';
 import px2dp from '../util/Px2dp'
 import Network from '../util/Network';
 import {toastLong} from '../component/Toast';
+import Header from '../component/Header'
 
 const {width,height}=Dimensions.get('window');
 
@@ -84,11 +85,12 @@ export default class RegisterViewSecond extends Component{
         return(
             <View style={styles.backgView} keyboardDismissMode="on-drag" keyboardShouldPersistTaps={false} >
                 <View style={{width:width }}>
-                    <NavigationBar
-                        title={titleConfig}
-                        leftButton={leftButtonConfig}
-                        tintColor={'#18242e'}
-                        statusBar={bar}
+                    <Header {...this.props}
+                            title='监测需求'
+                        //righticon={require('../image/yuqing@2x.png')}
+                        //renderCustomView={this._renderCustomView}
+                        //lefticon={require('../image/zuo.png')}
+                            headercolor={'#18242e'}
                     />
                 </View>
                 <ScrollView>

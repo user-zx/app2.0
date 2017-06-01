@@ -20,6 +20,7 @@ import {NavGoBack} from '../component/NavGoBack';
 import RegisterViewSecond from './RegisterViewSecond'
 import {toastLong} from '../component/Toast';
 import Modal from 'react-native-root-modal';
+import Header from '../component/Header'
 
 
 
@@ -235,11 +236,12 @@ export default class RegisterView extends Component {
         return (
             <View style={styles.cityViewL}>
                 <View style={{width:width }}>
-                    <NavigationBar
-                        title={titleConfig}
-                        leftButton={leftButtonConfig}
-                        tintColor={'#18242e'}
-                        statusBar={bar}
+                    <Header {...this.props}
+                            title='基本信息'
+                        //righticon={require('../image/yuqing@2x.png')}
+                        //renderCustomView={this._renderCustomView}
+                        //lefticon={require('../image/zuo.png')}
+                            headercolor={'#18242e'}
                     />
                 </View>
                 <View style={[styles.inputView,{marginTop:px2dp(35)}]}>

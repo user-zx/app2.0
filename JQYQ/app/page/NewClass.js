@@ -25,6 +25,7 @@ import ModalDropdown from 'react-native-modal-dropdown';
 import {toastShort} from '../component/Toast';
 import Network from '../util/Network';
 import '../util/dateFormat';
+import Header from '../component/Header'
 
 export default class NewClass extends Component{
     _page=1;
@@ -108,11 +109,14 @@ export default class NewClass extends Component{
         return (
             <View style={{flex:1,flexDirection:'column'}}>
                 <View>
-                    <NavigationBar
-                        title={titleConfig}
-                        leftButton={leftButtonConfig}
-                        tintColor={'#18242e'}
-                        statusBar={bar}
+                    <Header {...this.props}
+                            title={this.state.title}
+                        //righticon={require('../image/yuqing@2x.png')}
+                        //renderCustomView={this._renderCustomView}
+                        //lefticon={require('../image/zuo.png')}
+                            headercolor={'#18242e'}
+                        //rightAction={() => this.show()}
+                        //rightmenu='分享'
                     />
                 </View>
                 <View style={{width:width,height:40,flexDirection:'row',borderBottomColor:'#ececec',

@@ -57,7 +57,7 @@ export default class ANN extends Component{
     }
 
     removeOne(index){
-        alert('删除这个',index)
+        alert('删除这个',index);
         this._searchARR = this._searchARR.concat();
         this._searchARR.splice(index,1);
         this.setState({

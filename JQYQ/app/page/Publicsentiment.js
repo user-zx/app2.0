@@ -16,6 +16,8 @@ import {NavGoBack} from '../component/NavGoBack';
 import PublicsentDay from './PublicsentDay';
 import PublicsentWeek from './PublicsentWeek';
 import PublicsentMonth from './PublicsentMonth';
+import Header from '../component/Header'
+
 //import AnimaStion from './AnimaStion'
 export default class Affair extends Component{
     constructor(props){
@@ -52,10 +54,14 @@ export default class Affair extends Component{
         return(
             <View style={{flex:1,flexDirection:'column'}}>
                 <View>
-                    <NavigationBar
-                        title={titleConfig}
-                        leftButton={liftButtonConfig}
-                        tintColor={'#18242e'}
+                    <Header {...this.props}
+                            title='舆情报告'
+                        //righticon={require('../image/yuqing@2x.png')}
+                        //renderCustomView={this._renderCustomView}
+                        //lefticon={require('../image/zuo.png')}
+                            headercolor={'#18242e'}
+                            //rightAction={() => this.show()}
+                            //rightmenu='分享'
                     />
                 </View>
                 <View style={{flex:1,}}>

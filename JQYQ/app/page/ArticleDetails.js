@@ -10,8 +10,9 @@ import {
     ScrollView,
     Dimensions,
     WebView,
+    TouchableHighlight,
+    Platform,
 } from 'react-native';
-import NavigationBar from 'react-native-navbar';
 import {NavGoBack} from '../component/NavGoBack';
 import px2dp from '../util/Px2dp';
 import Network from '../util/Network'
@@ -19,6 +20,8 @@ import {ServerBaseURL} from '../util/GlobalConst'
 import *as WeChat from 'react-native-wechat'
 import {ActionSheetCustom as ActionSheet} from 'react-native-actionsheet';
 import {toastShort} from '../component/Toast';
+import Header from '../component/Header'
+
 const buttons = ['取消', '微信好友', '朋友圈','添加到收藏'];
 const CANCEL_INDEX = 0;
 const DESTRUCTIVE_INDEX = 1;
@@ -62,7 +65,7 @@ export default class ArticleDetails extends Component {
 
 
     _handlePress(index) {
-        let URL = 'http://114.55.179.202:8989/apparticle2/share?id='+this.state.id;
+        let URL = 'http://guanjia.junquan.com.cn/apparticle2/share?id='+this.state.id;
         //console.log(index);
         if (index ==1 ){
             //分享给微信好友(连接)
@@ -78,7 +81,7 @@ export default class ArticleDetails extends Component {
                             description: this.state.title,
                             thumbImage: 'http://mta.zttit.com:8080/images/ZTT_1404756641470_image.jpg',
                             type: 'news',
-                            webpageUrl: 'http://114.55.179.202:8989/apparticle2/share?id='+this.state.id
+                            webpageUrl: 'http://guanjia.junquan.com.cn/apparticle2/share?id='+this.state.id
                         })
                             .catch((error) => {
                                 toastShort(error.message);
@@ -111,7 +114,7 @@ export default class ArticleDetails extends Component {
                         description:this.state.title,
                         thumbImage: 'http://mta.zttit.com:8080/images/ZTT_1404756641470_image.jpg',
                         type: 'news',
-                        webpageUrl: 'http://114.55.179.202:8989/apparticle2/share?id='+this.state.id
+                        webpageUrl: 'http://guanjia.junquan.com.cn/apparticle2/share?id='+this.state.id
                     })
                         .catch((error) => {
                             toastShort(error.message);
@@ -126,7 +129,13 @@ export default class ArticleDetails extends Component {
     show() {
         this.ActionSheet.show();
     }
-
+    _renderCustomView(){
+        return (
+        <View style={ADstyles.container}>
+            <Text>232323232323232</Text>
+        </View>
+    );
+    }
     render () {
         const leftButtonConfig = {
             title: '←',
@@ -134,40 +143,17 @@ export default class ArticleDetails extends Component {
             fontSize:32,
             tintColor: '#FFF'
         };
-        const titleConfig = {
-            title:this.state.title,
-            tintColor:'#FFF',
-            style:{
-                marginLeft:60,
-                marginRight:60,
-            },
-            numberOfLines:0
 
-        };
-        const startButton = {
-            title:'···',
-            handler: () => this.show(),
-            tintColor:'#FFF',
-            fontSize:34,
-        };
-        const styles1 = {
-            numberOfLines:1
-        };
-        const bar = {
-            style:'light-content',
-        };
         return(
 
             <View style={ADstyles.bigViewStyles}>
                 <View>
-                    <NavigationBar
-                        title={titleConfig}
-                        leftButton={leftButtonConfig}
-                        rightButton={startButton}
-                        tintColor={'#18242e'}
-                        numberOfLines={1}
-                        statusBar={bar}
-                />
+                    <Header {...this.props}
+                            title={this.state.title}
+                            headercolor={'#18242e'}
+                            rightAction={() => this.show()}
+                            rightmenu='分享'
+                    />
                 </View>
                 <ActionSheet
                     ref={(o) => this.ActionSheet = o}
@@ -180,7 +166,6 @@ export default class ArticleDetails extends Component {
 
                 <WebView
                     source={{uri:ServerBaseURL+'phone/html/articleDetail2.html?id='+this.props.id}}
-                    //source={{uri:'http://114.55.179.202:8989/phone/html/articleDetail2.html?id=7444d56e8c5123af09e107fe8a3dddfa'}}
                     style={{backgroundColor:'#FFF',width:width,height:height-64}}
                 />
             </View>
@@ -205,5 +190,31 @@ const ADstyles = StyleSheet.create({
     viewTitle:{
         marginLeft:px2dp(10),
         marginTop:px2dp(20),
-    }
+    },
+    container: {
+        flexDirection:'row',
+        height:64,
+        paddingTop:20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor:'#18242e'
+    },
+
+
+    containerleft: {
+        flex: 1,
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+    },
+    containercenter: {
+        flex: 1,
+        flexDirection: 'column',
+        alignItems: 'center',
+        //numberOfLines:0
+    },
+    containerright: {
+        flex: 1,
+        //flexDirection: 'column',
+        alignItems: 'flex-end',
+    },
 });

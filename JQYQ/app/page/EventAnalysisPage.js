@@ -22,7 +22,10 @@ import {toastShort} from '../component/Toast';
 import Network from '../util/Network';
 import '../util/dateFormat';
 import Affair from './Affair';
-import BGGlobal from '../util/BGGlobal'
+import BGGlobal from '../util/BGGlobal';
+import Header from '../component/Header'
+
+
 
 export default class EventAnalysisPage extends Component{
     _page=1;
@@ -52,10 +55,11 @@ export default class EventAnalysisPage extends Component{
         return (
             <View style={{flex:1,flexDirection:'column'}}>
                 <View>
-                    <NavigationBar
-                        title={titleConfig}
-                        tintColor={'#18242e'}
-                        statusBar={bar}
+                    <Header {...this.props}
+                            title='事件分析'
+                            headercolor={'#18242e'}
+                            lefticon={null}
+                            leftAction={()=>{}}
                     />
                 </View>
                 <View style={{flex:1}}>{this._renderListView()}</View>

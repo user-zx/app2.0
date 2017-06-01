@@ -14,8 +14,6 @@ import {
 } from 'react-native';
 //import GuideView from './GuideView'//引导页根据需要添加
 import LoginView from '../page/LoginView';
-import NewClassWaring from '../page/NewClassWaring'
-
 
 var { NativeAppEventEmitter } = require('react-native');
 
@@ -89,9 +87,7 @@ export default class navigator extends Component {
                     return <Component {...route.params} navigator = {navigator} />
                 }}
                 configureScene = {(route) => {
-                    //return Navigator.SceneConfigs.VerticalDownSwipeJump;
                     return Navigator.SceneConfigs.FloatFromRight;
-                    //gestures: {}
                 }}
             />
         );
