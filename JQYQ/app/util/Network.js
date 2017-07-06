@@ -2,7 +2,8 @@
  * Created by jiahailiang on 2017/2/8.
  */
 import {ServerBaseURL} from './GlobalConst';
-import {toastShort} from '../component/Toast';
+//import {toastShort} from '../component/Toast';
+import makeCancelable from '../util/MakeCancelable';
 
 module.exports = {
     /**
@@ -59,13 +60,40 @@ module.exports = {
                     successCallback(response);
                 }else{
                     failCallback(response.message);
-                    //toastShort('网络异常');
                 }
             })
             .catch(function(err){
                 //failCallback(String(err));
                 //toastShort(err);
             });
+    },
+    postCancel(url, params, successCallback, failCallback){
+        url = ServerBaseURL + url;
+        let _this = this;
+        _this.cancelable=makeCancelable(fetch(url, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(params)
+        }));
+        _this.cancelable.promise
+            .then((response) => response.text())
+            .then((responseText) => {
+                var response = JSON.parse(responseText);
+                if(response.status == 0) {
+                    successCallback(response);
+                }else{
+                    failCallback(response.message);
+                }
+            }).catch(function(err){
+                //failCallback(String(err));
+                //toastShort(err);
+            });
+        setTimeout(function () {
+            //_this.cancelable.cancel();
+        },2000);
     },
     postSecond(url, params, successCallback, failCallback){
         url = ServerBaseURL + url;

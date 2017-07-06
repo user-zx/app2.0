@@ -36,7 +36,7 @@ import {
 } from 'react-native';
 
 
-const standard = 375
+const standard = 375;
 
 
 //模块声名并导出
@@ -78,7 +78,7 @@ export default class Header extends Component {
 
         rightmenu: '',
         rightmenucolor: '#FFFFFF',
-    }
+    };
 
     //构造函数
     constructor(props) {
@@ -151,7 +151,7 @@ export default class Header extends Component {
                         onPress={this.props.rightAction} >
 
                         <View style={[{flexDirection:'row', alignItems:'center', justifyContent:'flex-end', flex:1, width:60}]}>
-                            <Text style={{color:this.props.rightmenucolor, fontSize:this._adapt(16), paddingRight:10,numberOfLines:1}}>
+                            <Text style={{color:this.props.rightmenucolor, fontSize:this._adapt(16), paddingRight:10,}}>
                                 {this.props.rightmenu}
                             </Text>
 

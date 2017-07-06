@@ -66,8 +66,10 @@ export default class NewClass extends Component{
         const {navigator} = this.props;
         return NavGoBack(navigator);
     };
-
-
+    //去除文章的前后空格
+    _trimStr(str){
+        return str.replace(/(^\s*)|(\s*$)/g,"");
+    }
 //下拉框点击事件
     _dropdown_6_onSelect(index,value) {
         this.params.carrie=this.state.carrie;//载体
@@ -75,7 +77,7 @@ export default class NewClass extends Component{
         this.params.sort=this.state.sequence;//热度
         this.params.time=this.state.time;
         Network.post('apppanorama2/getList',this.params,(response)=>{
-            let resArr= response.rows;
+            let resArr=response.rows;
             if(!response.rows){
                 toastShort('没有相关数据');
                 return;
@@ -233,12 +235,12 @@ export default class NewClass extends Component{
             <TouchableOpacity onPress={() => this._pressRow(rowData.title,rowData.id)}>
                 <View style={styles.cell}>
                     <View style={{width:width,height:px2dp(70)}}>
-                        <Text style={styles.cellTitle}>{rowData.title}</Text>
+                        <Text style={styles.cellTitle} numberOfLines={2}>{ this._trimStr(rowData.title)}</Text>
                     </View>
                     <View style={{flexDirection:'row',width:width,justifyContent:'space-between'}}>
                         <View style={{flexDirection:'row'}}>
                             <Image source={icon} style={{marginLeft:px2dp(15),marginBottom:px2dp(15),marginTop:px2dp(5)}} />
-                            <Text style={styles.cellText}>{rowData.siteName}</Text>
+                            <Text style={styles.cellText} >{rowData.siteName}</Text>
                             <Text style={styles.cellText}>{rowData.author}</Text>
                         </View>
                         <View style={{marginBottom:px2dp(10)}}>
@@ -257,8 +259,7 @@ export default class NewClass extends Component{
      * @private
      */
     _onListRefersh(end){
-        let timer =  setTimeout(()=>{
-            clearTimeout(timer);
+        this.timer =  setTimeout(()=>{
             this.params.tagId = this.props.id;
             this.params.pageNo = 1;
             this.params.nextTime = '';
@@ -277,7 +278,9 @@ export default class NewClass extends Component{
         },1500)
 
     }
-
+    componentWillUnmount() {
+        this.timer && clearTimeout(this.timer);
+    }
     /**
      * 加载更多
      * @param end
@@ -317,11 +320,11 @@ export default class NewClass extends Component{
         this.params.tagId = this.props.id;
         this.setState({title:this.props.title});
         Network.post('apppanorama2/getList',this.params,(response)=>{
+            if (!response.rows){
+                toastShort('暂无数据');
+                return;
+            }
             let resArr= response.rows;
-            //console.log(response.rows);
-            // for (let i in resArr){
-            //     resArr[i].publishTime = new Date(resArr[i].publishTime).Format("yyyy/MM/dd hh:mm");
-            // }
             for (let i in resArr){
                 resArr[i].publishTime = resArr[i].publishTime.replace(".000Z", "").replace("T"," ");
             }
@@ -351,15 +354,12 @@ const styles=StyleSheet.create({
     cell:{
         height:px2dp(100),
         backgroundColor:'#FFF',
-        //alignItems:'center',
-        //justifyContent:'center',
         borderBottomColor:'#ececec',
         borderBottomWidth:1
     },
     cellTitle:{
         paddingTop:px2dp(17),
         paddingLeft:px2dp(15),
-        //numberOfLines:1,
         paddingRight:px2dp(15),
         paddingBottom:px2dp(15),
         fontSize:15,
@@ -391,48 +391,39 @@ const styles=StyleSheet.create({
     },
     dropdown_9: {
         flex: 1,
-        //left: px2dp(10),
         height:160,
         width:px2dp(80),
         backgroundColor:'#FFF'
     },
     dropdown_8: {
         flex: 1,
-        //left: px2dp(10),
         height:px2dp(160),
         width:width,
         backgroundColor:'#666666'
     },
     modal: {
-        //flex:1,
         top: 0,
         right: 0,
         bottom: 0,
         left: 0,
         backgroundColor: '#00000000',
-        //backgroundColor: 'red',
-        //flex:1,
         flexDirection:'column',
 
     },
 
     modal2: {
-        //flex:1,
         top: 110,
         right: 0,
         bottom: 100,
         left: 0,
         backgroundColor: '#FFF',
-        //flex:1,
         flexDirection:'column'
 
     },
     buttonlayout: {
         marginTop: 8,
-        //alignSelf: 'center',
         flexDirection: 'row',
         alignItems: 'center',
-        //justifyContent:'space-around',
         width:width,
         height:30,
         marginLeft:15,
@@ -440,10 +431,8 @@ const styles=StyleSheet.create({
 
     buttonlayout1: {
         marginTop: 8,
-        //alignSelf: 'center',
         flexDirection: 'row',
         alignItems: 'center',
-        //justifyContent:'space-around',
         width:width,
         height:30,
         marginLeft:15
@@ -467,15 +456,8 @@ const styles=StyleSheet.create({
         padding:3
     },
     button: {
-        //height: px2dp(20),
         textAlign: 'center',
-        //textAlignVertical: 'center',
-        // marginLeft:5,
-        // marginRight:5,
-        //width:50,
         fontSize:12,
-        //padding:1,
-        //alignSelf: 'center',
         color:'#666666'
 
 

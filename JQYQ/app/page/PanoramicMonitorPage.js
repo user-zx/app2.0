@@ -250,7 +250,7 @@ export default class PanoramicMonitorPage extends Component{
             <TouchableOpacity onPress={() => this._pressRow(rowData.title,rowData.id)}>
                 <View style={styles.cell}>
                     <View style={{width:width,height:px2dp(70)}}>
-                        <Text style={styles.cellTitle}>{rowData.title}</Text>
+                        <Text style={styles.cellTitle} numberOfLines={2}>{this._trimStr(rowData.title)}</Text>
                     </View>
                     <View style={{flexDirection:'row',width:width,justifyContent:'space-between'}}>
                         <View style={{flexDirection:'row'}}>
@@ -295,6 +295,10 @@ export default class PanoramicMonitorPage extends Component{
             end();//刷新成功后需要调用end结束刷新
         },1500)
 
+    }
+
+    _trimStr(str){
+        return str.replace(/(^\s*)|(\s*$)/g,"");
     }
 
     /**

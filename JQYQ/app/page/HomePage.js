@@ -102,25 +102,25 @@ export default class HomePage extends Component{
             flexWrap:'wrap',
             overflow:'scroll',
         }
-        )
+        );
     }
-        componentDidMount(){
-            Network.post('app2/aggrNature',{},(responseText)=>{
-                    this.state.yujing=responseText.data.result.预警信息;
-                    this.state.xiangguan=responseText.data.result.相关信息;
-                    this.state.quanbu=responseText.data.result.全部;
-                    this.state.fumian=responseText.data.result.负面信息;
-                    this.state.yuqing=responseText.data.result.舆情信息;
-                    Network.post('appanalyse2/findColumn2',{},(responseArr)=>{
-                        this.setState({
-                            columnNameArr:responseArr.data
-                        });
-                    },(err)=>{toastLong(err)});
-                },
-                (err)=>{
-                    toastLong(err)
-                }
-            );
+    componentDidMount(){
+        Network.post('app2/aggrNature',{},(responseText)=>{
+                this.state.yujing=responseText.data.result.预警信息;
+                this.state.xiangguan=responseText.data.result.相关信息;
+                this.state.quanbu=responseText.data.result.全部;
+                this.state.fumian=responseText.data.result.负面信息;
+                this.state.yuqing=responseText.data.result.舆情信息;
+                Network.post('appanalyse2/findColumn2',{},(responseArr)=>{
+                    this.setState({
+                        columnNameArr:responseArr.data
+                    });
+                },(err)=>{toastLong(err)});
+            },
+            (err)=>{
+                toastLong(err)
+            }
+        );
 
     }
 

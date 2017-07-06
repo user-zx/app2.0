@@ -220,13 +220,13 @@ export default class SelfStart extends Component{
 
             end();//刷新成功后需要调用end结束刷新
             // this.refs.listView.endRefresh() //建议使用end() 当然 这个可以在任何地方使用
-        },1500)
+        },1000)
 
     }
 
     _onLoadMore(end){
-        let timer =  setTimeout(()=>{
-            clearTimeout(timer);
+        this.timer =  setTimeout(()=>{
+            //clearTimeout(timer);
             this._page++;
             let params=new Object();
             params.pageNO = this._page;
@@ -238,12 +238,10 @@ export default class SelfStart extends Component{
                         toastShort('没有收藏的文章');
                         return;
                     }
-                //console.log(response.rows.result,'00000000');
                 for (let i in resArr){
                         resArr[i].publishTime = resArr[i].publishTime.replace(".000Z", "").replace("T"," ");
                     }
                     this._dataArr = this._dataArr.concat(resArr);
-                    //this.state.isMore = resArr.length;
                     this.setState({
                         nextTime:response.rows.nextTime,
                         dataSource:this._dataSource.cloneWithRows(this._dataArr),
@@ -258,34 +256,29 @@ export default class SelfStart extends Component{
         },1000)
 
     }
-
+    componentWillUnmount() {
+        this.timer && clearTimeout(this.timer);
+    }
     componentDidMount() {
         Network.post('app2favorites/getList',{},(response)=>{
-            // let resArr= response.rows.result;
-            // if(response.rows.result =''||!response.rows.result){
-            //     toastShort('没有收藏的文章');
-            //     return;
-            // }
-            console.log(response,'hahhahahhah');
-                // for (let i in resArr){
-                //     resArr[i].publishTime = resArr[i].publishTime.replace(".000Z", "").replace("T"," ");
-                // }
-                // this._dataArr = this._dataArr.concat(resArr);
-                // this.setState({
-                //     dataSource:this._dataSource.cloneWithRows(this._dataArr),
-                //     id:resArr.id,
-                //     nextTime:response.rows.nextTime,
-                //     isMore:resArr.length,
-                // })
+            let resArr= response.rows.result;
+            if(response.rows.result =''||!response.rows.result){
+                toastShort('没有收藏的文章');
+                return;
+            }
+                for (let i in resArr){
+                    resArr[i].publishTime = resArr[i].publishTime.replace(".000Z", "").replace("T"," ");
+                }
+                this._dataArr = this._dataArr.concat(resArr);
+                this.setState({
+                    dataSource:this._dataSource.cloneWithRows(this._dataArr),
+                    id:resArr.id,
+                    nextTime:response.rows.nextTime,
+                    isMore:resArr.length,
+                })
         },(err)=>{console.log(err)});
-
     }
-    componentWillUnmount() {
-        //end();
-    }
-
 }
-
 
 const styles=StyleSheet.create({
     container:{
@@ -301,15 +294,13 @@ const styles=StyleSheet.create({
     cell:{
         height:px2dp(100),
         backgroundColor:'#FFF',
-        //alignItems:'center',
-        //justifyContent:'center',
+
         borderBottomColor:'#ececec',
         borderBottomWidth:1
     },
     cellTitle:{
         paddingTop:px2dp(17),
         paddingLeft:px2dp(15),
-        //numberOfLines:1,
         paddingRight:px2dp(15),
         paddingBottom:px2dp(15),
         fontSize:15,

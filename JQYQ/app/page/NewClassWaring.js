@@ -46,7 +46,8 @@ export default class NewClassWaring extends Component {
             value: '',
             aspect: '',
             sequence: '',
-            articleList: []
+            articleList: [],
+            waringText:'加载中...'
         };
         this.icons = {
             yuqing: require('../image/lable/yuqing@3x.png'),
@@ -154,7 +155,7 @@ export default class NewClassWaring extends Component {
                 renderRow={this._renderRow.bind(this)}
                 onRefresh={this._onListRefersh.bind(this)}
                 onLoadMore={this._onLoadMore.bind(this)}
-                pusuToLoadMoreTitle="加载中..."
+                pusuToLoadMoreTitle={this.state.waringText}
             />
         )
 
@@ -193,7 +194,7 @@ export default class NewClassWaring extends Component {
             <TouchableOpacity onPress={() => this._pressRow(rowData.title, rowData.id)}>
                 <View style={styles.cell}>
                     <View style={{width: width, height: px2dp(70)}}>
-                        <Text style={styles.cellTitle}>{rowData.title}</Text>
+                        <Text style={styles.cellTitle} numberOfLines={2}>{this._trimStr(rowData.title)}</Text>
                     </View>
                     <View style={{flexDirection: 'row', width: width, justifyContent: 'space-between'}}>
                         <View style={{flexDirection: 'row'}}>
@@ -223,8 +224,8 @@ export default class NewClassWaring extends Component {
      * @private
      */
     _onListRefersh(end) {
-        let timer = setTimeout(()=> {
-            clearTimeout(timer);
+        this.timer = setTimeout(()=> {
+           // clearTimeout(timer);
             this.params.pageNo = 1;
             Network.post('appwarning2/getList', this.params, (response)=> {
                 if (response.rows.result == '') {
@@ -249,20 +250,29 @@ export default class NewClassWaring extends Component {
 
     }
 
+    //去空格
+    _trimStr(str){
+        return str.replace(/(^\s*)|(\s*$)/g,"");
+    }
+
+
+    componentWillUnmount() {
+        this.timer && clearTimeout(this.timer);
+    }
     /**
      * 加载更多
      * @param end
      * @private
      */
     _onLoadMore(end) {
-        let timer = setTimeout(()=> {
-            clearTimeout(timer);
+        this.timer = setTimeout(()=> {
             this._page++;
 
             this.params.pageNo = this._page;
             Network.post('appwarning2/getList', this.params, (response)=> {
                 let resArr = response.rows.result;
                 if (!response.rows.result) {
+
                     toastShort('没有更多数据了');
                     this.setState({
                         dataArr:[],
@@ -281,13 +291,19 @@ export default class NewClassWaring extends Component {
                 err
             });
             end(this.state.dataArr.length < 10);
-        }, 2000)
+        }, 1500)
 
     }
 
     componentDidMount() {
         this.setState({title: this.props.title});
         Network.post('appwarning2/getList',this.params, (response)=> {
+            if  (!response.rows.result){
+                this.setState({
+                    waringText:'已经加载到底了(￣︶￣)~ ~'
+                });
+                return;
+            }
             let resArr = response.rows.result;
             for (let i in resArr) {
                 resArr[i].publishTime = resArr[i].publishTime.replace(".000Z", "").replace("T"," ");

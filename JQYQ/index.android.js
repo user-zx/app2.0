@@ -8,4 +8,5 @@ import {
     AppRegistry,
 } from 'react-native';
 import Navigator from './app/component/Navigator'
+
 AppRegistry.registerComponent('JQYQ', () => Navigator);

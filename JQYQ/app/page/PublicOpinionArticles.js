@@ -231,7 +231,7 @@ export default class PublicOpinionArticles extends Component{
             <TouchableOpacity onPress={() => this._pressRow(rowData.title,rowData.id)}>
                 <View style={styles.cell}>
                     <View style={{width:width,height:px2dp(70)}}>
-                        <Text style={styles.cellTitle}>{rowData.title}</Text>
+                        <Text style={styles.cellTitle} numberOfLines={2}>{rowData.title}</Text>
                     </View>
                     <View style={{flexDirection:'row',width:width,justifyContent:'space-between'}}>
                         <View style={{flexDirection:'row'}}>
@@ -255,8 +255,8 @@ export default class PublicOpinionArticles extends Component{
      * @private
      */
     _onListRefersh(end){
-        let timer =  setTimeout(()=>{
-            clearTimeout(timer);
+        this.timer =  setTimeout(()=>{
+            //clearTimeout(timer);
             this.params.eventId = BGGlobal.propsID;
             this.params.pageNo = 1;//第几页
             Network.post('appevent2/getList',this.params,(responce)=>{
@@ -282,7 +282,9 @@ export default class PublicOpinionArticles extends Component{
         },1500)
 
     }
-
+    componentWillUnmount() {
+        this.timer && clearTimeout(this.timer);
+    }
     /**
      * 模拟加载更多
      * @param end
@@ -342,7 +344,6 @@ export default class PublicOpinionArticles extends Component{
 
 }
 
-
 const styles=StyleSheet.create({
     container:{
 
@@ -357,15 +358,12 @@ const styles=StyleSheet.create({
     cell:{
         height:px2dp(100),
         backgroundColor:'#FFF',
-        //alignItems:'center',
-        //justifyContent:'center',
         borderBottomColor:'#ececec',
         borderBottomWidth:1
     },
     cellTitle:{
         paddingTop:px2dp(17),
         paddingLeft:px2dp(15),
-        //numberOfLines:1,
         paddingRight:px2dp(15),
         paddingBottom:px2dp(15),
         fontSize:15,

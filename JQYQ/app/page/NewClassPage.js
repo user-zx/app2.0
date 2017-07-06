@@ -16,12 +16,14 @@ import {
     Animated,
 } from 'react-native';
 
+
+
+
 import {
     SwRefreshListView, //支持下拉刷新和上拉加载的ListView
 } from 'react-native-swRefresh'
 const {width,height}=Dimensions.get('window');
 import {NavGoBack} from '../component/NavGoBack';
-import NavigationBar from 'react-native-navbar';
 import ArticleDetails from './ArticleDetails';
 import px2dp from '../util/Px2dp';
 import ModalDropdown from 'react-native-modal-dropdown';
@@ -30,6 +32,8 @@ import Network from '../util/Network';
 import '../util/dateFormat';
 import Modal from 'react-native-root-modal';
 import Header from '../component/Header'
+
+
 
 export default class NewClassPage extends Component{
     _page=1;
@@ -224,8 +228,8 @@ export default class NewClassPage extends Component{
         this.params.carrie=this.state.carrie;//载体
         this.params.nature=this.state.aspect;//相关
         this.params.sort=this.state.sequence;//热度
-        this.params.time = this.state.time;
-        console.log(this.params,'所有的参数');
+        this.params.time= this.state.time;
+        //console.log(this.params,'所有的参数');
         Network.post('apppanorama2/getList',this.params,(response)=>{
             let resArr= response.rows;
             if(!response.rows){
@@ -245,30 +249,12 @@ export default class NewClassPage extends Component{
     }
 
     render(){
-        const leftButtonConfig = {
-            title: '←',
-            handler: () => this.buttonGoBack(),
-            fontSize:32,
-            tintColor: '#FFF'
-        };
-        const bar = {
-            style:'light-content',
-        };
-        const titleConfig = {
-            title: this.state.title,
-            tintColor: '#FFF'
-        };
         return (
             <View style={{flex:1,flexDirection:'column'}}>
                 <View>
                     <Header {...this.props}
                             title={this.state.title}
-                        //righticon={require('../image/yuqing@2x.png')}
-                        //renderCustomView={this._renderCustomView}
-                        //lefticon={require('../image/zuo.png')}
                             headercolor={'#18242e'}
-                        //rightAction={() => this.show()}
-                        //rightmenu='分享'
                     />
                 </View>
                 <View style={{width:width,height:40,flexDirection:'row',borderBottomColor:'#ececec',
@@ -369,8 +355,6 @@ export default class NewClassPage extends Component{
                 onLoadMore={this._onLoadMore.bind(this)}
                 enableEmptySections = {true}
                 pusuToLoadMoreTitle="加载中..."
-
-
             />
         )
     }
@@ -406,7 +390,7 @@ export default class NewClassPage extends Component{
             <TouchableOpacity onPress={() => this._pressRow(rowData.title,rowData.id)}>
                 <View style={styles.cell}>
                     <View style={{width:width,height:px2dp(70)}}>
-                        <Text style={styles.cellTitle}>{rowData.title}</Text>
+                        <Text style={styles.cellTitle} numberOfLines={2}>{this._trimStr(rowData.title)}</Text>
                     </View>
                     <View style={{flexDirection:'row',width:width,justifyContent:'space-between'}}>
                         <View style={{flexDirection:'row'}}>
@@ -429,9 +413,9 @@ export default class NewClassPage extends Component{
      * @param end
      * @private
      */
+
     _onListRefersh(end){
-        let timer =  setTimeout(()=>{
-            clearTimeout(timer);
+        this.timer =  setTimeout(()=>{
             this.params.tagId = this.props.id;
             this.params.pageNo = 1;
             this.params.nextTime = '';
@@ -447,42 +431,49 @@ export default class NewClassPage extends Component{
                 })
             },(err)=>{err});//加载的状态
             end();//刷新成功后需要调用end结束刷新
-        },1500)
+        },1000)
 
     }
+    //去空格
+    _trimStr(str){
+        return str.replace(/(^\s*)|(\s*$)/g,"");
+    }
 
+    componentWillUnmount() {
+        this.timer && clearTimeout(this.timer);
+    }
     /**
      * 加载更多
      * @param end
      * @private
      */
     _onLoadMore(end){
-        let timer =  setTimeout(()=>{
-            clearTimeout(timer);
+        this.timer =  setTimeout(()=>{
+            this._page++;
+            this.params.pageNo = this._page;
+            this.params.nextTime = this.state.nextTime;
+            //添加的
+            this.params.tagId = this.props.id;
+            //筛选的
+            Network.post('apppanorama2/getList',this.params,(response)=>{
+                let resArr= response.rows;
+                if (!response.rows) {
+                    toastShort('没有更多数据了');
+                    return;
+                }
+                for (let i in resArr){
+                    resArr[i].publishTime = resArr[i].publishTime.replace(".000Z", "").replace("T"," ");
+                }
+                this._dataArr = this._dataArr.concat(resArr);
+                this.setState({
+                    dataArr:resArr,
+                    nextTime:response.nextTime ,
+                    dataSource:this._dataSource.cloneWithRows(this._dataArr)
+                })
+            },(err)=>{err});
+            end(!this.state.dataArr || this.state.dataArr.length <10);//加载结束条件
         },2000);
-        this._page++;
-        this.params.pageNo = this._page;
-        this.params.nextTime = this.state.nextTime;
-        //添加的
-        this.params.tagId = this.props.id;
-        //筛选的
-        Network.post('apppanorama2/getList',this.params,(response)=>{
-            let resArr= response.rows;
-            if (!response.rows) {
-                toastShort('没有更多数据了');
-                return;
-            }
-            for (let i in resArr){
-                resArr[i].publishTime = resArr[i].publishTime.replace(".000Z", "").replace("T"," ");
-            }
-            this._dataArr = this._dataArr.concat(resArr);
-            this.setState({
-                dataArr:resArr,
-                nextTime:response.nextTime ,
-                dataSource:this._dataSource.cloneWithRows(this._dataArr)
-            })
-        },(err)=>{err});
-        end(!this.state.dataArr || this.state.dataArr.length <10);//加载结束条件
+
     }
 
     componentDidMount() {
@@ -490,6 +481,10 @@ export default class NewClassPage extends Component{
         this.params.tagId = this.props.id;
         this.setState({title:this.props.title});
         Network.post('apppanorama2/getList',this.params,(response)=>{
+            if (!response.rows){
+                toastShort('暂无数据');
+                return;
+            }
             let resArr= response.rows;
             for (let i in resArr){
                 resArr[i].publishTime = resArr[i].publishTime.replace(".000Z", "").replace("T"," ");
@@ -520,15 +515,12 @@ const styles=StyleSheet.create({
     cell:{
         height:px2dp(100),
         backgroundColor:'#FFF',
-        //alignItems:'center',
-        //justifyContent:'center',
         borderBottomColor:'#ececec',
         borderBottomWidth:1
     },
     cellTitle:{
         paddingTop:px2dp(17),
         paddingLeft:px2dp(15),
-        //numberOfLines:1,
         paddingRight:px2dp(15),
         paddingBottom:px2dp(15),
         fontSize:15,
