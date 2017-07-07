@@ -273,9 +273,10 @@ export default class NewClassWaring extends Component {
                 let resArr = response.rows.result;
                 if (!response.rows.result) {
 
-                    toastShort('没有更多数据了');
+                    //toastShort('没有更多数据了');
                     this.setState({
                         dataArr:[],
+                        waringText:'已经加载到底了(￣︶￣)~ ~'
                     });
                     return;
                 }
@@ -294,7 +295,7 @@ export default class NewClassWaring extends Component {
         }, 1500)
 
     }
-
+    //还有一个情况没判断,当加载数据不足十条的时候,下面的文字也需要改
     componentDidMount() {
         this.setState({title: this.props.title});
         Network.post('appwarning2/getList',this.params, (response)=> {

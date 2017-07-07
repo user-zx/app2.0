@@ -53,6 +53,7 @@ export default class NewClass extends Component{
             articleList:[],
             nextTime:'',
             time:'',
+            deepText:'加载中...'
         };
         this.icons = {
             yuqing:require('../image/lable/yuqing@3x.png'),
@@ -197,7 +198,7 @@ export default class NewClass extends Component{
                 onRefresh={this._onListRefersh.bind(this)}
                 onLoadMore={this._onLoadMore.bind(this)}
                 enableEmptySections = {true}
-                pusuToLoadMoreTitle="加载中..."
+                pusuToLoadMoreTitle={this.state.deepText}
 
 
             />
@@ -300,6 +301,9 @@ export default class NewClass extends Component{
             let resArr= response.rows;
             if (!response.rows) {
                 toastShort('没有更多数据了');
+                this.setState({
+                   deepText:'已经加载到底了(￣︶￣)~ ~'
+                });
                 return;
             }
             for (let i in resArr){
@@ -322,6 +326,9 @@ export default class NewClass extends Component{
         Network.post('apppanorama2/getList',this.params,(response)=>{
             if (!response.rows){
                 toastShort('暂无数据');
+                this.setState({
+                    deepText:'已经加载到底了(￣︶￣)~ ~'
+                });
                 return;
             }
             let resArr= response.rows;

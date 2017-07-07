@@ -4,7 +4,7 @@
 import {ServerBaseURL} from './GlobalConst';
 //import {toastShort} from '../component/Toast';
 import makeCancelable from '../util/MakeCancelable';
-
+import {load} from '../page/LoginView';
 module.exports = {
     /**
      * 基于fetch的get方法
@@ -46,26 +46,60 @@ module.exports = {
 
     post(url, params, successCallback, failCallback){
         url = ServerBaseURL + url;
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(params)
-        }).then((response) => response.text())
-            .then((responseText) => {
-                var response = JSON.parse(responseText);
-                if(response.status == 0) {
-                    successCallback(response);
-                }else{
-                    failCallback(response.message);
-                }
-            })
-            .catch(function(err){
-                //failCallback(String(err));
-                //toastShort(err);
-            });
+
+        load('userInfo',(responce)=>{
+            if (responce.status === 200){
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'pomptoken':responce.token
+
+                    },
+                    body: JSON.stringify(params)
+                }).then((response) => response.text())
+                    .then((responseText) => {
+                        var response = JSON.parse(responseText);
+                        if(response.status == 0) {
+                            successCallback(response);
+                        }else{
+                            failCallback(response.message);
+                        }
+                    })
+                    .catch(function(err){
+                        //failCallback(String(err));
+                        //toastShort(err);
+                    });
+            }else {
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        //'pomptoken':token
+
+                    },
+                    body: JSON.stringify(params)
+                }).then((response) => response.text())
+                    .then((responseText) => {
+                        var response = JSON.parse(responseText);
+                        if(response.status == 0) {
+                            successCallback(response);
+                        }else{
+                            failCallback(response.message);
+                        }
+                    })
+                    .catch(function(err){
+                        //failCallback(String(err));
+                        //toastShort(err);
+                    });
+            }
+        });
+
+
+
+
     },
     postCancel(url, params, successCallback, failCallback){
         url = ServerBaseURL + url;

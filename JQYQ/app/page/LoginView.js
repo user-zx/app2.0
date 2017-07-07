@@ -129,8 +129,10 @@ export default class LoginView extends Component{
                 _this.params.username = response.user;
                 _this.params.password = response.pwd;
                 _this.params.registrationId = response.rid;
-                //console.log(_this.params);
+                //console.log();
                 Network.post('app2/login',_this.params,()=>{
+                    //console.log(res);
+
                     _this.JumpAction(TabbarView);
                 },()=>{
                     _this._shakeAndClearPassCode();
@@ -300,11 +302,13 @@ export default class LoginView extends Component{
         _this.params.username = this.state.username;
         _this.params.password = this.state.password;
         _this.params.registrationId = _this.state.registrationId;
-        Network.post('app2/login',_this.params,()=>{
+        Network.post('app2/login',_this.params,(res)=>{
+            console.log(res);
             save("userInfo",{
                 'user':_this.params.username,
                 'pwd':_this.params.password,
-                'rid':_this.params.registrationId
+                'rid':_this.params.registrationId,
+                'token':res.data.pompToken
             });
             _this.JumpAction(TabbarView);
         },()=>{

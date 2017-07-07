@@ -22,6 +22,10 @@ import Px2dp from '../util/Px2dp';
 
 import {WXAppKey} from '../util/GlobalConst';
 import * as Wexin from 'react-native-wechat';
+import  NetWorkTool from '../util/NetWorkToors';
+import {toastShort} from '../component/Toast'
+
+
 var { NativeAppEventEmitter } = require('react-native');
 
 var subscription = NativeAppEventEmitter.addListener(
@@ -41,7 +45,20 @@ export default class TabBarView extends React.Component{
             badgeNumber: '2',
             isBadge:false
         };
+
+
+
+
     }
+
+    handleMethod(isConnected){
+
+        isConnected ? null : toastShort('当前无网络连接');
+
+    }
+
+
+
     //控制安卓物理返回键问题
 
     componentDidMount() {
@@ -71,11 +88,24 @@ export default class TabBarView extends React.Component{
     }
 
     componentWillUnmount() {
+
         if (Platform.OS === 'android') {
             BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
         }
         subscription.remove();
+        //移除网络监听
+        NetWorkTool.removeEventListener(NetWorkTool.TAG_NETWORK_CHANGE,this.handleMethod);
+
     }
+
+    componentWillMount() {
+
+        NetWorkTool.addEventListener(NetWorkTool.TAG_NETWORK_CHANGE,this.handleMethod);
+
+    }
+
+
+
     onBackAndroid = () => {
         const nav = this.props.navigator;
         const routers = nav.getCurrentRoutes();
